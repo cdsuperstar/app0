@@ -3,30 +3,33 @@ module.exports = {
 
   parserOptions: {
     parser: 'babel-eslint',
-    sourceType: 'module'
+    sourceType: 'module',
   },
 
   env: {
-    browser: true
+    browser: true,
   },
 
   extends: [
     // https://eslint.vuejs.org/rules/#priority-a-essential-error-prevention
     // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential',
+    //'plugin:vue/essential',
     '@vue/standard',
-    'plugin:prettier/recommended'
+    'plugin:vue/recommended',
+    'plugin:prettier/recommended',
+    'prettier',
+    'prettier/vue',
   ],
 
   // required to lint *.vue files
-  plugins: ['vue', 'prettier'],
+  plugins: ['vue'],
   globals: {
     ga: true, // Google Analytics
     cordova: true,
     __statics: true,
     process: true,
     Capacitor: true,
-    chrome: true
+    chrome: true,
   },
 
   // add your custom rules here
@@ -46,9 +49,9 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/no-extraneous-dependencies': 'off',
     'prefer-promise-reject-errors': 'off',
-    'prettier/prettier': 'error',
+    // 'prettier/prettier': 'error',
 
     // allow debugger during development only
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
-}
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  },
+};
