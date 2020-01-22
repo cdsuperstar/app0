@@ -40,6 +40,12 @@
           {{ $t('auth.login.login') }}
         </q-btn>
       </q-card-actions>
+      <q-card-actions>
+        <!--        <q-btn color="primary" :loading="loading" @click="login">-->
+        <q-btn color="primary" @click="login">
+          {{ $t('auth.login.login') }}
+        </q-btn>
+      </q-card-actions>
       <router-link to="/password/forgot">
         <a>{{ this.$t('auth.login.password_forgot') }}</a>
       </router-link>
