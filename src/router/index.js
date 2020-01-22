@@ -32,6 +32,8 @@ export default function(/* { store, ssrContext } */) {
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
     rolesVar: 'role',
+    tokenStore: ['localStorage', 'cookie'],
+    tokenDefaultName: '0apps_token',
     // authRedirect: { path: '/user' },
     // forbiddenRedirect: { path: '/403' },
     // notFoundRedirect: { path: '/404' },
@@ -43,7 +45,7 @@ export default function(/* { store, ssrContext } */) {
     loginData: {
       url: 'oauth/token',
       method: 'POST',
-      redirect: 'dashboard',
+      redirect: '/user/dashboard',
       fetchUser: true,
       data: { grant_type: 'password' }
     },
@@ -78,12 +80,19 @@ export default function(/* { store, ssrContext } */) {
   //   'Content-Type': 'application/json'
   // }
   Router.beforeEach((to, from, next) => {
-    console.log('TODO:add before each router')
-
-    next()
-    // if () next('login')
-    // else if (!requiresAuth && currentUser) next('home')
-    // else next()
+    // if (!to.matched.length) {
+    // next({ name: 'not-found' })
+    // } else {
+    console.log('len:', from.name, to.name, Vue.auth.check())
+    // if (!from.name && to.name === 'not-found' && Vue.auth.check())
+    //   next({ name: '/#/dashboard' })
+    // next()
+    // }
+    if (Vue.auth.check() && to.name === 'not-found') {
+      next({ name: 'dashboard' })
+    } else {
+      next()
+    }
   })
   return Router
 }
