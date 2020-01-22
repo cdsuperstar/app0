@@ -1,45 +1,42 @@
 // This is just an example,
 // so you can safely delete all default props below
-
 export default {
-  failed: 'Action failed',
-  success: 'Action was successful',
+  failed: '操作失败',
+  success: '操作成功',
   buttons: {
-    send: 'Send'
+    send: '发送'
   },
   auth: {
-    network_error: 'Network error. Please check your internet connection',
-    submit: 'Submit',
-    home: 'Home',
-    navigation: 'Navigation',
-    my_account: 'My account',
+    network_error: '网络错误，请检查您的网络链接。',
+    submit: '提交',
+    home: '主界面',
+    navigation: '浏览',
+    my_account: '我的账号',
     administrator: {
-      title: 'Administrator'
+      title: '超级管理员'
     },
     superuser: {
-      title: 'Superuser',
+      title: '超级用户',
       users: {
-        users: 'Users'
+        users: '用户'
       }
     },
     labels: {
-      email: 'Email address',
-      name: 'Name',
-      password: 'Password',
-      remember_me: 'Remember me',
-      repeat_password: 'Repeat password'
+      email: '邮箱地址',
+      name: '姓名',
+      password: '密码',
+      remember_me: '记住我',
+      repeat_password: '重复密码'
     },
     errors: {
-      password_length:
-        'The minimum length of the password is {length} characters.',
-      password_match: 'Passwords do not match.',
-      email: 'A valid email address is required'
+      password_length: '密码最少{length}位.',
+      password_match: '密码不匹配.',
+      email: '需要一个有效的邮件地址'
     },
     login: {
-      login: 'Login',
-      password_forgot: 'Forgot your password?',
-      verification_required:
-        'Please check your email and verify your account first.',
+      login: '登录',
+      password_forgot: '忘记密码了吗?',
+      verification_required: '请先检查你的邮件和账号.',
       invalid_credentials: 'Email address or password is incorrect.',
       email: '@:auth.labels.email',
       password: '@:auth.labels.password',

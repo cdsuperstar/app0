@@ -13,9 +13,12 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.4.2",
+    "@websanova/vue-auth": "git+https://github.com/onurkose/vue-auth.git",
     "axios": "^0.18.1",
     "quasar": "^1.7.4",
-    "vue-i18n": "^8.0.0"
+    "vue-axios": "^2.1.5",
+    "vue-i18n": "^8.0.0",
+    "vuelidate": "^0.7.5"
   },
   "devDependencies": {
     "@quasar/app": "^1.5.2",

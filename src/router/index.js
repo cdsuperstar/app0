@@ -25,5 +25,58 @@ export default function(/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
+  Vue.axios.defaults.baseURL = 'http://0apps.test/api/v1'
+  Vue.router = Router
+  Vue.use(require('@websanova/vue-auth'), {
+    auth: require('@websanova/vue-auth/drivers/auth/laravel-passport-bearer.js'),
+    http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
+    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+    rolesVar: 'role',
+    // authRedirect: { path: '/user' },
+    // forbiddenRedirect: { path: '/403' },
+    // notFoundRedirect: { path: '/404' },
+    // registerData: {
+    //   url: 'auth/register',
+    //   method: 'POST',
+    //   redirect: 'auth//login'
+    // },
+    loginData: {
+      url: 'oauth/token',
+      method: 'POST',
+      redirect: 'dashboard',
+      fetchUser: true,
+      data: { grant_type: 'password' }
+    },
+    logoutData: {
+      url: 'auth/logout',
+      method: 'POST',
+      redirect: '/guest',
+      makeRequest: false
+    },
+    // fetchData: { url: 'auth/user', method: 'GET', enabled: false },
+    refreshData: {
+      url: 'oauth/token',
+      method: 'POST',
+      enabled: true,
+      interval: 30,
+      checkExpiration: true,
+      data: { grant_type: 'refresh_token' }
+    },
+    passportData: {
+      client_id: '2',
+      client_secret: 'RmjfwRck2fYIcJQbda1B8jwAlACuMuiVNylQ0dcI'
+    }
+  })
+  // Vue.axios.defaults.headers.common = {
+  //   // 'X-CSRF-TOKEN': window.Laravel.csrfToken,
+  //   'X-Requested-With': 'XMLHttpRequest',
+  //   'Content-Type': 'application/json'
+  // }
+
+  // Router.beforeEach((to, from, next) => {
+  //   console.log(Vue.$auth.check())
+  //
+  //   next()
+  // })
   return Router
 }

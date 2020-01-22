@@ -1,15 +1,17 @@
 <template>
   <q-page class="flex flex-center">
-    <Login></Login>
+    {{ $t('success') }}
+    {{ $auth.check() }}
+    {{ $auth.user().email }}
+    <q-btn color="primary" @click="$auth.logout()">
+      {{ $t('auth.logout.logout') }}
+    </q-btn>
   </q-page>
 </template>
 
 <script>
-import Login from './Login'
 export default {
   name: 'PageIndex',
-  components: {
-    Login
-  }
+  components: {}
 }
 </script>
