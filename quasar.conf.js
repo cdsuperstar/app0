@@ -58,7 +58,19 @@ module.exports = function(ctx) {
       // Options below are automatically set depending on the env, set them if you want to override
       // preloadChunks: false,
       // extractCSS: false,
-
+      env: ctx.dev
+        ? {
+            // so on dev we'll have
+            CLIENT_SECRET: JSON.stringify(process.env.CLIENT_SECRET),
+            CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
+            BASE_URL: JSON.stringify(process.env.BASE_URL)
+          }
+        : {
+            // and on build (production):
+            CLIENT_SECRET: JSON.stringify(process.env.CLIENT_SECRET),
+            CLIENT_ID: JSON.stringify(process.env.CLIENT_ID),
+            BASE_URL: JSON.stringify(process.env.BASE_URL)
+          },
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack(cfg) {
         cfg.module.rules.push({
@@ -77,7 +89,7 @@ module.exports = function(ctx) {
     devServer: {
       https: false,
       port: 8080,
-      open: false //true // opens browser window automatically
+      open: false // true opens browser window automatically
     },
 
     // animations: 'all', // --- includes all animations

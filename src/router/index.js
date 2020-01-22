@@ -25,7 +25,7 @@ export default function(/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Vue.axios.defaults.baseURL = 'http://0apps.test/api/v1'
+  Vue.axios.defaults.baseURL = process.env.BASE_URL
   Vue.router = Router
   Vue.use(require('@websanova/vue-auth'), {
     auth: require('@websanova/vue-auth/drivers/auth/laravel-passport-bearer.js'),
@@ -62,9 +62,14 @@ export default function(/* { store, ssrContext } */) {
       checkExpiration: true,
       data: { grant_type: 'refresh_token' }
     },
+    fetchData: {
+      url: 'auth/user',
+      method: 'GET',
+      enabled: true
+    },
     passportData: {
-      client_id: '2',
-      client_secret: 'RmjfwRck2fYIcJQbda1B8jwAlACuMuiVNylQ0dcI'
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET
     }
   })
   // Vue.axios.defaults.headers.common = {
@@ -72,11 +77,13 @@ export default function(/* { store, ssrContext } */) {
   //   'X-Requested-With': 'XMLHttpRequest',
   //   'Content-Type': 'application/json'
   // }
+  Router.beforeEach((to, from, next) => {
+    console.log('TODO:add before each router')
 
-  // Router.beforeEach((to, from, next) => {
-  //   console.log(Vue.$auth.check())
-  //
-  //   next()
-  // })
+    next()
+    // if () next('login')
+    // else if (!requiresAuth && currentUser) next('home')
+    // else next()
+  })
   return Router
 }

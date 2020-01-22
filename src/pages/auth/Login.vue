@@ -4,7 +4,6 @@
       <q-card-section>
         <div class="text-h6">
           {{ $auth.check() }}
-          {{ $auth.user().email }}
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>
@@ -52,12 +51,10 @@
 
 <script>
 import { email, required } from 'vuelidate/lib/validators'
-import QInnerLoading from '../../../.quasar-ide-helper/QInnerLoading'
-// import qs from 'qs'
 
 export default {
   name: 'Login',
-  components: { QInnerLoading },
+  components: {},
   data() {
     return {
       data: {
@@ -77,10 +74,7 @@ export default {
         this.loading = true
         this.$auth
           .login(this.data)
-          .then(response => {
-            console.log(this.$auth.token())
-            console.log(response)
-          })
+          .then(response => {})
           .catch(error => {
             if (error.response) {
               if (error.response.status === 401) {
