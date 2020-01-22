@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     {{ $t('success') }}
     {{ $auth.check() }}
-    {{ $auth.user().email }}
+    {{ $auth.user().created_at }}
     <q-btn color="primary" @click="$auth.logout()">
       {{ $t('auth.logout.logout') }}
     </q-btn>
