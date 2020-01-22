@@ -40,12 +40,9 @@
           {{ $t('auth.login.login') }}
         </q-btn>
       </q-card-actions>
-      <q-card-actions>
-        <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="primary" @click="login">
-          {{ $t('auth.login.login') }}
-        </q-btn>
-      </q-card-actions>
+      <q-inner-loading :showing="loading">
+        <q-spinner-gears size="50px" color="primary" />
+      </q-inner-loading>
       <router-link to="/password/forgot">
         <a>{{ this.$t('auth.login.password_forgot') }}</a>
       </router-link>
@@ -55,11 +52,12 @@
 
 <script>
 import { email, required } from 'vuelidate/lib/validators'
+import QInnerLoading from '../../../.quasar-ide-helper/QInnerLoading'
 // import qs from 'qs'
 
 export default {
   name: 'Login',
-  components: {},
+  components: { QInnerLoading },
   data() {
     return {
       data: {
