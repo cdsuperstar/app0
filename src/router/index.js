@@ -37,11 +37,11 @@ export default function(/* { store, ssrContext } */) {
     // authRedirect: { path: '/user' },
     // forbiddenRedirect: { path: '/403' },
     // notFoundRedirect: { path: '/404' },
-    // registerData: {
-    //   url: 'auth/register',
-    //   method: 'POST',
-    //   redirect: 'auth//login'
-    // },
+    registerData: {
+      url: 'auth/register',
+      method: 'POST',
+      redirect: '/guest'
+    },
     loginData: {
       url: 'oauth/token',
       method: 'POST',
