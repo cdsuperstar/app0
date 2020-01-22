@@ -23,18 +23,18 @@ export default {
     },
     labels: {
       email: '邮箱地址',
-      name: '名称',
+      name: '用户名',
       password: '密码',
       remember_me: '记住我',
       repeat_password: '重复密码'
     },
     errors: {
-      password_length: '密码最少{length}位.',
+      password_length: '密码最少8位.',
       password_match: '密码不匹配.',
       email: '需要一个有效的邮件地址'
     },
     login: {
-      login: '登录',
+      login: ' 登 录  ',
       password_forgot: '忘记密码了吗?',
       verification_required: '请先检查你的邮件和账号.',
       invalid_credentials: '用户名或密码不正确.',
@@ -43,15 +43,15 @@ export default {
       remember_me: '@:auth.labels.remember_me'
     },
     register: {
-      register: '注册',
+      register: '  注 册  ',
       invalid_data: '服务器不能处理请求，请检查数据.',
       already_registered: '用户名已存在，请检查用户名.',
-      account_created:
-        '请检查您的电子邮件以验证您的注册。 有时最多可能需要10分钟。 如果尚未收到电子邮件，请检查垃圾邮件文件夹。',
+      account_created: '账号注册成功！',
       email: '@:auth.labels.email',
       name: '@:auth.labels.name',
       password: '@:auth.labels.password',
       repeat_password: '@:auth.labels.repeat_password',
+      cencel: '@:auth.logout.cancel',
       errors: {
         password_length: '@:auth.errors.password_length',
         password_match: '@:auth.errors.password_match',
@@ -65,9 +65,9 @@ export default {
     },
     logout: {
       logout_confirmation: '您确定要注销吗？',
-      confirm: '确定',
-      logout: '注销',
-      cancel: '取消'
+      confirm: ' 确 定 ',
+      logout: ' 注 销 ',
+      cancel: ' 取 消 '
     },
     password: {
       forgot: {

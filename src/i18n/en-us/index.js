@@ -30,8 +30,7 @@ export default {
       repeat_password: 'Repeat password'
     },
     errors: {
-      password_length:
-        'The minimum length of the password is {length} characters.',
+      password_length: 'The minimum length of the password is 8 characters.',
       password_match: 'Passwords do not match.',
       email: 'A valid email address is required'
     },
@@ -51,12 +50,12 @@ export default {
         'Server could not process the request. Please correct the sent data.',
       already_registered:
         'Email address is already registered. Please check your email for verification.',
-      account_created:
-        'Please check your email to verify your registration. This sometimes can take up to 10 minutes. Please check the spam folder if the email has not been received.',
+      account_created: 'Account registration success!',
       email: '@:auth.labels.email',
       name: '@:auth.labels.name',
       password: '@:auth.labels.password',
       repeat_password: '@:auth.labels.repeat_password',
+      cencel: '@:auth.logout.cancel',
       errors: {
         password_length: '@:auth.errors.password_length',
         password_match: '@:auth.errors.password_match',

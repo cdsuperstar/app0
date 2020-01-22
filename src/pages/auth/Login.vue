@@ -15,6 +15,8 @@
           type="email"
           :label="this.$t('auth.login.email')"
           :error="this.$v.data.data.username.$error"
+          :error-message="this.$t('auth.errors.email')"
+          @blur="$v.data.data.username.$touch"
           required
           autofocus
         />
@@ -26,17 +28,21 @@
           :error="$v.data.data.password.$error"
           required
           @keyup.enter="login"
-        /><br />
+        />
         <q-checkbox
           id="rememberMe"
           v-model="data.rememberMe"
           :label="this.$t('auth.login.remember_me')"
         />
       </q-card-section>
-      <q-card-actions>
+      <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
         <q-btn color="primary" @click="login">
           {{ $t('auth.login.login') }}
+        </q-btn>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <q-btn color="primary" to="register">
+          {{ $t('auth.register.register') }}
         </q-btn>
       </q-card-actions>
       <q-inner-loading :showing="loading">
