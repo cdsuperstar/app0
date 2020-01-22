@@ -89,6 +89,10 @@ module.exports = function(ctx) {
     devServer: {
       https: false,
       port: 8080,
+      watchOptions: {
+        aggregateTimeout: 300,
+        poll: 1000
+      },
       open: false // true opens browser window automatically
     },
 
