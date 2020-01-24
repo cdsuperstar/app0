@@ -47,7 +47,7 @@
           {{ $t('auth.register.register') }}
         </q-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <q-btn color="primary" to="guest">
+        <q-btn color="primary" to="login">
           {{ $t('auth.register.cencel') }}
         </q-btn>
         <q-checkbox

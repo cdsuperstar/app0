@@ -3,7 +3,6 @@
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
         <div class="text-h6">
-          {{ $auth.check() }}
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>

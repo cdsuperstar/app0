@@ -26,6 +26,12 @@ export default function(/* { store, ssrContext } */) {
   })
 
   Vue.axios.defaults.baseURL = process.env.BASE_URL
+  if (process.env.DEV) {
+    console.log('baseurl:', process.env.BASE_URL)
+    console.log('client id:', process.env.CLIENT_ID)
+    console.log('client secret:', process.env.CLIENT_SECRET)
+  }
+
   Vue.router = Router
   Vue.use(require('@websanova/vue-auth'), {
     auth: require('@websanova/vue-auth/drivers/auth/laravel-passport-bearer.js'),
@@ -40,7 +46,7 @@ export default function(/* { store, ssrContext } */) {
     registerData: {
       url: 'auth/register',
       method: 'POST',
-      redirect: '/guest'
+      redirect: '/login'
     },
     loginData: {
       url: 'oauth/token',
@@ -52,8 +58,8 @@ export default function(/* { store, ssrContext } */) {
     logoutData: {
       url: 'auth/logout',
       method: 'POST',
-      redirect: '/guest',
-      makeRequest: false
+      redirect: '/login',
+      makeRequest: true
     },
     // fetchData: { url: 'auth/user', method: 'GET', enabled: false },
     refreshData: {

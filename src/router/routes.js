@@ -1,7 +1,7 @@
 const routes = [
   {
-    path: '/guest',
-    name: 'guest',
+    path: '/login',
+    name: 'login',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
     children: [{ path: '', component: () => import('pages/auth/Login.vue') }]
