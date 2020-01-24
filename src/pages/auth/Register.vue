@@ -4,7 +4,6 @@
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
         <div class="text-h6">
-          {{ $auth.check() }}
           {{ $t('auth.register.register') }}
         </div>
       </q-card-section>
@@ -26,7 +25,7 @@
         />
         <q-input
           v-model.trim="data.data.password"
-          type="text"
+          type="password"
           :label="this.$t('auth.register.password')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password_length')"
@@ -35,7 +34,7 @@
 
         <q-input
           v-model.trim="data.data.password_confirmation"
-          type="text"
+          type="password"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.data.password_confirmation.$error"
           :error-message="this.$t('auth.errors.password_match')"
@@ -51,6 +50,10 @@
         <q-btn color="primary" to="guest">
           {{ $t('auth.register.cencel') }}
         </q-btn>
+        <q-checkbox
+          v-model="data.autoLogin"
+          :label="this.$t('auth.register.autologin')"
+        />
       </q-card-actions>
       <q-inner-loading :showing="loading">
         <q-spinner-gears size="50px" color="primary" />
@@ -70,11 +73,12 @@ export default {
       data: {
         data: {
           name: '11',
+          username: '',
           email: '1@1.com',
           password: '12345678',
           password_confirmation: '12345678'
         },
-        // autoLogin: true,
+        autoLogin: false,
         rememberMe: false
       },
       loading: false
@@ -82,10 +86,10 @@ export default {
   },
   methods: {
     register() {
+      this.data.data.username = this.data.data.email
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
-        console.log(this.data)
         this.$auth
           .register(this.data)
           .then(response => {
@@ -97,12 +101,26 @@ export default {
               timeout: 2500,
               actions: [{ icon: 'close', color: 'white' }]
             })
-            console.log(response)
           })
           .catch(error => {
             if (error.response) {
-              console.log(error.response)
               if (error.response.status === 422) {
+                for (var key in error.response.data.error) {
+                  switch (error.response.data.error[key][0]) {
+                    case 'The email has already been taken.':
+                      this.$q.notify({
+                        message: this.$t('auth.register.already_registered'),
+                        color: 'red-5',
+                        textColor: 'white',
+                        position: 'center',
+                        timeout: 2500,
+                        actions: [{ icon: 'close', color: 'white' }]
+                      })
+                      break
+                    default:
+                  }
+                }
+              } else {
                 this.$q.notify({
                   message: this.$t('auth.register.invalid_data'),
                   color: 'red-5',
@@ -111,8 +129,6 @@ export default {
                   timeout: 2500,
                   actions: [{ icon: 'close', color: 'white' }]
                 })
-              } else {
-                // console.error(error)
               }
             }
           })

@@ -52,6 +52,7 @@ export default {
       password: '@:auth.labels.password',
       repeat_password: '@:auth.labels.repeat_password',
       cencel: '@:auth.logout.cancel',
+      autologin: '注册后登录',
       errors: {
         password_length: '@:auth.errors.password_length',
         password_match: '@:auth.errors.password_match',
