@@ -66,7 +66,7 @@ export default {
       data: {
         data: {
           username: '1@1.com',
-          password: '11111111'
+          password: '12345678'
         },
         rememberMe: false
       },
