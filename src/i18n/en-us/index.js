@@ -32,6 +32,7 @@ export default {
     errors: {
       password_length: 'The minimum length of the password is 8 characters.',
       password_match: 'Passwords do not match.',
+      password: 'password is required',
       email: 'A valid email address is required'
     },
     login: {
