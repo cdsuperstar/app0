@@ -62,14 +62,14 @@ export default function(/* { store, ssrContext } */) {
       makeRequest: true
     },
     // fetchData: { url: 'auth/user', method: 'GET', enabled: false },
-    refreshData: {
-      url: 'oauth/token',
-      method: 'POST',
-      enabled: true,
-      interval: 30,
-      checkExpiration: true,
-      data: { grant_type: 'refresh_token' }
-    },
+    // refreshData: {
+    //   url: 'oauth/token',
+    //   method: 'POST',
+    //   enabled: true,
+    //   interval: 55,
+    //   checkExpiration: true,
+    //   data: { grant_type: 'refresh_token' }
+    // },
     fetchData: {
       url: 'auth/user',
       method: 'GET',

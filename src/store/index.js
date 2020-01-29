@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import example from './module-example'
-
+// eslint-disable-next-line camelcase
+import zero from './zero'
 Vue.use(Vuex)
 
 /*
@@ -17,6 +18,7 @@ Vue.use(Vuex)
 export default function(/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
+      zero
       // example
     },
 
