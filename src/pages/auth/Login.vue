@@ -12,21 +12,22 @@
           id="email"
           v-model.trim="data.data.username"
           type="email"
+          required
+          autofocus
           :label="this.$t('auth.login.email')"
           :error="this.$v.data.data.username.$error"
           :error-message="this.$t('auth.errors.email')"
           @blur="$v.data.data.username.$touch"
-          required
-          autofocus
         />
         <q-input
           id="password"
           v-model="data.data.password"
           type="password"
+          required
           :label="this.$t('auth.login.password')"
           :error="$v.data.data.password.$error"
-          required
-          @keyup.enter="login"
+          :error-message="this.$t('auth.errors.password')"
+          @blur="$v.data.data.password.$touch"
         />
         <q-checkbox
           id="rememberMe"

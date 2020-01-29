@@ -12,10 +12,10 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
-    "@quasar/extras": "^1.4.2",
+    "@quasar/extras": "^1.5.0",
     "@websanova/vue-auth": "git+https://github.com/onurkose/vue-auth.git",
     "axios": "^0.18.1",
-    "quasar": "^1.7.4",
+    "quasar": "^1.8.3",
     "vue-axios": "^2.1.5",
     "vue-i18n": "^8.0.0",
     "vuelidate": "^0.7.5"

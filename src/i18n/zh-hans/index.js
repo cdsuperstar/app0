@@ -31,6 +31,7 @@ export default {
     errors: {
       password_length: '密码最少8位.',
       password_match: '密码不匹配.',
+      password: '需要输入密码',
       email: '需要一个有效的邮件地址'
     },
     login: {

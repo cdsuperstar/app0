@@ -11,9 +11,9 @@
       <q-card-section>
         <q-input
           v-model.trim="data.data.name"
-          :label="this.$t('auth.register.name')"
           type="text"
           autofocus
+          :label="this.$t('auth.register.name')"
         />
         <q-input
           v-model.trim="data.data.email"
