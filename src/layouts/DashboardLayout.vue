@@ -24,6 +24,22 @@
 
     <q-drawer v-model="left" side="left" overlay bordered>
       <!-- drawer content -->
+      <q-list>
+        <q-item-label header>{{ $t('menu.menuname') }}</q-item-label>
+        <q-item
+          v-for="item in ZModules"
+          v-bind:key="item.id"
+          :to="{ name: item.name }"
+        >
+          <q-item-section avatar>
+            <q-icon :name="item.icon" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>{{ item.title }}</q-item-label>
+            <q-item-label caption>{{ item.tip }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
     </q-drawer>
 
     <q-drawer v-model="right" side="right" overlay elevated>
@@ -48,6 +64,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   data() {
     return {
@@ -65,6 +83,35 @@ export default {
       ],
       lang: this.$i18n.locale
     }
+  },
+  created() {
+    this.$router.app.$http
+      .get('/z_module/')
+      .then(res => {
+        if (res.data.success) {
+          if (Array.isArray(res.data.data)) {
+            let { routes } = this.$router.options
+            let routeData = routes.find(r => r.path === '/user')
+            res.data.data.forEach(function(val) {
+              routeData.children.push({
+                path: val.url,
+                name: val.name,
+                component: () => import('pages/modules/' + val.name + '.vue')
+              })
+            })
+            this.$router.addRoutes([routeData])
+          }
+        } else {
+        }
+      })
+      .catch(e => {})
+    this.getZModules()
+  },
+  computed: {
+    ...mapState('zero', ['ZModules'])
+  },
+  methods: {
+    ...mapActions('zero', ['getZModules'])
   },
   watch: {
     lang(lang) {

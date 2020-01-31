@@ -19,6 +19,7 @@ const routes = [
   },
   {
     path: '/user',
+    name: 'logineduser',
     component: () => import('layouts/DashboardLayout.vue'),
     children: [
       {

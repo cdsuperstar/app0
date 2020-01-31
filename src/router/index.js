@@ -89,7 +89,7 @@ export default function(/* { store, ssrContext } */) {
     // if (!to.matched.length) {
     // next({ name: 'not-found' })
     // } else {
-    console.log('len:', from.name, to.name, Vue.auth.check())
+    console.log('from to check:', from.name, to.name, Vue.auth.check())
     // if (!from.name && to.name === 'not-found' && Vue.auth.check())
     //   next({ name: '/#/dashboard' })
     // next()

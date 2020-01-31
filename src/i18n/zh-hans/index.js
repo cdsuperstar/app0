@@ -6,6 +6,9 @@ export default {
   buttons: {
     send: '发送'
   },
+  menu: {
+    menuname: '菜单'
+  },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',
     submit: '提交',
