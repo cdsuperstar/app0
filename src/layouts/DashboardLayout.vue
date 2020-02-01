@@ -85,8 +85,7 @@ export default {
     }
   },
   created() {
-    this.$router.app.$http
-      .get('/z_module/')
+    this.getZModules()
       .then(res => {
         if (res.data.success) {
           if (Array.isArray(res.data.data)) {
@@ -105,7 +104,6 @@ export default {
         }
       })
       .catch(e => {})
-    this.getZModules()
   },
   computed: {
     ...mapState('zero', ['ZModules'])
