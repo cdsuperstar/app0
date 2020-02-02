@@ -1,14 +1,22 @@
 <template>
   <q-page class="flex flex-center">
     <q-btn v-on:click="test()">asdfasdfs</q-btn>
+    <q-btn v-on:click="del()">测试删除</q-btn>
+    <q-btn v-on:click="addItems()">测试增加</q-btn>
+    <q-btn v-on:click="testadd()">增加选定</q-btn>
     <q-card>
       <ag-grid-vue
         style="width: 1000px; height: 500px;"
         class="ag-theme-balham"
+        :gridOptions="gridOptions"
         @grid-ready="onGridReady"
         :columnDefs="columnDefs"
         :rowData="rowData"
+        rowSelection="multiple"
+        rowMultiSelectWithClick="true"
         @cellValueChanged="onTest"
+        @rowSelected="onRowSelected"
+        @selectionChanged="onSelectionChanged"
         :defaultColDef="defaultColDef"
       >
       </ag-grid-vue>
@@ -24,13 +32,24 @@ export default {
   computed: {},
   data() {
     return {
+      gridOptions: null,
+      gridApi: null,
+      columnApi: null,
       columnDefs: null,
       rowData: null,
       defaultColDef: null
     }
   },
   beforeMount() {
+    this.gridOptions = {}
     this.columnDefs = [
+      {
+        checkboxSelection: true,
+        editable: false,
+        headerName: 'ID',
+        field: 'id',
+        sortable: true
+      },
       {
         headerName: '模块名',
         field: 'name',
@@ -72,6 +91,8 @@ export default {
   },
   mounted() {
     // console.log(this.ZModules)
+    this.gridApi = this.gridOptions.api
+    this.gridColumnApi = this.gridOptions.columnApi
     this.$router.app.$http
       .get('/z_module/')
       .then(res => {
@@ -91,7 +112,59 @@ export default {
     test() {
       console.log(this.rowData)
     },
+    del() {
+      var selectedData = this.gridApi.getSelectedRows()
+
+      selectedData.forEach(val => {
+        this.$router.app.$http
+          .delete('/z_module/' + val.id)
+          .then(res => {
+            if (res.data.success) {
+              this.gridApi.updateRowData({ remove: selectedData })
+              console.log(res.data.data)
+            } else {
+            }
+          })
+          .catch(e => {})
+      })
+    },
+    onRowSelected(event) {
+      console.log()
+      // window.alert(
+      //   'row ' + event.node.data.athlete + ' selected = ' + event.node.selected
+      // )
+    },
+    onSelectionChanged(event) {
+      // var rowCount = event.api.getSelectedNodes().length
+      // this.selections = event.api.getSelectedRows()
+      // window.alert('selection changed, ' + rowCount + ' rows selected')
+    },
+    addItems() {
+      var newItems = [{}]
+      var res = this.gridApi.updateRowData({ add: newItems })
+      console.log(res)
+    },
+    testadd() {
+      var selectedData = this.gridApi.getSelectedRows()
+
+      selectedData.forEach(val => {
+        this.$router.app.$http
+          .post('/z_module/', val)
+          .then(res => {
+            if (res.data.success) {
+              this.gridApi.updateRowData({ add: selectedData })
+              console.log(res.data.data)
+            } else {
+            }
+          })
+          .catch(e => {})
+      })
+    },
     onTest(params) {
+      if (params.data.id === undefined) {
+        console.log('null')
+        return false
+      }
       this.$router.app.$http
         .put('/z_module/' + params.data.id, params.data)
         .then(res => {
@@ -101,7 +174,6 @@ export default {
           }
         })
         .catch(e => {})
-      console.log(params)
     }
   }
 }
