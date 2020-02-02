@@ -24,21 +24,44 @@
 
     <q-drawer v-model="left" side="left" overlay bordered>
       <!-- drawer content -->
-      <q-list>
+
+      <q-list bordered class="rounded-borders">
         <q-item-label header>{{ $t('menu.menuname') }}</q-item-label>
-        <q-item
-          v-for="item in ZModules"
+        <q-expansion-item
+          v-for="item in menutree"
           v-bind:key="item.id"
+          expand-separator
+          :icon="item.icon"
           :to="{ name: item.name }"
+          :label="item.title"
+          :caption="item.tip"
+          default-closed
         >
-          <q-item-section avatar>
-            <q-icon :name="item.icon" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ item.title }}</q-item-label>
-            <q-item-label caption>{{ item.tip }}</q-item-label>
-          </q-item-section>
-        </q-item>
+          <q-expansion-item
+            v-for="item in item.children"
+            v-bind:key="item.id"
+            :header-inset-level="1"
+            expand-separator
+            :to="{ name: item.name }"
+            :icon="item.icon"
+            :label="item.title"
+            :caption="item.tip"
+          >
+            <q-expansion-item
+              v-for="item in item.children"
+              v-bind:key="item.id"
+              :header-inset-level="2"
+              :content-inset-level="2"
+              expand-separator
+              :icon="item.icon"
+              :to="{ name: item.name }"
+              :label="item.title"
+              :caption="item.tip"
+              default-opened
+            >
+            </q-expansion-item>
+          </q-expansion-item>
+        </q-expansion-item>
       </q-list>
     </q-drawer>
 
@@ -69,6 +92,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
+      menutree: null,
       left: false,
       right: false,
       langs: [
@@ -100,6 +124,15 @@ export default {
             })
             this.$router.addRoutes([routeData])
           }
+        } else {
+        }
+      })
+      .catch(e => {})
+    this.$router.app.$http
+      .get('/z_module/getMyMenu')
+      .then(res => {
+        if (res.data.success) {
+          this.menutree = res.data.data
         } else {
         }
       })

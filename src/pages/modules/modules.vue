@@ -4,6 +4,9 @@
     <q-btn v-on:click="del()">测试删除</q-btn>
     <q-btn v-on:click="addItems()">测试增加</q-btn>
     <q-btn v-on:click="testadd()">增加选定</q-btn>
+
+    <q-btn v-on:click="testtree()">测试树</q-btn>
+
     <q-card>
       <ag-grid-vue
         style="width: 1000px; height: 500px;"
@@ -159,6 +162,17 @@ export default {
           })
           .catch(e => {})
       })
+    },
+    testtree() {
+      this.$router.app.$http
+        .get('/z_module/getMyMenu')
+        .then(res => {
+          if (res.data.success) {
+            console.log(res.data.data)
+          } else {
+          }
+        })
+        .catch(e => {})
     },
     onTest(params) {
       if (params.data.id === undefined) {
