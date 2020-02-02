@@ -8,6 +8,7 @@
         @grid-ready="onGridReady"
         :columnDefs="columnDefs"
         :rowData="rowData"
+        @cellValueChanged="onTest"
         :defaultColDef="defaultColDef"
       >
       </ag-grid-vue>
@@ -89,6 +90,18 @@ export default {
     },
     test() {
       console.log(this.rowData)
+    },
+    onTest(params) {
+      this.$router.app.$http
+        .put('/z_module/' + params.data.id, params.data)
+        .then(res => {
+          if (res.data.success) {
+            // console.log(res.data.data)
+          } else {
+          }
+        })
+        .catch(e => {})
+      console.log(params)
     }
   }
 }
