@@ -24,44 +24,13 @@
 
     <q-drawer v-model="left" side="left" overlay bordered>
       <!-- drawer content -->
-
-      <q-list bordered class="rounded-borders">
-        <q-item-label header>{{ $t('menu.menuname') }}</q-item-label>
-        <q-expansion-item
+      <q-list bordered link class="rounded-borders">
+        <treemenu
           v-for="item in menutree"
           v-bind:key="item.id"
-          expand-separator
-          :icon="item.icon"
-          :to="{ name: item.name }"
-          :label="item.title"
-          :caption="item.tip"
-          default-closed
-        >
-          <q-expansion-item
-            v-for="item in item.children"
-            v-bind:key="item.id"
-            :header-inset-level="1"
-            expand-separator
-            :to="{ name: item.name }"
-            :icon="item.icon"
-            :label="item.title"
-            :caption="item.tip"
-          >
-            <q-expansion-item
-              v-for="item in item.children"
-              v-bind:key="item.id"
-              :header-inset-level="2"
-              :content-inset-level="2"
-              expand-separator
-              :icon="item.icon"
-              :to="{ name: item.name }"
-              :label="item.title"
-              :caption="item.tip"
-              default-opened
-            >
-            </q-expansion-item>
-          </q-expansion-item>
-        </q-expansion-item>
+          :children="item"
+          :depth="0"
+        ></treemenu>
       </q-list>
     </q-drawer>
 
@@ -88,8 +57,9 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
+import treemenu from '../pages/modules/treemenu'
 export default {
+  components: { treemenu },
   data() {
     return {
       menutree: null,
