@@ -175,8 +175,8 @@ export default {
         .catch(e => {})
     },
     onTest(params) {
-      if (params.data.id === undefined) {
-        console.log('null')
+      if (params.data.id === undefined || params.oldValue === params.newValue) {
+        console.log('Edit null or value not changed.')
         return false
       }
       this.$router.app.$http
