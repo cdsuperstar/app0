@@ -32,6 +32,7 @@
           :depth="0"
         ></treemenu>
       </q-list>
+      <nested-test class="col-8" v-model="menutree" />
     </q-drawer>
 
     <q-drawer v-model="right" side="right" overlay elevated>
@@ -58,8 +59,10 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import treemenu from '../pages/modules/treemenu'
+import NestedTest from '../pages/modules/nested-tree'
+
 export default {
-  components: { treemenu },
+  components: { treemenu, NestedTest },
   data() {
     return {
       menutree: null,
