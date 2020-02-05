@@ -155,7 +155,8 @@ export default {
           .post('/z_module/', val)
           .then(res => {
             if (res.data.success) {
-              selectedData = res.data.data
+              this.gridApi.updateRowData({ remove: selectedData })
+              this.gridApi.updateRowData({ add: [res.data.data] })
             } else {
             }
           })
