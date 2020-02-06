@@ -1,15 +1,16 @@
 <template>
   <div>
     <q-expansion-item
-      v-if="children.ismenu == 1"
+      v-if="children.children.length > 0"
       v-bind:key="children.id"
       dense
       dense-toggle
       expand-separator
-      :header-inset-level="depth * 0.3"
+      :to="children.ismenu == 1 ? '' : { name: children.url }"
       :content-inset-level="depth * 0.3"
       :icon="children.icon"
       :label="children.title"
+      :caption="children.tip"
       default-closed
     >
       <treemenu
@@ -21,12 +22,11 @@
     </q-expansion-item>
 
     <q-item
-      v-if="children.ismenu == 0"
-      :to="{ name: children.url }"
-      clickable
+      v-if="children.children.length == 0"
+      :to="children.ismenu == 1 ? '' : { name: children.url }"
+      :caption="children.tip"
       dense
       dense-toggle
-      v-ripple
       :title="children.tip"
     >
       <q-item-section avatar>
@@ -39,6 +39,9 @@
 <script>
 export default {
   name: 'treemenu',
-  props: ['children', 'depth']
+  props: ['children', 'depth'],
+  created() {
+    // console.log(this.children.name, this.children, this.depth)
+  }
 }
 </script>
