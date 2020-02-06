@@ -31,6 +31,11 @@ const routes = [
         path: 'changepwd',
         name: 'changepwd',
         component: () => import('pages/person/changepwd.vue')
+      },
+      {
+        path: 'userprofile',
+        name: 'userprofile',
+        component: () => import('pages/person/userprofile.vue')
       }
     ]
   }

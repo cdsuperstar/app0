@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="text-h6">
+        <div class="row text-h6 no-wrap text-bold" style="color: #027be3">
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>
@@ -23,7 +23,7 @@
           id="password"
           v-model="data.data.password"
           required
-          :type="data.data.pwdType"
+          :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.login.password')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password')"
@@ -31,9 +31,9 @@
         >
           <template v-slot:append>
             <q-icon
-              name="remove_red_eye"
+              :name="isPwd ? 'visibility_off' : 'visibility'"
               class="cursor-pointer"
-              @click="changeType()"
+              @click="isPwd = !isPwd"
             />
           </template>
         </q-input>
@@ -45,20 +45,23 @@
       </q-card-section>
       <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="primary" @click="login">
-          {{ $t('auth.login.login') }}
+        <q-btn color="warning" icon="how_to_reg" to="register">
+          &nbsp;&nbsp;{{ $t('auth.register.register') }}
         </q-btn>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <q-btn color="primary" to="register">
-          {{ $t('auth.register.register') }}
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <q-btn color="secondary" icon-right="input" @click="login">
+          {{ $t('auth.login.login') }}&nbsp;&nbsp;
         </q-btn>
       </q-card-actions>
       <q-inner-loading :showing="loading">
-        <q-spinner-gears size="50px" color="primary" />
+        <q-spinner-gears size="50px" color="yellow" />
       </q-inner-loading>
-      <router-link to="/password/forgot">
-        <a>{{ this.$t('auth.login.password_forgot') }}</a>
-      </router-link>
+      <div align="right">
+        <br />
+        <router-link to="/password/forgot">
+          <a>{{ this.$t('auth.login.password_forgot') }}</a>
+        </router-link>
+      </div>
     </q-card>
   </q-page>
 </template>
@@ -71,10 +74,10 @@ export default {
   components: {},
   data() {
     return {
+      isPwd: true,
       data: {
         data: {
           username: '1@1.com',
-          pwdType: 'password',
           password: '12345678'
         },
         rememberMe: false
@@ -113,10 +116,6 @@ export default {
             this.loading = false
           })
       }
-    },
-    changeType() {
-      this.data.data.pwdType =
-        this.data.data.pwdType === 'password' ? 'text' : 'password'
     }
   },
   validations: {

@@ -47,7 +47,7 @@ export default {
       remember_me: '@:auth.labels.remember_me'
     },
     register: {
-      register: '注册',
+      register: '注册新用户',
       invalid_data: '服务器不能处理请求，请检查数据.',
       already_registered: '用户名已存在，请检查用户名.',
       account_created: '账号注册成功！',
@@ -96,6 +96,21 @@ export default {
       }
     },
     users: {
+      profile: {
+        header: '修改用户个人信息',
+        nickname: '昵称',
+        nicknameerror: '请输入昵称',
+        sex: '性别',
+        birthday: '出生日期',
+        address: '家庭地址',
+        phone1: '电话号码',
+        phone2: '备用电话号码',
+        position: '职务',
+        department: '部门',
+        title: '职称',
+        jobs: '岗位',
+        remark: '备注'
+      },
       labels: {
         email: '邮箱',
         name: '名称'

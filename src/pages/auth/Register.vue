@@ -3,7 +3,7 @@
     <!-- content -->
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="text-h6">
+        <div class="row text-h6 no-wrap text-bold" style="color: #4caf50">
           {{ $t('auth.register.register') }}
         </div>
       </q-card-section>
@@ -11,12 +11,14 @@
       <q-card-section>
         <q-input
           v-model.trim="data.data.name"
+          color="green"
           type="text"
           autofocus
           :label="this.$t('auth.register.name')"
         />
         <q-input
           v-model.trim="data.data.email"
+          color="green"
           type="email"
           :label="this.$t('auth.register.email')"
           :error="$v.data.data.email.$error"
@@ -25,7 +27,8 @@
         />
         <q-input
           v-model.trim="data.data.password"
-          :type="data.data.pwdType"
+          color="green"
+          :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.password')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password_length')"
@@ -33,16 +36,17 @@
         >
           <template v-slot:append>
             <q-icon
-              name="remove_red_eye"
+              :name="isPwd ? 'visibility_off' : 'visibility'"
               class="cursor-pointer"
-              @click="changeType()"
+              @click="isPwd = !isPwd"
             />
           </template>
         </q-input>
 
         <q-input
           v-model.trim="data.data.password_confirmation"
-          :type="data.data.pwdType"
+          color="green"
+          :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.data.password_confirmation.$error"
           :error-message="this.$t('auth.errors.password_match')"
@@ -50,21 +54,23 @@
         >
           <template v-slot:append>
             <q-icon
-              name="remove_red_eye"
+              :name="isPwd ? 'visibility_off' : 'visibility'"
               class="cursor-pointer"
-              @click="changeType()"
+              @click="isPwd = !isPwd"
             />
           </template>
         </q-input>
       </q-card-section>
-      <q-card-actions align="center">
+      <q-card-actions class="row no-wrap" align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="primary" @click="register">
-          {{ $t('auth.register.register') }}
+        <q-btn color="primary" icon="save" @click="register">
+          &nbsp;
+          {{ $t('auth.logout.confirm') }}
         </q-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <q-btn color="primary" to="login">
+        <q-btn color="warning" icon-right="cancel" to="login">
           {{ $t('auth.register.cencel') }}
+          &nbsp;
         </q-btn>
         <q-checkbox
           v-model="data.autoLogin"
@@ -86,6 +92,7 @@ export default {
   components: {},
   data() {
     return {
+      isPwd: true,
       data: {
         data: {
           name: '11',
@@ -153,10 +160,6 @@ export default {
             this.loading = false
           })
       }
-    },
-    changeType() {
-      this.data.data.pwdType =
-        this.data.data.pwdType === 'password' ? 'text' : 'password'
     }
   },
   validations: {

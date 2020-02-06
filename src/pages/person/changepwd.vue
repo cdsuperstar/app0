@@ -3,15 +3,15 @@
     <!-- content -->
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="row text-h6 no-wrap">
+        <div class="row text-h6 no-wrap text-bold" style="color: #9c27b0">
           {{ $t('auth.password.change.header') }}
           <q-space />
           <q-icon
             color="teal"
-            name="remove_red_eye"
+            :name="isPwd ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
             :title="this.$t('auth.password.change.showpwd')"
-            @click="changeType()"
+            @click="isPwd = !isPwd"
           />
         </div>
       </q-card-section>
@@ -19,15 +19,17 @@
       <q-card-section>
         <q-input
           v-model.trim="data.data.currentpwd"
+          color="purple"
           :label="this.$t('auth.password.change.currentpwd')"
-          :type="data.data.pwdType"
+          :type="isPwd ? 'password' : 'text'"
           :error="$v.data.data.currentpwd.$error"
           :error-message="this.$t('auth.errors.password_length')"
           @blur="$v.data.data.currentpwd.$touch"
         />
         <q-input
           v-model.trim="data.data.password"
-          :type="data.data.pwdType"
+          color="purple"
+          :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.password.change.newpwd')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password_length')"
@@ -36,7 +38,8 @@
 
         <q-input
           v-model.trim="data.data.password_confirmation"
-          :type="data.data.pwdType"
+          color="purple"
+          :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.data.password_confirmation.$error"
           :error-message="this.$t('auth.errors.password_match')"
@@ -45,12 +48,12 @@
       </q-card-section>
       <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="primary" @click="changepwd()">
-          {{ $t('auth.logout.confirm') }}
+        <q-btn color="secondary" icon="save" @click="changepwd()">
+          &nbsp; {{ $t('auth.logout.confirm') }}
         </q-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <q-btn color="primary" to="user">
-          {{ $t('auth.register.cencel') }}
+        <q-btn color="warning" icon-right="cancel" to="user">
+          {{ $t('auth.register.cencel') }} &nbsp;
         </q-btn>
       </q-card-actions>
       <q-inner-loading :showing="loading">
@@ -64,10 +67,11 @@
 import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'Login',
+  name: 'Changepwd',
   components: {},
   data() {
     return {
+      isPwd: true,
       data: {
         data: {
           currentpwd: '',
@@ -113,10 +117,6 @@ export default {
             this.loading = false
           })
       }
-    },
-    changeType() {
-      this.data.data.pwdType =
-        this.data.data.pwdType === 'password' ? 'text' : 'password'
     }
   },
   validations: {
