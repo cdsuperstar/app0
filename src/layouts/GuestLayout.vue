@@ -9,8 +9,11 @@
         </q-toolbar-title>
         <q-select
           v-model="lang"
+          stretch
+          flat
+          dark
+          popup-content-style="background-color:#bdbdbd"
           borderless
-          dense
           options-dense
           map-options
           :options="langs"

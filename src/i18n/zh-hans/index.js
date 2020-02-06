@@ -38,7 +38,7 @@ export default {
       email: '需要一个有效的邮件地址'
     },
     login: {
-      login: ' 登 录  ',
+      login: '登录',
       password_forgot: '忘记密码了吗?',
       verification_required: '请先检查你的邮件和账号.',
       invalid_credentials: '用户名或密码不正确.',
@@ -47,7 +47,7 @@ export default {
       remember_me: '@:auth.labels.remember_me'
     },
     register: {
-      register: '  注 册  ',
+      register: '注册',
       invalid_data: '服务器不能处理请求，请检查数据.',
       already_registered: '用户名已存在，请检查用户名.',
       account_created: '账号注册成功！',
@@ -70,9 +70,9 @@ export default {
     },
     logout: {
       logout_confirmation: '您确定要注销吗？',
-      confirm: ' 确 定 ',
-      logout: ' 注 销 ',
-      cancel: ' 取 消 '
+      confirm: '确定',
+      logout: '注销',
+      cancel: '取消'
     },
     password: {
       forgot: {
@@ -83,6 +83,12 @@ export default {
       reset: {
         header: '重置你的密码',
         success: '您的密码已重置。 您现在可以使用新密码登录。'
+      },
+      change: {
+        header: '修改密码',
+        currentpwd: '请输入当前密码',
+        showpwd: '显示/隐藏密码',
+        newpwd: '请输入新密码'
       },
       errors: {
         password_length: '@:auth.errors.password_length',

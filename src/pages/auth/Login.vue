@@ -22,13 +22,21 @@
         <q-input
           id="password"
           v-model="data.data.password"
-          type="password"
           required
+          :type="data.data.pwdType"
           :label="this.$t('auth.login.password')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password')"
           @blur="$v.data.data.password.$touch"
-        />
+        >
+          <template v-slot:append>
+            <q-icon
+              name="remove_red_eye"
+              class="cursor-pointer"
+              @click="changeType()"
+            />
+          </template>
+        </q-input>
         <q-checkbox
           id="rememberMe"
           v-model="data.rememberMe"
@@ -66,6 +74,7 @@ export default {
       data: {
         data: {
           username: '1@1.com',
+          pwdType: 'password',
           password: '12345678'
         },
         rememberMe: false
@@ -104,6 +113,10 @@ export default {
             this.loading = false
           })
       }
+    },
+    changeType() {
+      this.data.data.pwdType =
+        this.data.data.pwdType === 'password' ? 'text' : 'password'
     }
   },
   validations: {

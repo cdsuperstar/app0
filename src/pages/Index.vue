@@ -16,6 +16,7 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'PageIndex',
+  components: {},
   computed: {
     ...mapState('zero', ['products'])
   },
@@ -24,7 +25,6 @@ export default {
     test() {
       console.log('Its a test')
     }
-  },
-  components: {}
+  }
 }
 </script>

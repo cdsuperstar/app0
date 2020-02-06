@@ -10,15 +10,81 @@
           </q-avatar>
           Title
         </q-toolbar-title>
+        <q-space />
+        <q-btn-dropdown stretch flat label="功能" v-if="$q.screen.gt.xs">
+          <q-list>
+            <q-item-label header>Folders</q-item-label>
+            <q-item
+              v-for="n in 3"
+              :key="`x.${n}`"
+              clickable
+              v-close-popup
+              tabindex="0"
+            >
+              <q-item-section avatar>
+                <q-avatar icon="folder" color="secondary" text-color="white" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Photos</q-item-label>
+                <q-item-label caption>February 22, 2016</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon name="info" />
+              </q-item-section>
+            </q-item>
+            <q-separator inset spaced />
+            <q-item-label header>Files</q-item-label>
+            <q-item
+              v-for="n in 3"
+              :key="`y.${n}`"
+              clickable
+              v-close-popup
+              tabindex="0"
+            >
+              <q-item-section avatar>
+                <q-avatar
+                  icon="assignment"
+                  color="primary"
+                  text-color="white"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Vacation</q-item-label>
+                <q-item-label caption>February 22, 2016</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-icon name="info" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-select
           v-model="lang"
+          stretch
+          flat
+          dark
+          popup-content-style="background-color:#bdbdbd"
           borderless
-          dense
           options-dense
           map-options
           :options="langs"
         />
-        <q-btn dense flat round icon="menu" @click="right = !right" />
+        <q-btn
+          dense
+          flat
+          round
+          icon="apps"
+          @click="right = !right"
+          v-if="$q.screen.gt.xs"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          icon="more_vert"
+          @click="right = !right"
+          v-if="$q.screen.lt.sm"
+        />
       </q-toolbar>
     </q-header>
 
@@ -43,14 +109,98 @@
       <router-view />
     </q-page-container>
 
-    <q-footer reveal bordered class="bg-grey-8 text-white">
+    <q-footer reveal bordered class="bg-white text-black">
       <q-toolbar>
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
-          </q-avatar>
-          Title
-        </q-toolbar-title>
+        <q-toolbar-title> </q-toolbar-title>
+        <q-btn-dropdown
+          stretch
+          flat
+          dense
+          icon="person_outline"
+          title="用户中心"
+        >
+          <q-list separator style="overflow:hidden;">
+            <q-item clickable tag="a" to="notepad" v-ripple>
+              <q-item-section avatar>
+                <q-avatar
+                  color="yellow"
+                  text-color="white"
+                  icon="event_note"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>备忘录</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable tag="a" to="changepwd" v-ripple>
+              <q-item-section avatar>
+                <q-avatar
+                  color="red"
+                  text-color="white"
+                  icon="vpn_key"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>更改密码</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable tag="a" to="userprofile" v-ripple>
+              <q-item-section avatar>
+                <q-avatar
+                  color="teal"
+                  text-color="white"
+                  icon="person_outline"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>个人信息</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable tag="a" to="message" v-ripple>
+              <q-item-section avatar>
+                <q-avatar
+                  color="red"
+                  text-color="white"
+                  icon="message"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-badge color="orange" floating transparent>22</q-badge>
+                <q-item-label>消息中心</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable tag="a" to="welcome" v-ripple>
+              <q-item-section avatar>
+                <q-avatar
+                  color="purple"
+                  text-color="white"
+                  icon="whatshot"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>帮助中心</q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable tag="a" v-ripple @click="$auth.logout()">
+              <q-item-section avatar>
+                <q-avatar
+                  color="indigo"
+                  text-color="white"
+                  icon="assignment_ind"
+                  size="30px"
+                ></q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ $t('auth.logout.logout') }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-footer>
   </q-layout>

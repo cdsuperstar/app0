@@ -25,21 +25,37 @@
         />
         <q-input
           v-model.trim="data.data.password"
-          type="password"
+          :type="data.data.pwdType"
           :label="this.$t('auth.register.password')"
           :error="$v.data.data.password.$error"
           :error-message="this.$t('auth.errors.password_length')"
           @blur="$v.data.data.password.$touch"
-        />
+        >
+          <template v-slot:append>
+            <q-icon
+              name="remove_red_eye"
+              class="cursor-pointer"
+              @click="changeType()"
+            />
+          </template>
+        </q-input>
 
         <q-input
           v-model.trim="data.data.password_confirmation"
-          type="password"
+          :type="data.data.pwdType"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.data.password_confirmation.$error"
           :error-message="this.$t('auth.errors.password_match')"
           @blur="$v.data.data.password_confirmation.$touch"
-        />
+        >
+          <template v-slot:append>
+            <q-icon
+              name="remove_red_eye"
+              class="cursor-pointer"
+              @click="changeType()"
+            />
+          </template>
+        </q-input>
       </q-card-section>
       <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
@@ -76,6 +92,7 @@ export default {
           username: '',
           email: '1@1.com',
           password: '12345678',
+          pwdType: 'password',
           password_confirmation: '12345678'
         },
         autoLogin: false,
@@ -136,6 +153,10 @@ export default {
             this.loading = false
           })
       }
+    },
+    changeType() {
+      this.data.data.pwdType =
+        this.data.data.pwdType === 'password' ? 'text' : 'password'
     }
   },
   validations: {

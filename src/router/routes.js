@@ -19,13 +19,18 @@ const routes = [
   },
   {
     path: '/user',
-    name: 'logineduser',
+    meta: { auth: true },
     component: () => import('layouts/DashboardLayout.vue'),
     children: [
       {
         path: 'dashboard',
         name: 'dashboard',
         component: () => import('pages/Index.vue')
+      },
+      {
+        path: 'changepwd',
+        name: 'changepwd',
+        component: () => import('pages/person/changepwd.vue')
       }
     ]
   }
