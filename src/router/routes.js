@@ -52,6 +52,21 @@ const routes = [
         path: 'userprofile',
         name: 'userprofile',
         component: () => import('pages/person/userprofile.vue')
+      },
+      {
+        path: 'message',
+        name: 'message',
+        component: () => import('pages/person/message.vue')
+      },
+      {
+        path: 'notepad',
+        name: 'notepad',
+        component: () => import('pages/person/notepad.vue')
+      },
+      {
+        path: 'help',
+        name: 'help',
+        component: () => import('pages/person/help.vue')
       }
     ]
   }

@@ -173,7 +173,7 @@
                 <q-item-label>消息中心</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item v-ripple clickable tag="a" to="welcome">
+            <q-item v-ripple clickable tag="a" to="help">
               <q-item-section avatar>
                 <q-avatar
                   color="purple"

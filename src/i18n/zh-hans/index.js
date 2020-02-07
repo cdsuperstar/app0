@@ -7,6 +7,7 @@ export default {
     send: '发送',
     confirm: '确定',
     navigation: '浏览',
+    search: '搜索',
     back: '返回',
     submit: '提交',
     cancel: '取消'
@@ -132,5 +133,11 @@ export default {
       verify_label: '验证',
       verify_message: '您确定要验证吗 {user}?'
     }
+  },
+  help: {
+    header: '帮助中心',
+    keylabel: '关键字',
+    check_keylabel: '请输入关键字！',
+    search: '@:buttons.search'
   }
 }
