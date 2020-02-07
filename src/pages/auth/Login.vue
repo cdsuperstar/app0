@@ -45,20 +45,21 @@
       </q-card-section>
       <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="warning" icon="how_to_reg" to="register">
-          &nbsp;&nbsp;{{ $t('auth.register.register') }}
-        </q-btn>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <q-btn color="secondary" icon-right="input" @click="login">
           {{ $t('auth.login.login') }}&nbsp;&nbsp;
         </q-btn>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <q-btn color="warning" icon-right="how_to_reg" to="register">
+          &nbsp;&nbsp;{{ $t('auth.register.register') }} &nbsp;&nbsp;
+        </q-btn>
       </q-card-actions>
       <q-inner-loading :showing="loading">
-        <q-spinner-gears size="50px" color="yellow" />
+        <q-spinner-gears size="50px" color="purple" />
       </q-inner-loading>
       <div align="right">
         <br />
-        <router-link to="/password/forgot">
+        <router-link to="/forgot">
           <a>{{ this.$t('auth.login.password_forgot') }}</a>
         </router-link>
       </div>

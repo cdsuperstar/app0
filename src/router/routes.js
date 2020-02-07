@@ -18,6 +18,22 @@ const routes = [
     children: [{ path: '', component: () => import('pages/auth/Register.vue') }]
   },
   {
+    path: '/forgot',
+    meta: { auth: false },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/auth/password/Forgot.vue') }
+    ]
+  },
+  {
+    path: '/reset',
+    meta: { auth: false },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/auth/password/Reset.vue') }
+    ]
+  },
+  {
     path: '/user',
     meta: { auth: true },
     component: () => import('layouts/DashboardLayout.vue'),

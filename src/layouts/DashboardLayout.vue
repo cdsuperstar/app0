@@ -11,14 +11,14 @@
           Title
         </q-toolbar-title>
         <q-space />
-        <q-btn-dropdown stretch flat label="功能" v-if="$q.screen.gt.xs">
+        <q-btn-dropdown v-if="$q.screen.gt.xs" stretch flat label="功能">
           <q-list>
             <q-item-label header>Folders</q-item-label>
             <q-item
               v-for="n in 3"
               :key="`x.${n}`"
-              clickable
               v-close-popup
+              clickable
               tabindex="0"
             >
               <q-item-section avatar>
@@ -37,8 +37,8 @@
             <q-item
               v-for="n in 3"
               :key="`y.${n}`"
-              clickable
               v-close-popup
+              clickable
               tabindex="0"
             >
               <q-item-section avatar>
@@ -70,20 +70,20 @@
           :options="langs"
         />
         <q-btn
+          v-if="$q.screen.gt.xs"
           dense
           flat
           round
           icon="apps"
           @click="right = !right"
-          v-if="$q.screen.gt.xs"
         />
         <q-btn
+          v-if="$q.screen.lt.sm"
           flat
           round
           dense
           icon="more_vert"
           @click="right = !right"
-          v-if="$q.screen.lt.sm"
         />
       </q-toolbar>
     </q-header>
@@ -93,12 +93,12 @@
       <q-list bordered link class="rounded-borders">
         <treemenu
           v-for="item in menutree"
-          v-bind:key="item.id"
+          :key="item.id"
           :children="item"
           :depth="0"
         ></treemenu>
       </q-list>
-      <nested-test class="col-8" v-model="menutree" />
+      <nested-test v-model="menutree" class="col-8" />
     </q-drawer>
 
     <q-drawer v-model="right" side="right" overlay elevated>
@@ -120,7 +120,7 @@
           title="用户中心"
         >
           <q-list separator style="overflow:hidden;">
-            <q-item clickable tag="a" to="notepad" v-ripple>
+            <q-item v-ripple clickable tag="a" to="notepad">
               <q-item-section avatar>
                 <q-avatar
                   color="yellow"
@@ -133,7 +133,7 @@
                 <q-item-label>备忘录</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable tag="a" to="changepwd" v-ripple>
+            <q-item v-ripple clickable tag="a" to="changepwd">
               <q-item-section avatar>
                 <q-avatar
                   color="red"
@@ -146,7 +146,7 @@
                 <q-item-label>更改密码</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable tag="a" to="userprofile" v-ripple>
+            <q-item v-ripple clickable tag="a" to="userprofile">
               <q-item-section avatar>
                 <q-avatar
                   color="teal"
@@ -159,7 +159,7 @@
                 <q-item-label>个人信息</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable tag="a" to="message" v-ripple>
+            <q-item v-ripple clickable tag="a" to="message">
               <q-item-section avatar>
                 <q-avatar
                   color="red"
@@ -173,7 +173,7 @@
                 <q-item-label>消息中心</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable tag="a" to="welcome" v-ripple>
+            <q-item v-ripple clickable tag="a" to="welcome">
               <q-item-section avatar>
                 <q-avatar
                   color="purple"
@@ -186,7 +186,7 @@
                 <q-item-label>帮助中心</q-item-label>
               </q-item-section>
             </q-item>
-            <q-item clickable tag="a" v-ripple @click="$auth.logout()">
+            <q-item v-ripple clickable tag="a" @click="$auth.logout()">
               <q-item-section avatar>
                 <q-avatar
                   color="indigo"
@@ -231,6 +231,18 @@ export default {
       lang: this.$i18n.locale
     }
   },
+  computed: {
+    ...mapState('zero', ['ZModules'])
+  },
+  watch: {
+    lang(lang) {
+      this.$i18n.locale = lang.value
+      // set quasar's language too!!
+      import(`quasar/lang/${lang.value}`).then(language => {
+        this.$q.lang.set(language.default)
+      })
+    }
+  },
   created() {
     this.getZModules()
       .then(res => {
@@ -261,20 +273,9 @@ export default {
       })
       .catch(e => {})
   },
-  computed: {
-    ...mapState('zero', ['ZModules'])
-  },
+
   methods: {
     ...mapActions('zero', ['getZModules'])
-  },
-  watch: {
-    lang(lang) {
-      this.$i18n.locale = lang.value
-      // set quasar's language too!!
-      import(`quasar/lang/${lang.value}`).then(language => {
-        this.$q.lang.set(language.default)
-      })
-    }
   }
 }
 </script>

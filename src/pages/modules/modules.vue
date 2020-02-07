@@ -1,26 +1,26 @@
 <template>
   <q-page class="flex flex-center">
-    <q-btn v-on:click="test()">asdfasdfs</q-btn>
-    <q-btn v-on:click="del()">测试删除</q-btn>
-    <q-btn v-on:click="addItems()">测试增加</q-btn>
-    <q-btn v-on:click="testadd()">增加选定</q-btn>
+    <q-btn @click="test()">asdfasdfs</q-btn>
+    <q-btn @click="del()">测试删除</q-btn>
+    <q-btn @click="addItems()">测试增加</q-btn>
+    <q-btn @click="testadd()">增加选定</q-btn>
 
-    <q-btn v-on:click="testtree()">测试树</q-btn>
+    <q-btn @click="testtree()">测试树</q-btn>
 
     <q-card>
       <ag-grid-vue
         style="width: 1000px; height: 500px;"
         class="ag-theme-balham"
-        :gridOptions="gridOptions"
-        @grid-ready="onGridReady"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
+        :gridOptions="gridOptions"
+        :columnDefs="columnDefs"
+        :rowData="rowData"
+        :defaultColDef="defaultColDef"
+        @grid-ready="onGridReady"
         @cellValueChanged="onTest"
         @rowSelected="onRowSelected"
         @selectionChanged="onSelectionChanged"
-        :defaultColDef="defaultColDef"
       >
       </ag-grid-vue>
     </q-card>
@@ -33,6 +33,9 @@ import { AgGridVue } from 'ag-grid-vue'
 export default {
   name: 'modules',
   computed: {},
+  components: {
+    AgGridVue
+  },
   data() {
     return {
       gridOptions: null,
@@ -88,9 +91,6 @@ export default {
       editable: true,
       resizable: true
     }
-  },
-  components: {
-    AgGridVue
   },
   mounted() {
     // console.log(this.ZModules)

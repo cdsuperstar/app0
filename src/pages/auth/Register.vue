@@ -4,21 +4,21 @@
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
         <div class="row text-h6 no-wrap text-bold" style="color: #4caf50">
-          {{ $t('auth.register.register') }}
+          {{ $t('auth.register.registernew') }}
         </div>
       </q-card-section>
 
       <q-card-section>
         <q-input
           v-model.trim="data.data.name"
-          color="green"
+          color="teal-6"
           type="text"
           autofocus
           :label="this.$t('auth.register.name')"
         />
         <q-input
           v-model.trim="data.data.email"
-          color="green"
+          color="teal-6"
           type="email"
           :label="this.$t('auth.register.email')"
           :error="$v.data.data.email.$error"
@@ -27,7 +27,7 @@
         />
         <q-input
           v-model.trim="data.data.password"
-          color="green"
+          color="teal-6"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.password')"
           :error="$v.data.data.password.$error"
@@ -45,7 +45,7 @@
 
         <q-input
           v-model.trim="data.data.password_confirmation"
-          color="green"
+          color="teal-6"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.data.password_confirmation.$error"

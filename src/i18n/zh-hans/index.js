@@ -4,16 +4,21 @@ export default {
   failed: '操作失败',
   success: '操作成功',
   buttons: {
-    send: '发送'
+    send: '发送',
+    confirm: '确定',
+    navigation: '浏览',
+    back: '返回',
+    submit: '提交',
+    cancel: '取消'
   },
   menu: {
     menuname: '菜单'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',
-    submit: '提交',
+    submit: '@:buttons.submit',
     home: '主界面',
-    navigation: '浏览',
+    navigation: '@:buttons.navigation',
     my_account: '我的账号',
     administrator: {
       title: '超级管理员'
@@ -40,14 +45,15 @@ export default {
     login: {
       login: '登录',
       password_forgot: '忘记密码了吗?',
-      verification_required: '请先检查你的邮件和账号.',
+      verification_required: '请先检查您的邮件和账号.',
       invalid_credentials: '用户名或密码不正确.',
       email: '@:auth.labels.email',
       password: '@:auth.labels.password',
       remember_me: '@:auth.labels.remember_me'
     },
     register: {
-      register: '注册新用户',
+      register: '注册',
+      registernew: '注册新用户',
       invalid_data: '服务器不能处理请求，请检查数据.',
       already_registered: '用户名已存在，请检查用户名.',
       account_created: '账号注册成功！',
@@ -70,19 +76,26 @@ export default {
     },
     logout: {
       logout_confirmation: '您确定要注销吗？',
-      confirm: '确定',
+      confirm: '@:buttons.confirm',
       logout: '注销',
-      cancel: '取消'
+      cancel: '@:buttons.cancel'
     },
     password: {
       forgot: {
         header: '申请新密码',
+        send: '@:buttons.send',
+        back: '@:buttons.back',
         check_email: '请检查您的电子邮件以重置密码。',
+        success: '发送成功！请注意查收邮件',
         email: '@:auth.labels.email'
       },
       reset: {
-        header: '重置你的密码',
-        success: '您的密码已重置。 您现在可以使用新密码登录。'
+        header: '重置您的密码',
+        key: '输入校验码',
+        confirm: '重置',
+        newpwd: '新密码',
+        success: '您的密码已重置。 您现在可以使用新密码登录。',
+        keyfail: '您的校验码已过期， 请重新获取。'
       },
       change: {
         header: '修改密码',

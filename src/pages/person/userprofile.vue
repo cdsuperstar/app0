@@ -85,6 +85,10 @@
               >
                 <q-date
                   v-model.trim="data.data.birthday"
+                  minimal
+                  color="orange"
+                  text-color="black"
+                  first-day-of-week="1"
                   @input="() => $refs.qDateProxy.hide()"
                 />
               </q-popup-proxy>
@@ -149,7 +153,9 @@ export default {
 
   loading: false,
   methods: {
-    changeprofile() {}
+    changeprofile() {
+      console.log(this.$t)
+    }
   },
   validations: {
     data: {
