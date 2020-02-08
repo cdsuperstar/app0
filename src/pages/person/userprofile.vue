@@ -44,19 +44,19 @@
           :label="this.$t('auth.users.profile.jobs')"
         />
         <q-input
-          v-model.trim="data.data.department"
+          v-model.trim="data.data.unitid"
           color="orange"
           :label="this.$t('auth.users.profile.department')"
         />
         <q-input
-          v-model.trim="data.data.phone1"
+          v-model.trim="data.data.phone"
           color="orange"
           mask="### - #### ####"
           hint="Mask:### - ### - #### ####"
           :label="this.$t('auth.users.profile.phone1')"
         />
         <q-input
-          v-model.trim="data.data.phone2"
+          v-model.trim="data.data.tel"
           type="number"
           color="orange"
           :label="this.$t('auth.users.profile.phone2')"
@@ -70,7 +70,7 @@
         <!--        />-->
 
         <q-input
-          v-model.trim="data.data.birthday"
+          v-model.trim="data.data.birth"
           color="orange"
           mask="date"
           :rules="['date']"
@@ -84,8 +84,7 @@
                 transition-hide="scale"
               >
                 <q-date
-                  v-model.trim="data.data.birthday"
-                  minimal
+                  v-model.trim="data.data.birth"
                   color="orange"
                   text-color="black"
                   first-day-of-week="1"
@@ -102,7 +101,7 @@
           :label="this.$t('auth.users.profile.address')"
         />
         <q-input
-          v-model.trim="data.data.remark"
+          v-model.trim="data.data.memo"
           type="textarea"
           color="orange"
           :label="this.$t('auth.users.profile.remark')"
@@ -154,6 +153,54 @@ export default {
   loading: false,
   methods: {
     changeprofile() {
+      this.$v.data.$touch()
+      if (!this.$v.data.$error) {
+        this.loading = true
+        this.$profile(this.data)
+          .then(response => {
+            this.$q.notify({
+              message: this.$t('auth.register.account_created'),
+              color: 'purple-4',
+              textColor: 'white',
+              position: 'center',
+              timeout: 2500,
+              actions: [{ icon: 'close', color: 'white' }]
+            })
+          })
+          .catch(error => {
+            if (error.response) {
+              if (error.response.status === 422) {
+                for (var key in error.response.data.error) {
+                  switch (error.response.data.error[key][0]) {
+                    case 'The email has already been taken.':
+                      this.$q.notify({
+                        message: this.$t('auth.register.already_registered'),
+                        color: 'red-5',
+                        textColor: 'white',
+                        position: 'center',
+                        timeout: 2500,
+                        actions: [{ icon: 'close', color: 'white' }]
+                      })
+                      break
+                    default:
+                  }
+                }
+              } else {
+                this.$q.notify({
+                  message: this.$t('auth.register.invalid_data'),
+                  color: 'red-5',
+                  textColor: 'white',
+                  position: 'center',
+                  timeout: 2500,
+                  actions: [{ icon: 'close', color: 'white' }]
+                })
+              }
+            }
+          })
+          .finally(() => {
+            this.loading = false
+          })
+      }
       console.log(this.$t)
     }
   },
