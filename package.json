@@ -12,6 +12,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@ag-grid-community/all-modules": "^22.1.1",
     "@quasar/extras": "^1.5.1",
     "@websanova/vue-auth": "git+https://github.com/onurkose/vue-auth.git",
     "ag-grid-community": "^22.1.1",

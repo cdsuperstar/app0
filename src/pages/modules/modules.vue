@@ -8,21 +8,23 @@
     <q-btn @click="testtree()">测试树</q-btn>
 
     <q-card>
-      <ag-grid-vue
-        style="width: 1000px; height: 500px;"
-        class="ag-theme-balham"
-        rowSelection="multiple"
-        rowMultiSelectWithClick="true"
-        :gridOptions="gridOptions"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
-        @grid-ready="onGridReady"
-        @cellValueChanged="onTest"
-        @rowSelected="onRowSelected"
-        @selectionChanged="onSelectionChanged"
-      >
-      </ag-grid-vue>
+      <div style="height: 100%">
+        <ag-grid-vue
+          style="width: 1000px; height: 500px;"
+          class="ag-theme-balham"
+          rowSelection="multiple"
+          rowMultiSelectWithClick="true"
+          :gridOptions="gridOptions"
+          :columnDefs="columnDefs"
+          :rowData="rowData"
+          :defaultColDef="defaultColDef"
+          @grid-ready="onGridReady"
+          @cellValueChanged="onTest"
+          @rowSelected="onRowSelected"
+          @selectionChanged="onSelectionChanged"
+        >
+        </ag-grid-vue>
+      </div>
     </q-card>
   </q-page>
 </template>
@@ -92,10 +94,7 @@ export default {
       resizable: true
     }
   },
-  mounted() {
-    // console.log(this.ZModules)
-    this.gridApi = this.gridOptions.api
-    this.gridColumnApi = this.gridOptions.columnApi
+  created() {
     this.$router.app.$http
       .get('/z_module/')
       .then(res => {
@@ -107,13 +106,18 @@ export default {
       })
       .catch(e => {})
   },
+  mounted() {
+    // console.log(this.ZModules)
+    this.gridApi = this.gridOptions.api
+    this.gridColumnApi = this.gridOptions.columnApi
+  },
   methods: {
     // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
     test() {
-      console.log(this.rowData)
+      console.log('Its test')
     },
     del() {
       var selectedData = this.gridApi.getSelectedRows()
