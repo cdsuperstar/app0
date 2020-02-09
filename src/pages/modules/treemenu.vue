@@ -7,7 +7,7 @@
       dense-toggle
       expand-separator
       :to="children.ismenu == 1 ? '' : { name: children.url }"
-      :content-inset-level="depth * 0.3"
+      :content-inset-level="depth * 0.2"
       :icon="children.icon"
       :label="children.title"
       :caption="children.tip"

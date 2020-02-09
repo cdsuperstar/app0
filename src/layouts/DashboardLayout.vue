@@ -95,7 +95,7 @@
           v-for="item in menutree"
           :key="item.id"
           :children="item"
-          :depth="0"
+          :depth="1"
         ></treemenu>
       </q-list>
       <nested-test v-model="menutree" class="col-8" />

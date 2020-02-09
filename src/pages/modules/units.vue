@@ -57,32 +57,14 @@ export default {
         sortable: true
       },
       {
-        headerName: '模块名',
+        headerName: '单位名',
         field: 'name',
         sortable: true,
         filter: true
       },
       {
-        headerName: '标题',
+        headerName: '单位简介',
         field: 'title',
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: 'ICON',
-        field: 'icon',
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '菜单类型',
-        field: 'ismenu',
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '路径名',
-        field: 'url',
         sortable: true,
         filter: true
       }
