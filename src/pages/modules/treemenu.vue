@@ -3,6 +3,7 @@
     <q-expansion-item
       v-if="children.children.length > 0"
       v-bind:key="children.id"
+      header-class="text-purple"
       dense
       dense-toggle
       expand-separator
@@ -30,7 +31,7 @@
       :title="children.tip"
     >
       <q-item-section avatar>
-        <q-avatar :icon="children.icon" />
+        <q-icon :name="children.icon" />
       </q-item-section>
       <q-item-section>{{ children.title }}</q-item-section>
     </q-item>

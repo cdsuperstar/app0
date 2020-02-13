@@ -1,29 +1,78 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-btn @click="test()">值。。。</q-btn>
-    <q-btn @click="del()">测试删除</q-btn>
-    <q-btn @click="addItems()">测试增加</q-btn>
-    <q-btn @click="testadd()">增加选定</q-btn>
+  <q-page padding class="q-pa-lg">
+    <div class="text-h5 q-ma-md text-teal-6">
+      用户管理
+    </div>
+    <q-separator color="lime-2" />
+    <div class="q-ma-md">
+      <q-btn
+        color="lime-7"
+        text-color="white"
+        class="q-ma-xs"
+        icon="post_add"
+        :label="this.$t('buttons.add')"
+        @click="addItems()"
+      />
+      <q-btn
+        color="deep-orange-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="delete_sweep"
+        :label="this.$t('buttons.delete')"
+        @click="del()"
+      />
 
-    <q-btn @click="testtree()">测试树</q-btn>
-
-    <q-card>
+      <q-btn
+        color="indigo-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="save"
+        :label="this.$t('buttons.save')"
+        @click="testadd()"
+      />
+      <q-btn
+        color="purple-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="remove_red_eye"
+        :label="this.$t('buttons.show')"
+        @click="test()"
+      />
+      <q-btn
+        color="blue-grey-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="update"
+        :label="this.$t('buttons.update')"
+        @click="test()"
+      />
+      <q-btn
+        color="green-6"
+        text-color="white"
+        class="q-ma-xs"
+        icon="cloud_download"
+        :label="this.$t('buttons.export')"
+        @click="test()"
+      />
+    </div>
+    <div class="shadow-1">
       <ag-grid-vue
-        style="width: 1000px; height: 500px;"
-        class="ag-theme-balham"
+        class="User-agGrid ag-theme-balham"
+        style="width: 100%; height: 300px;"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
         :gridOptions="gridOptions"
         :columnDefs="columnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
+        :localeText="this.$t('aggrid')"
         @grid-ready="onGridReady"
         @cellValueChanged="onTest"
         @rowSelected="onRowSelected"
         @selectionChanged="onSelectionChanged"
       >
       </ag-grid-vue>
-    </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -31,7 +80,7 @@
 import { AgGridVue } from 'ag-grid-vue'
 
 export default {
-  name: 'modules',
+  name: 'users',
   computed: {},
   components: {
     AgGridVue
@@ -54,29 +103,59 @@ export default {
         editable: false,
         headerName: 'ID',
         field: 'id',
+        width: 30,
         sortable: true
       },
       {
         headerName: '用户名',
         field: 'name',
+        resizable: false,
+        width: 80,
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '邮箱',
+        field: 'email',
+        pinned: 'left',
+        resizable: false,
+        width: 80,
         sortable: true,
         filter: true
       },
       {
         headerName: '密码',
-        field: 'title',
+        field: 'password',
         sortable: true,
+        width: 100,
+        suppressSizeToFit: true,
         filter: true
       },
       {
         headerName: '系统配置',
-        field: 'icon',
+        field: 'syscfg',
         sortable: true,
         filter: true
       },
       {
         headerName: '用户配置',
-        field: 'ismenu',
+        field: 'usercfg',
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '创建时间',
+        field: 'created_at',
+        width: 90,
+        editable: false,
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '更新时间',
+        field: 'updated_at',
+        width: 90,
+        editable: false,
         sortable: true,
         filter: true
       }
@@ -91,7 +170,7 @@ export default {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
     this.$router.app.$http
-      .get('/z_module/')
+      .get('/users/')
       .then(res => {
         if (res.data.success) {
           // console.log(res.data.data)
@@ -114,7 +193,7 @@ export default {
 
       selectedData.forEach(val => {
         this.$router.app.$http
-          .delete('/z_module/' + val.id)
+          .delete('/users/' + val.id)
           .then(res => {
             if (res.data.success) {
               this.gridApi.updateRowData({ remove: selectedData })
@@ -146,7 +225,7 @@ export default {
 
       selectedData.forEach(val => {
         this.$router.app.$http
-          .post('/z_module/', val)
+          .post('/users/', val)
           .then(res => {
             if (res.data.success) {
               this.gridApi.updateRowData({ remove: selectedData })
@@ -157,24 +236,13 @@ export default {
           .catch(e => {})
       })
     },
-    testtree() {
-      this.$router.app.$http
-        .get('/z_module/getMyMenu')
-        .then(res => {
-          if (res.data.success) {
-            console.log(res.data.data)
-          } else {
-          }
-        })
-        .catch(e => {})
-    },
     onTest(params) {
       if (params.data.id === undefined || params.oldValue === params.newValue) {
         console.log('Edit null or value not changed.')
         return false
       }
       this.$router.app.$http
-        .put('/z_module/' + params.data.id, params.data)
+        .put('/users/' + params.data.id, params.data)
         .then(res => {
           if (res.data.success) {
             // console.log(res.data.data)
@@ -186,3 +254,13 @@ export default {
   }
 }
 </script>
+<style>
+/*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
+.User-agGrid .ag-header {
+  background-color: #339999;
+  color: #ffffff;
+}
+.User-agGrid .ag-header .ag-icon {
+  color: #ffffff;
+}
+</style>
