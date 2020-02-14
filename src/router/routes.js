@@ -42,31 +42,6 @@ const routes = [
         path: 'dashboard',
         name: 'dashboard',
         component: () => import('pages/Index.vue')
-      },
-      {
-        path: 'changepwd',
-        name: 'changepwd',
-        component: () => import('pages/person/changepwd.vue')
-      },
-      {
-        path: 'userprofile',
-        name: 'userprofile',
-        component: () => import('pages/person/userprofile.vue')
-      },
-      {
-        path: 'message',
-        name: 'message',
-        component: () => import('pages/person/message.vue')
-      },
-      {
-        path: 'notepad',
-        name: 'notepad',
-        component: () => import('pages/person/notepad.vue')
-      },
-      {
-        path: 'help',
-        name: 'help',
-        component: () => import('pages/person/help.vue')
       }
     ]
   }

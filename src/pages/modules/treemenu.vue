@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="children.ismenu.indexOf('A') !== -1">
     <q-expansion-item
       v-if="children.children.length > 0"
       v-bind:key="children.id"
@@ -7,7 +7,11 @@
       dense
       dense-toggle
       expand-separator
-      :to="children.ismenu == 1 ? '' : { name: children.url }"
+      :to="
+        children.url === '' || children.url === null
+          ? ''
+          : { name: children.url }
+      "
       :content-inset-level="depth * 0.2"
       :icon="children.icon"
       :label="children.title"
@@ -24,7 +28,11 @@
 
     <q-item
       v-if="children.children.length == 0"
-      :to="children.ismenu == 1 ? '' : { name: children.url }"
+      :to="
+        children.url === '' || children.url === null
+          ? ''
+          : { name: children.url }
+      "
       :caption="children.tip"
       dense
       dense-toggle
@@ -42,6 +50,10 @@ export default {
   name: 'treemenu',
   props: ['children', 'depth'],
   created() {
+    // console.log(
+    //   this.children.url,
+    //   this.children.url === '' || this.children.url === null
+    // )
     // console.log(this.children.name, this.children, this.depth)
   }
 }

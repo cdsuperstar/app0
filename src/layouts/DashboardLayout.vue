@@ -98,7 +98,7 @@
           :depth="1"
         ></treemenu>
       </q-list>
-      <nested-test v-model="menutree" class="col-8" />
+      <nested-test v-model="menutree" v-if="false" class="col-8" />
     </q-drawer>
 
     <q-drawer v-model="right" side="right" overlay elevated>
@@ -120,72 +120,27 @@
           title="用户中心"
         >
           <q-list separator style="overflow:hidden;">
-            <q-item v-ripple clickable tag="a" to="notepad">
-              <q-item-section avatar>
-                <q-avatar
-                  color="yellow"
-                  text-color="white"
-                  icon="event_note"
-                  size="30px"
-                ></q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>备忘录</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item v-ripple clickable tag="a" to="changepwd">
-              <q-item-section avatar>
-                <q-avatar
-                  color="red"
-                  text-color="white"
-                  icon="vpn_key"
-                  size="30px"
-                ></q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>更改密码</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item v-ripple clickable tag="a" to="userprofile">
-              <q-item-section avatar>
-                <q-avatar
-                  color="teal"
-                  text-color="white"
-                  icon="person_outline"
-                  size="30px"
-                ></q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>个人信息</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item v-ripple clickable tag="a" to="message">
-              <q-item-section avatar>
-                <q-avatar
-                  color="red"
-                  text-color="white"
-                  icon="message"
-                  size="30px"
-                ></q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-badge color="orange" floating transparent>22</q-badge>
-                <q-item-label>消息中心</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-item v-ripple clickable tag="a" to="help">
-              <q-item-section avatar>
-                <q-avatar
-                  color="purple"
-                  text-color="white"
-                  icon="whatshot"
-                  size="30px"
-                ></q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>帮助中心</q-item-label>
-              </q-item-section>
-            </q-item>
+            <div v-for="item in bmenu" :key="item.id">
+              <q-item
+                v-ripple
+                clickable
+                tag="a"
+                :to="item.url"
+                v-if="item.ismenu.indexOf('B') !== -1"
+              >
+                <q-item-section avatar>
+                  <q-avatar
+                    color="indigo"
+                    text-color="white"
+                    :icon="item.icon"
+                    size="30px"
+                  ></q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>{{ item.title }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </div>
             <q-item v-ripple clickable tag="a" @click="$auth.logout()">
               <q-item-section avatar>
                 <q-avatar
@@ -215,6 +170,7 @@ export default {
   components: { treemenu, NestedTest },
   data() {
     return {
+      bmenu: null,
       menutree: null,
       left: false,
       right: false,
@@ -244,6 +200,7 @@ export default {
     }
   },
   created() {
+    // console.log(str.indexOf('B') === -1)
     this.getZModules()
       .then(res => {
         if (res.data.success) {
@@ -251,12 +208,17 @@ export default {
             let { routes } = this.$router.options
             let routeData = routes.find(r => r.path === '/user')
             res.data.data.forEach(function(val) {
-              routeData.children.push({
-                path: val.url,
-                name: val.name,
-                component: () => import('pages/modules/' + val.name + '.vue')
-              })
+              // push url to router by Luke
+              if (val.url !== '' && val.url !== null) {
+                routeData.children.push({
+                  path: val.url,
+                  name: val.name,
+                  component: () => import('pages/modules/' + val.url + '.vue')
+                })
+              }
             })
+            this.bmenu = res.data.data
+
             this.$router.addRoutes([routeData])
           }
         } else {
@@ -275,7 +237,10 @@ export default {
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules'])
+    ...mapActions('zero', ['getZModules']),
+    test() {
+      console.log('test:', this.bmenu)
+    }
   }
 }
 </script>
