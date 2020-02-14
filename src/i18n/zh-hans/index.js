@@ -142,10 +142,10 @@ export default {
   },
   aggrid: {
     // for filter panel
-    page: '页',
+    page: '页面',
     more: '更多',
-    to: '到',
-    of: 'of',
+    to: '至',
+    of: '总计',
     next: '下一页',
     last: '上一页',
     first: '首页',

@@ -96,7 +96,10 @@ export default {
     }
   },
   beforeMount() {
-    this.gridOptions = {}
+    this.gridOptions = {
+      pagination: 'true',
+      paginationPageSize: 10
+    }
     this.columnDefs = [
       {
         checkboxSelection: true,
@@ -262,5 +265,8 @@ export default {
 }
 .User-agGrid .ag-header .ag-icon {
   color: #ffffff;
+}
+.ag-cell {
+  padding-left: 1px;
 }
 </style>

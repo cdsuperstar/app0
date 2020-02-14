@@ -74,10 +74,10 @@ export default {
       isPwd: true,
       data: {
         data: {
-          currentpwd: '',
-          password: '',
+          currentpwd: '11111111',
+          password: '11111111',
           pwdType: 'password',
-          password_confirmation: ''
+          password_confirmation: '11111111'
         }
       },
       loading: false
@@ -85,7 +85,18 @@ export default {
   },
   methods: {
     changepwd() {
-      this.data.data.username = this.data.data.email
+      this.data.data.username = this.$auth.user().email
+      // this.$router.app.$http
+      //   .get('/z_module/')
+      //   .then(res => {
+      //     if (res.data.success) {
+      //       // console.log(res.data.data)
+      //       this.rowData = res.data.data
+      //     } else {
+      //     }
+      //   })
+      //   .catch(e => {})
+
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
@@ -103,14 +114,11 @@ export default {
           })
           .catch(error => {
             if (error.response) {
-              this.$q.notify({
-                message: this.$t('auth.register.invalid_data'),
-                color: 'red-5',
-                textColor: 'white',
-                position: 'center',
-                timeout: 2500,
-                actions: [{ icon: 'close', color: 'white' }]
-              })
+              // showMessage(
+              //   'red-5',
+              //   'center',
+              //   this.$t('auth.register.invalid_data')
+              // )
             }
           })
           .finally(() => {
