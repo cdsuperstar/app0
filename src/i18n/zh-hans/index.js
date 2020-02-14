@@ -6,6 +6,8 @@ export default {
   buttons: {
     send: '发送',
     confirm: '确定',
+    cancel: '取消',
+    tree: '测试树',
     navigation: '浏览',
     search: '搜索',
     back: '返回',
@@ -15,11 +17,13 @@ export default {
     update: '更新',
     delete: '删除',
     save: '保存',
-    export: '导出',
-    cancel: '取消'
+    export: '导出'
   },
   menu: {
     menuname: '菜单'
+  },
+  models: {
+    header: '模块管理'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',

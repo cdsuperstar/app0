@@ -266,7 +266,7 @@ export default {
 .User-agGrid .ag-header .ag-icon {
   color: #ffffff;
 }
-.ag-cell {
+.User-agGrid .ag-cell {
   padding-left: 1px;
 }
 </style>
