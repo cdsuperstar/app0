@@ -1,31 +1,70 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-btn @click="test()">值。。。</q-btn>
-    <q-btn @click="del()">测试删除</q-btn>
-    <q-btn @click="addItems()">测试增加</q-btn>
-    <q-btn @click="testadd()">增加选定</q-btn>
+  <q-page padding class="q-pa-lg">
+    <div class="text-h5 q-ma-md text-teal-6">
+      {{ $t('models.header') }}
+    </div>
+    <q-separator color="lime-2" />
+    <div class="q-ma-md">
+      <q-btn
+        color="lime-7"
+        text-color="white"
+        class="q-ma-xs"
+        icon="post_add"
+        :label="this.$t('buttons.add')"
+        @click="addItems()"
+      />
+      <q-btn
+        color="deep-orange-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="delete_sweep"
+        :label="this.$t('buttons.delete')"
+        @click="delItems()"
+      />
 
-    <q-btn @click="testtree()">测试树</q-btn>
-
-    <q-card>
-      <div style="height: 100%">
-        <ag-grid-vue
-          style="width: 1000px; height: 500px;"
-          class="ag-theme-balham"
-          rowSelection="multiple"
-          rowMultiSelectWithClick="true"
-          :gridOptions="gridOptions"
-          :columnDefs="columnDefs"
-          :rowData="rowData"
-          :defaultColDef="defaultColDef"
-          @grid-ready="onGridReady"
-          @cellValueChanged="onTest"
-          @rowSelected="onRowSelected"
-          @selectionChanged="onSelectionChanged"
-        >
-        </ag-grid-vue>
-      </div>
-    </q-card>
+      <q-btn
+        color="indigo-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="save"
+        :label="this.$t('buttons.save')"
+        @click="saveItems()"
+      />
+      <q-btn
+        color="purple-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="remove_red_eye"
+        :label="this.$t('buttons.show')"
+        @click="test()"
+      />
+      <q-btn
+        color="blue-grey-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="update"
+        :label="this.$t('buttons.tree')"
+        @click="Modeltree()"
+      />
+    </div>
+    <div class="shadow-1">
+      <ag-grid-vue
+        style="width: 100%; height: 500px;"
+        class="ag-theme-balham Models-agGrid"
+        rowSelection="multiple"
+        rowMultiSelectWithClick="true"
+        :gridOptions="gridOptions"
+        :columnDefs="columnDefs"
+        :rowData="rowData"
+        :defaultColDef="defaultColDef"
+        :localeText="this.$t('aggrid')"
+        @grid-ready="onGridReady"
+        @cellValueChanged="onTest"
+        @rowSelected="onRowSelected"
+        @selectionChanged="onSelectionChanged"
+      >
+      </ag-grid-vue>
+    </div>
   </q-page>
 </template>
 
@@ -52,39 +91,63 @@ export default {
     this.gridOptions = {}
     this.columnDefs = [
       {
-        checkboxSelection: true,
         editable: false,
         headerName: 'ID',
         field: 'id',
-        sortable: true
+        width: 30,
+        sortable: true,
+        headerCheckboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: true
       },
       {
         headerName: '模块名',
         field: 'name',
+        width: 100,
         sortable: true,
         filter: true
       },
       {
         headerName: '标题',
         field: 'title',
+        width: 100,
         sortable: true,
         filter: true
       },
       {
         headerName: 'ICON',
         field: 'icon',
+        width: 50,
         sortable: true,
         filter: true
       },
       {
-        headerName: '菜单类型',
+        headerName: '类型',
         field: 'ismenu',
+        width: 40,
         sortable: true,
         filter: true
       },
       {
         headerName: '路径名',
         field: 'url',
+        width: 100,
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '创建时间',
+        field: 'created_at',
+        width: 80,
+        editable: false,
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '更新时间',
+        field: 'updated_at',
+        width: 80,
+        editable: false,
         sortable: true,
         filter: true
       }
@@ -119,7 +182,7 @@ export default {
     test() {
       console.log('Its test')
     },
-    del() {
+    delItems() {
       var selectedData = this.gridApi.getSelectedRows()
 
       selectedData.forEach(val => {
@@ -151,7 +214,7 @@ export default {
       var res = this.gridApi.updateRowData({ add: newItems })
       console.log(res)
     },
-    testadd() {
+    saveItems() {
       var selectedData = this.gridApi.getSelectedRows()
 
       selectedData.forEach(val => {
@@ -167,7 +230,7 @@ export default {
           .catch(e => {})
       })
     },
-    testtree() {
+    Modeltree() {
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
@@ -196,3 +259,16 @@ export default {
   }
 }
 </script>
+<style>
+/*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
+.Models-agGrid .ag-header {
+  background-color: #666699;
+  color: #ffffff;
+}
+.User-agGrid .ag-header .ag-icon {
+  color: #cccccc;
+}
+.Models-agGrid .ag-cell {
+  padding-left: 1px;
+}
+</style>
