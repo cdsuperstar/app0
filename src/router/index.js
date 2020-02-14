@@ -90,6 +90,9 @@ export default function(/* { store, ssrContext } */) {
     // next({ name: 'not-found' })
     // } else {
     console.log('from to check:', from.name, to.name, Vue.auth.check())
+    // Inject instance to zglobal by Luke
+    Router.app.$root.$zglobal.self = Router.app.$root
+
     // if (!from.name && to.name === 'not-found' && Vue.auth.check())
     //   next({ name: '/#/dashboard' })
     // next()

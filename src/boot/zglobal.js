@@ -1,17 +1,21 @@
-import Vue from 'vue'
+// import Vue from 'vue'
 
 const zglobal = {
-  showMessage(color, position, mesval) {
-    // this.$q.notify({
-    //   message: this.$t(mesval),
-    //   color: color,
-    //   textColor: 'white',
-    //   position: position,
-    //   timeout: 2500,
-    //   actions: [{ icon: 'close', color: 'white' }]
-    // })
+  props: {
+    self: null
+  },
+  showMessage(color, position, msgval) {
+    this.self.$q.notify({
+      message: msgval,
+      color: color,
+      textColor: 'white',
+      position: position,
+      timeout: 2500,
+      actions: [{ icon: 'close', color: 'white' }]
+    })
   }
 }
-Vue.prototype.$zglobal = zglobal
 
-export { zglobal }
+export default async ({ Vue }) => {
+  Vue.prototype.$zglobal = zglobal
+}

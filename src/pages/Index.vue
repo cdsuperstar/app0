@@ -20,6 +20,9 @@ export default {
   computed: {
     ...mapState('zero', ['products'])
   },
+  created() {
+    this.$zglobal.showMessage('positive', 'top', '这是个消息的测试  !!')
+  },
   methods: {
     ...mapActions('zero', ['getZModules']),
     test() {
