@@ -48,6 +48,16 @@
       />
     </div>
     <div class="shadow-1">
+      <q-input
+        color="purple-12"
+        v-model="quickFilter"
+        v-on:input="onQuickFilterChanged()"
+        label="请输入全局查询值"
+      >
+        <template v-slot:prepend>
+          <q-icon name="event" />
+        </template>
+      </q-input>
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Models-agGrid"
@@ -81,6 +91,7 @@ export default {
   },
   data() {
     return {
+      quickFilter: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
@@ -180,6 +191,9 @@ export default {
     // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
+    },
+    onQuickFilterChanged() {
+      this.gridApi.setQuickFilter(this.quickFilter)
     },
     test() {
       console.log('Its test')
