@@ -257,16 +257,25 @@ export default {
   }
 }
 </script>
+
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .User-agGrid .ag-header {
   background-color: #339999;
   color: #ffffff;
 }
-.User-agGrid .ag-header .ag-icon {
-  color: #ffffff;
-}
+
 .User-agGrid .ag-cell {
   padding-left: 1px;
+}
+.ag-theme-balham .ag-icon,
+.ag-header-icon .ag-sort-ascending-icon {
+  color: #ffffff;
+}
+.ag-theme-balham .ag-icon-checkbox-unchecked {
+  color: #cccccc;
+}
+.ag-theme-balham .ag-icon-checkbox-checked {
+  color: #339999;
 }
 </style>

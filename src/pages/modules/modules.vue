@@ -57,6 +57,8 @@
         :columnDefs="columnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
+        :pagination="true"
+        :paginationPageSize="10"
         :localeText="this.$t('aggrid')"
         @grid-ready="onGridReady"
         @cellValueChanged="onTest"
@@ -265,10 +267,17 @@ export default {
   background-color: #666699;
   color: #ffffff;
 }
-.User-agGrid .ag-header .ag-icon {
-  color: #cccccc;
-}
 .Models-agGrid .ag-cell {
   padding-left: 1px;
+}
+.ag-theme-balham .ag-icon,
+.ag-header-icon .ag-sort-ascending-icon {
+  color: #ffffff;
+}
+.ag-theme-balham .ag-icon-checkbox-unchecked {
+  color: #cccccc;
+}
+.ag-theme-balham .ag-icon-checkbox-checked {
+  color: #666699;
 }
 </style>

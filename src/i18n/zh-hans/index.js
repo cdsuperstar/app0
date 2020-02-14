@@ -23,7 +23,8 @@ export default {
     menuname: '菜单'
   },
   models: {
-    header: '模块管理'
+    header: '模块管理',
+    searchall: '全局搜索'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',
