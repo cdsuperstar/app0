@@ -4,7 +4,7 @@
       {{ $t('models.header') }}
     </div>
     <q-separator color="lime-2" />
-    <div class="q-ma-md">
+    <div class="row q-ma-md">
       <q-btn
         color="lime-7"
         text-color="white"
@@ -21,7 +21,6 @@
         :label="this.$t('buttons.delete')"
         @click="delItems()"
       />
-
       <q-btn
         color="indigo-5"
         text-color="white"
@@ -46,18 +45,29 @@
         :label="this.$t('buttons.tree')"
         @click="Modeltree()"
       />
-    </div>
-    <div class="shadow-1">
+      <q-btn
+        color="green-6"
+        text-color="white"
+        class="q-ma-xs"
+        icon="cloud_download"
+        :label="this.$t('buttons.export')"
+        @click="ExportDataAsCVS()"
+      />
+      <q-space />
       <q-input
-        color="purple-12"
+        dense
         v-model="quickFilter"
-        v-on:input="onQuickFilterChanged()"
-        label="请输入全局查询值"
+        color="indigo"
+        class="q-ml-md"
+        :label="this.$t('models.searchall')"
+        @input="onQuickFilterChanged()"
       >
         <template v-slot:prepend>
-          <q-icon name="event" />
+          <q-icon name="search" />
         </template>
       </q-input>
+    </div>
+    <div class="shadow-1">
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Models-agGrid"
@@ -213,6 +223,14 @@ export default {
           })
           .catch(e => {})
       })
+    },
+    ExportDataAsCVS() {
+      var params = {
+        fileName: 'modules.xls',
+        suppressQuotes: true,
+        columnSeparator: ','
+      }
+      this.gridApi.exportDataAsCsv(params)
     },
     onRowSelected(event) {
       console.log()

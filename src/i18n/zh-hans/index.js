@@ -7,7 +7,7 @@ export default {
     send: '发送',
     confirm: '确定',
     cancel: '取消',
-    tree: '测试树',
+    tree: '树形',
     navigation: '浏览',
     search: '搜索',
     back: '返回',
@@ -17,6 +17,7 @@ export default {
     update: '更新',
     delete: '删除',
     save: '保存',
+    import: '导入',
     export: '导出'
   },
   menu: {
@@ -24,7 +25,7 @@ export default {
   },
   models: {
     header: '模块管理',
-    searchall: '全局搜索'
+    searchall: '全局搜索值'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',
@@ -113,7 +114,9 @@ export default {
         header: '修改密码',
         currentpwd: '请输入当前密码',
         showpwd: '显示/隐藏密码',
-        newpwd: '请输入新密码'
+        newpwd: '请输入新密码',
+        oldpwderror: '密码更改失败！当前（旧）密码不正确。',
+        success: '密码更改成功！再次登陆请使用新密码。'
       },
       errors: {
         password_length: '@:auth.errors.password_length',
@@ -123,18 +126,22 @@ export default {
     users: {
       profile: {
         header: '修改用户个人信息',
+        no: '工号',
         nickname: '昵称',
-        nicknameerror: '请输入昵称',
+        noerror: '请输入工号',
         sex: '性别',
+        male: '男',
+        female: '女',
         birthday: '出生日期',
         address: '家庭地址',
-        phone1: '电话号码',
+        phone1: '主要电话号码',
         phone2: '备用电话号码',
         position: '职务',
         department: '部门',
         title: '职称',
         jobs: '岗位',
-        remark: '备注'
+        remark: '备注',
+        success: '用户资料更改成功！'
       },
       labels: {
         email: '邮箱',

@@ -18,32 +18,32 @@
 
       <q-card-section>
         <q-input
-          v-model.trim="data.data.currentpwd"
+          v-model.trim="data.oldpwd"
           color="purple"
           :label="this.$t('auth.password.change.currentpwd')"
           :type="isPwd ? 'password' : 'text'"
-          :error="$v.data.data.currentpwd.$error"
+          :error="$v.data.oldpwd.$error"
           :error-message="this.$t('auth.errors.password_length')"
-          @blur="$v.data.data.currentpwd.$touch"
+          @blur="$v.data.oldpwd.$touch"
         />
         <q-input
-          v-model.trim="data.data.password"
+          v-model.trim="data.newpwd"
           color="purple"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.password.change.newpwd')"
-          :error="$v.data.data.password.$error"
+          :error="$v.data.newpwd.$error"
           :error-message="this.$t('auth.errors.password_length')"
-          @blur="$v.data.data.password.$touch"
+          @blur="$v.data.newpwd.$touch"
         />
 
         <q-input
-          v-model.trim="data.data.password_confirmation"
+          v-model.trim="data.password_confirmation"
           color="purple"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.repeat_password')"
-          :error="$v.data.data.password_confirmation.$error"
+          :error="$v.data.password_confirmation.$error"
           :error-message="this.$t('auth.errors.password_match')"
-          @blur="$v.data.data.password_confirmation.$touch"
+          @blur="$v.data.password_confirmation.$touch"
         />
       </q-card-section>
       <q-card-actions align="center">
@@ -68,60 +68,45 @@ import { required, minLength, sameAs } from 'vuelidate/lib/validators'
 
 export default {
   name: 'Changepwd',
-  components: {},
   data() {
     return {
       isPwd: true,
       data: {
-        data: {
-          currentpwd: '11111111',
-          password: '11111111',
-          pwdType: 'password',
-          password_confirmation: '11111111'
-        }
+        oldpwd: '',
+        newpwd: '',
+        password_confirmation: ''
       },
       loading: false
     }
   },
   methods: {
     changepwd() {
-      this.data.data.username = this.$auth.user().email
-      // this.$router.app.$http
-      //   .get('/z_module/')
-      //   .then(res => {
-      //     if (res.data.success) {
-      //       // console.log(res.data.data)
-      //       this.rowData = res.data.data
-      //     } else {
-      //     }
-      //   })
-      //   .catch(e => {})
-
+      this.data.id = this.$auth.user().id
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
-        this.$auth
-          .changepwd(this.data)
-          .then(response => {
-            this.$q.notify({
-              message: this.$t('auth.register.invalid_data'),
-              color: 'purple-4',
-              textColor: 'white',
-              position: 'center',
-              timeout: 2500,
-              actions: [{ icon: 'close', color: 'white' }]
-            })
-          })
-          .catch(error => {
-            if (error.response) {
-              // showMessage(
-              //   'red-5',
-              //   'center',
-              //   this.$t('auth.register.invalid_data')
-              // )
+        this.$router.app.$http
+          .post('/users/setMyPassword/', this.data)
+          .then(res => {
+            this.loading = false
+            if (res.data.success) {
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('auth.password.change.success')
+              )
+            } else {
+              this.loading = false
+              if (res.data.code === 2) {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('auth.password.change.oldpwderror')
+                )
+              }
             }
           })
-          .finally(() => {
+          .catch(e => {
             this.loading = false
           })
       }
@@ -129,19 +114,17 @@ export default {
   },
   validations: {
     data: {
-      data: {
-        currentpwd: {
-          minLength: minLength(8),
-          required
-        },
-        password: {
-          minLength: minLength(8),
-          required
-        },
-        password_confirmation: {
-          sameAsPassword: sameAs('password'),
-          required
-        }
+      oldpwd: {
+        minLength: minLength(8),
+        required
+      },
+      newpwd: {
+        minLength: minLength(8),
+        required
+      },
+      password_confirmation: {
+        sameAsPassword: sameAs('newpwd'),
+        required
       }
     }
   }

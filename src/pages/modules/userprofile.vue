@@ -10,67 +10,61 @@
 
       <q-card-section>
         <q-input
-          v-model.trim="data.data.nickname"
+          v-model.trim="data.no"
+          color="orange"
+          :label="this.$t('auth.users.profile.no')"
+          :error="$v.data.no.$error"
+          :error-message="this.$t('auth.users.profile.noerror')"
+          @blur="$v.data.no.$touch"
+        />
+        <q-input
+          v-model.trim="data.nickname"
           color="orange"
           :label="this.$t('auth.users.profile.nickname')"
-          :error="$v.data.data.nickname.$error"
-          :error-message="this.$t('auth.users.profile.nicknameerror')"
-          @blur="$v.data.data.nickname.$touch"
         />
-        <!--        <q-input-->
-        <!--                v-model.trim="data.data.sex"-->
-        <!--          color="orange"-->
-        <!--          :label="this.$t('auth.users.profile.sex')"-->
-        <!--        />-->
         <q-select
-          v-model.trim="data.data.sex"
+          v-model.trim="data.sex"
           color="orange"
           :options="data.sexoptions"
           :label="this.$t('auth.users.profile.sex')"
+          emit-value
+          map-options
         />
         <q-input
-          v-model.trim="data.data.position"
+          v-model.trim="data.position"
           color="orange"
           :label="this.$t('auth.users.profile.position')"
         />
         <q-input
-          v-model.trim="data.data.title"
+          v-model.trim="data.title"
           color="orange"
           :label="this.$t('auth.users.profile.title')"
         />
         <q-input
-          v-model.trim="data.data.jobs"
+          v-model.trim="data.jobs"
           color="orange"
           :label="this.$t('auth.users.profile.jobs')"
         />
         <q-input
-          v-model.trim="data.data.unitid"
+          v-model.trim="data.unitid"
           color="orange"
           :label="this.$t('auth.users.profile.department')"
         />
         <q-input
-          v-model.trim="data.data.phone"
+          v-model.trim="data.phone"
           color="orange"
           mask="### - #### ####"
           hint="Mask:### - ### - #### ####"
           :label="this.$t('auth.users.profile.phone1')"
         />
         <q-input
-          v-model.trim="data.data.tel"
-          type="number"
+          v-model.trim="data.tel"
+          type="text"
           color="orange"
           :label="this.$t('auth.users.profile.phone2')"
         />
-        <!--        <q-input-->
-        <!--          v-model.trim="data.data.birthday"-->
-        <!--          type="date"-->
-        <!--          color="orange"-->
-        <!--          mask="####-##-##"-->
-        <!--          :label="this.$t('auth.users.profile.birthday')"-->
-        <!--        />-->
-
         <q-input
-          v-model.trim="data.data.birth"
+          v-model.trim="data.birth"
           color="orange"
           mask="date"
           :rules="['date']"
@@ -84,7 +78,7 @@
                 transition-hide="scale"
               >
                 <q-date
-                  v-model.trim="data.data.birth"
+                  v-model.trim="data.birth"
                   color="orange"
                   text-color="black"
                   first-day-of-week="1"
@@ -96,12 +90,12 @@
         </q-input>
 
         <q-input
-          v-model.trim="data.data.address"
+          v-model.trim="data.address"
           color="orange"
           :label="this.$t('auth.users.profile.address')"
         />
         <q-input
-          v-model.trim="data.data.memo"
+          v-model.trim="data.memo"
           type="textarea"
           color="orange"
           :label="this.$t('auth.users.profile.remark')"
@@ -112,7 +106,7 @@
         <q-btn color="secondary" icon="save" @click="changeprofile()">
           &nbsp; {{ $t('auth.logout.confirm') }}
         </q-btn>
-        &nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <q-btn color="warning" icon-right="cancel" to="user">
           {{ $t('auth.register.cencel') }} &nbsp;
         </q-btn>
@@ -132,84 +126,88 @@ export default {
   data() {
     return {
       data: {
-        data: {
-          nickname: ''
-        },
+        no: null,
+        nickname: null,
+        sex: null,
+        position: null,
+        title: null,
+        jobs: null,
+        unitid: null,
+        phone: null,
+        tel: null,
+        birth: null,
+        address: null,
+        memo: null,
         sexoptions: [
-          {
-            label: '男',
-            value: '男'
-          },
-          {
-            label: '女',
-            value: '女'
-          }
+          { label: this.$t('auth.users.profile.male'), value: 'm' },
+          { label: this.$t('auth.users.profile.female'), value: 'f' }
         ]
       },
       loading: false
     }
   },
-
   loading: false,
+  created() {
+    this.$router.app.$http
+      .get('/profile/getMyProfile/')
+      .then(res => {
+        if (res.data.success) {
+          // console.log(res.data.data)
+          res.data.data.sexoptions = this.data.sexoptions //将性别赋过去
+          this.data = res.data.data
+        } else {
+          this.$zglobal.showMessage(
+            'red-5',
+            'center',
+            this.$t('auth.register.invalid_data')
+          )
+        }
+      })
+      .catch(e => {})
+  },
   methods: {
     changeprofile() {
+      this.data.id = this.$auth.user().id
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
-        this.$profile(this.data)
-          .then(response => {
-            this.$q.notify({
-              message: this.$t('auth.register.account_created'),
-              color: 'purple-4',
-              textColor: 'white',
-              position: 'center',
-              timeout: 2500,
-              actions: [{ icon: 'close', color: 'white' }]
-            })
+        this.$router.app.$http
+          .post('/profile/', this.data)
+          .then(res => {
+            this.loading = false
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('auth.users.profile.success')
+            )
           })
           .catch(error => {
+            this.loading = false
             if (error.response) {
-              if (error.response.status === 422) {
-                for (var key in error.response.data.error) {
-                  switch (error.response.data.error[key][0]) {
-                    case 'The email has already been taken.':
-                      this.$q.notify({
-                        message: this.$t('auth.register.already_registered'),
-                        color: 'red-5',
-                        textColor: 'white',
-                        position: 'center',
-                        timeout: 2500,
-                        actions: [{ icon: 'close', color: 'white' }]
-                      })
-                      break
-                    default:
-                  }
-                }
-              } else {
-                this.$q.notify({
-                  message: this.$t('auth.register.invalid_data'),
-                  color: 'red-5',
-                  textColor: 'white',
-                  position: 'center',
-                  timeout: 2500,
-                  actions: [{ icon: 'close', color: 'white' }]
-                })
-              }
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
+            } else {
+              this.loading = false
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
             }
           })
           .finally(() => {
             this.loading = false
           })
       }
-      console.log(this.$t)
     }
   },
   validations: {
     data: {
-      data: {
-        nickname: {
-          required
-        }
+      no: {
+        required
       }
     }
   }
