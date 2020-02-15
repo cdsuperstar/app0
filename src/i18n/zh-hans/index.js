@@ -3,7 +3,17 @@
 export default {
   failed: '操作失败',
   success: '操作成功',
+  operation: {
+    addsuccess: '添加成功！',
+    addfailed: '添加失败！',
+    delsuccess: '删除成功！',
+    delfailed: '删除失败！',
+    updatesuccess: '更新成功！',
+    updatefailed: '更新失败！'
+  },
   buttons: {
+    comfirmtitle: '确认操作',
+    comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
     send: '发送',
     confirm: '确定',
     cancel: '取消',
@@ -23,7 +33,7 @@ export default {
   menu: {
     menuname: '菜单'
   },
-  models: {
+  modules: {
     header: '模块管理',
     searchall: '全局搜索值'
   },

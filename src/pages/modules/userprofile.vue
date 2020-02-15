@@ -152,8 +152,8 @@ export default {
       .get('/profile/getMyProfile/')
       .then(res => {
         if (res.data.success) {
-          // console.log(res.data.data)
-          res.data.data.sexoptions = this.data.sexoptions //将性别赋过去
+          // console.log(res.data.data)将性别赋过去
+          res.data.data.sexoptions = this.data.sexoptions
           this.data = res.data.data
         } else {
           this.$zglobal.showMessage(

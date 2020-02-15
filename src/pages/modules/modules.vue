@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="q-pa-lg">
     <div class="text-h5 q-ma-md text-teal-6">
-      {{ $t('models.header') }}
+      {{ $t('modules.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md">
@@ -59,7 +59,7 @@
         v-model="quickFilter"
         color="indigo"
         class="q-ml-md"
-        :label="this.$t('models.searchall')"
+        :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
       >
         <template v-slot:prepend>
@@ -78,12 +78,11 @@
         :rowData="rowData"
         :defaultColDef="defaultColDef"
         :pagination="true"
-        :paginationPageSize="10"
+        :paginationPageSize="20"
+        :getRowStyle="getRowStyle"
         :localeText="this.$t('aggrid')"
+        @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
-        @cellValueChanged="onTest"
-        @rowSelected="onRowSelected"
-        @selectionChanged="onSelectionChanged"
       >
       </ag-grid-vue>
     </div>
@@ -92,7 +91,6 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-
 export default {
   name: 'modules',
   computed: {},
@@ -107,11 +105,15 @@ export default {
       columnApi: null,
       columnDefs: null,
       rowData: null,
+      getRowStyle: null,
+      changerowcolor: null,
       defaultColDef: null
     }
   },
   beforeMount() {
-    this.gridOptions = {}
+    this.gridOptions = {
+      allowShowChangeAfterFilter: true
+    }
     this.columnDefs = [
       {
         editable: false,
@@ -179,6 +181,7 @@ export default {
       editable: true,
       resizable: true
     }
+    this.getRowStyle = this.onchangerowcolor
   },
   created() {
     this.$router.app.$http
@@ -210,19 +213,46 @@ export default {
     },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
-
-      selectedData.forEach(val => {
-        this.$router.app.$http
-          .delete('/z_module/' + val.id)
-          .then(res => {
-            if (res.data.success) {
-              this.gridApi.updateRowData({ remove: selectedData })
-              console.log(res.data.data)
-            } else {
-            }
+      if (selectedData.length > 0) {
+        this.$q
+          .dialog({
+            title: this.$t('buttons.comfirmtitle'),
+            message: this.$t('buttons.comfirmdialog'),
+            html: true,
+            cancel: true,
+            persistent: true
           })
-          .catch(e => {})
-      })
+          .onOk(() => {
+            selectedData.forEach(val => {
+              this.$router.app.$http
+                .delete('/z_module/' + val.id)
+                .then(res => {
+                  if (res.data.success) {
+                    this.gridApi.updateRowData({ remove: [val] })
+                    // console.log(res.data.data)
+                    this.$zglobal.showMessage(
+                      'positive',
+                      'center',
+                      this.$t('operation.delsuccess')
+                    )
+                  } else {
+                    this.$zglobal.showMessage(
+                      'red-7',
+                      'center',
+                      this.$t('operation.delfailed')
+                    )
+                  }
+                })
+                .catch(e => {})
+            })
+          })
+          .onCancel(() => {
+            // console.log('>>>> Cancel')
+          })
+          .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+          })
+      }
     },
     ExportDataAsCVS() {
       var params = {
@@ -232,16 +262,17 @@ export default {
       }
       this.gridApi.exportDataAsCsv(params)
     },
-    onRowSelected(event) {
-      console.log()
-      // window.alert(
-      //   'row ' + event.node.data.athlete + ' selected = ' + event.node.selected
-      // )
+    onchangerowcolor() {
+      return { backgroundColor: this.changerowcolor }
     },
-    onSelectionChanged(event) {
-      // var rowCount = event.api.getSelectedNodes().length
-      // this.selections = event.api.getSelectedRows()
-      // window.alert('selection changed, ' + rowCount + ' rows selected')
+    oncellValueChanged(params) {
+      if (params.newValue.trim() !== params.oldValue.trim()) {
+        this.changerowcolor = '#ffa195'
+        this.gridApi.redrawRows({
+          rowNodes: [this.gridApi.getDisplayedRowAtIndex(params.rowIndex)]
+        })
+      }
+      this.changerowcolor = ''
     },
     addItems() {
       var newItems = [{}]
@@ -249,19 +280,55 @@ export default {
       console.log(res)
     },
     saveItems() {
-      var selectedData = this.gridApi.getSelectedRows()
-
+      let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        this.$router.app.$http
-          .post('/z_module/', val)
-          .then(res => {
-            if (res.data.success) {
-              this.gridApi.updateRowData({ remove: selectedData })
-              this.gridApi.updateRowData({ add: [res.data.data] })
-            } else {
-            }
-          })
-          .catch(e => {})
+        // console.log(val)
+        if (val.id === undefined) {
+          this.$router.app.$http
+            .post('/z_module/', val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.addsuccess')
+                )
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.addfailed')
+                )
+              }
+            })
+            .catch(e => {})
+        } else {
+          this.$router.app.$http
+            .put('/z_module/' + val.id, val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.updatesuccess')
+                )
+                // console.log(res.data.data)
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.updatefailed')
+                )
+              }
+            })
+            .catch(e => {})
+        }
       })
     },
     Modeltree() {
@@ -270,21 +337,6 @@ export default {
         .then(res => {
           if (res.data.success) {
             console.log(res.data.data)
-          } else {
-          }
-        })
-        .catch(e => {})
-    },
-    onTest(params) {
-      if (params.data.id === undefined || params.oldValue === params.newValue) {
-        console.log('Edit null or value not changed.')
-        return false
-      }
-      this.$router.app.$http
-        .put('/z_module/' + params.data.id, params.data)
-        .then(res => {
-          if (res.data.success) {
-            // console.log(res.data.data)
           } else {
           }
         })
