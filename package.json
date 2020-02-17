@@ -23,7 +23,8 @@
     "vue-i18n": "^8.0.0",
     "vue-property-decorator": "^8.4.0",
     "vuedraggable": "^2.23.2",
-    "vuelidate": "^0.7.5"
+    "vuelidate": "^0.7.5",
+    "xlsx": "^0.15.5"
   },
   "devDependencies": {
     "@quasar/app": "^1.5.3",

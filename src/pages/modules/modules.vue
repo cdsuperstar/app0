@@ -33,14 +33,6 @@
         color="purple-5"
         text-color="white"
         class="q-ma-xs"
-        icon="remove_red_eye"
-        :label="this.$t('buttons.show')"
-        @click="test()"
-      />
-      <q-btn
-        color="blue-grey-5"
-        text-color="white"
-        class="q-ma-xs"
         icon="update"
         :label="this.$t('buttons.tree')"
         @click="Modeltree()"
@@ -54,9 +46,25 @@
         @click="ExportDataAsCVS()"
       />
       <q-space />
-      <q-input
+      <q-file
+        v-model="importfile"
+        color="indigo"
+        style="max-width: 150px"
+        accept=".xlsx, *.xls"
         dense
+        clearable
+        :label="this.$t('buttons.import')"
+        @input="ImportCVStoData()"
+      >
+        <template v-slot:prepend>
+          <q-icon name="attachment" />
+        </template>
+      </q-file>
+
+      <q-input
         v-model="quickFilter"
+        dense
+        style="max-width: 120px"
         color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
@@ -78,7 +86,7 @@
         :rowData="rowData"
         :defaultColDef="defaultColDef"
         :pagination="true"
-        :paginationPageSize="20"
+        :paginationPageSize="50"
         :getRowStyle="getRowStyle"
         :localeText="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
@@ -91,6 +99,8 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import XLSX from 'xlsx'
+
 export default {
   name: 'modules',
   computed: {},
@@ -100,6 +110,7 @@ export default {
   data() {
     return {
       quickFilter: null,
+      importfile: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
@@ -208,9 +219,34 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    test() {
-      console.log('Its test')
+    // 导入开始
+    ImportCVStoData() {
+      let file = this.importfile
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          /* Parse data */
+          const bstr = e.target.result
+          const wb = XLSX.read(bstr, { type: 'binary' })
+          const wsname = wb.SheetNames[0]
+          const ws = wb.Sheets[wsname]
+          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
+          let j = 0
+          data.map(item => {
+            let ret = {}
+            let i = 0
+            console.log(this)
+            this.columnDefs.forEach(function(val) {
+              ret[val.field] = item[i++]
+            })
+            if (j > 0) this.rowData.push(ret)
+            j++
+          })
+        }
+        reader.readAsBinaryString(file)
+      }
     },
+    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -224,11 +260,12 @@ export default {
           })
           .onOk(() => {
             selectedData.forEach(val => {
+              this.gridApi.updateRowData({ remove: [val] })
+              if (val.id === undefined) return false
               this.$router.app.$http
                 .delete('/z_module/' + val.id)
                 .then(res => {
                   if (res.data.success) {
-                    this.gridApi.updateRowData({ remove: [val] })
                     // console.log(res.data.data)
                     this.$zglobal.showMessage(
                       'positive',
@@ -282,7 +319,7 @@ export default {
     saveItems() {
       let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        // console.log(val)
+        console.log(val)
         if (val.id === undefined) {
           this.$router.app.$http
             .post('/z_module/', val)

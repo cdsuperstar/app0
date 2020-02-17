@@ -136,6 +136,7 @@ export default {
     users: {
       profile: {
         header: '修改用户个人信息',
+        signpic: '更改用户图片',
         no: '工号',
         nickname: '昵称',
         noerror: '请输入工号',

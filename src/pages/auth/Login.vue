@@ -78,12 +78,20 @@ export default {
       isPwd: true,
       data: {
         data: {
-          username: '1@1.com',
-          password: '12345678'
+          username: '',
+          password: ''
         },
         rememberMe: false
       },
       loading: false
+    }
+  },
+  created() {
+    // 加入初始记住的用户信息
+    if (this.$q.localStorage.getItem('rememberMe')) {
+      this.data.data.username = this.$q.localStorage.getItem('username')
+      this.data.data.password = this.$q.localStorage.getItem('password')
+      this.data.rememberMe = this.$q.localStorage.getItem('rememberMe')
     }
   },
   methods: {
@@ -93,7 +101,13 @@ export default {
         this.loading = true
         this.$auth
           .login(this.data)
-          .then(response => {})
+          .then(response => {
+            if (this.data.rememberMe) {
+              this.$q.localStorage.set('username', this.data.data.username)
+              this.$q.localStorage.set('password', this.data.data.password)
+            }
+            this.$q.localStorage.set('rememberMe', this.data.rememberMe)
+          })
           .catch(error => {
             if (error.response) {
               if (error.response.status === 401) {
