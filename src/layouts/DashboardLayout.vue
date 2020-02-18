@@ -128,7 +128,7 @@
           title="用户中心"
         >
           <q-list separator style="overflow:hidden;">
-            <div v-for="item in bmenu" :key="item.id">
+            <div v-for="item in menutree" :key="item.id">
               <q-item
                 v-ripple
                 clickable
@@ -178,8 +178,6 @@ export default {
   components: { treemenu, NestedTest },
   data() {
     return {
-      bmenu: null,
-      menutree: null,
       left: false,
       right: false,
       langs: [
@@ -196,7 +194,15 @@ export default {
     }
   },
   computed: {
-    ...mapState('zero', ['ZModules'])
+    ...mapState('zero', ['ZModules']),
+    menutree: {
+      get() {
+        return JSON.parse(JSON.stringify(this.ZModules))
+      },
+      set(value) {
+        this.setZModules(value)
+      }
+    }
   },
   watch: {
     lang(lang) {
@@ -208,14 +214,14 @@ export default {
     }
   },
   created() {
-    // console.log(str.indexOf('B') === -1)
     this.getZModules()
       .then(res => {
         if (res.data.success) {
-          if (Array.isArray(res.data.data)) {
+          let routearr = this.$zglobal.flatten(res.data.data)
+          if (Array.isArray(routearr)) {
             let { routes } = this.$router.options
             let routeData = routes.find(r => r.path === '/user')
-            res.data.data.forEach(function(val) {
+            routearr.forEach(function(val) {
               // push url to router by Luke
               if (val.url !== '' && val.url !== null) {
                 routeData.children.push({
@@ -225,19 +231,8 @@ export default {
                 })
               }
             })
-            this.bmenu = res.data.data
-
             this.$router.addRoutes([routeData])
           }
-        } else {
-        }
-      })
-      .catch(e => {})
-    this.$router.app.$http
-      .get('/z_module/getMyMenu')
-      .then(res => {
-        if (res.data.success) {
-          this.menutree = res.data.data
         } else {
         }
       })
@@ -245,9 +240,9 @@ export default {
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules']),
+    ...mapActions('zero', ['getZModules', 'setZModules']),
     test() {
-      console.log('test:', this.bmenu)
+      console.log('test:', this.ZModules)
     }
   }
 }

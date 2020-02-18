@@ -1,3 +1,6 @@
 export function ZModules(state) {
-  return state.z_modules
+  return state.ZModules
+}
+export function ZPermissions(state) {
+  return state.ZPermissions
 }

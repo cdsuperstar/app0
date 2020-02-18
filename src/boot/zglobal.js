@@ -13,6 +13,14 @@ const zglobal = {
       timeout: 2500,
       actions: [{ icon: 'close', color: 'white' }]
     })
+  },
+  flatten(arr) {
+    return arr
+      ? arr.reduce(
+          (result, item) => [...result, item, ...this.flatten(item.children)],
+          []
+        )
+      : []
   }
 }
 
