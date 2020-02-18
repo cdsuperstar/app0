@@ -11,6 +11,14 @@
           Title
         </q-toolbar-title>
         <q-space />
+        <q-btn
+          flat
+          round
+          dense
+          icon="home"
+          to="/user/dashboard"
+          :title="this.$t('buttons.home')"
+        />
         <q-btn-dropdown v-if="$q.screen.gt.xs" stretch flat label="功能">
           <q-list>
             <q-item-label header>Folders</q-item-label>
