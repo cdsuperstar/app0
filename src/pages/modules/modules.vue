@@ -436,12 +436,10 @@ export default {
         })
     },
     EditModeltree() {
-      console.log(this.Modeldata)
       this.loading = true
       this.$router.app.$http
         .post('/z_module/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
         .then(res => {
-          console.log(res)
           if (res.data.success) {
             this.loading = false
             this.DModelTree = false
