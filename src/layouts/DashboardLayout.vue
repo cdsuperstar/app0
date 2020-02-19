@@ -128,7 +128,7 @@
           title="用户中心"
         >
           <q-list separator style="overflow:hidden;">
-            <div v-for="item in menutree" :key="item.id">
+            <div v-for="item in routearr" :key="item.id">
               <q-item
                 v-ripple
                 clickable
@@ -178,6 +178,7 @@ export default {
   components: { treemenu, NestedTest },
   data() {
     return {
+      routearr: [],
       left: false,
       right: false,
       langs: [
@@ -217,11 +218,11 @@ export default {
     this.getZModules()
       .then(res => {
         if (res.data.success) {
-          let routearr = this.$zglobal.flatten(res.data.data)
-          if (Array.isArray(routearr)) {
+          this.routearr = this.$zglobal.flatten(res.data.data)
+          if (Array.isArray(this.routearr)) {
             let { routes } = this.$router.options
             let routeData = routes.find(r => r.path === '/user')
-            routearr.forEach(function(val) {
+            this.forEach(function(val) {
               // push url to router by Luke
               if (val.url !== '' && val.url !== null) {
                 routeData.children.push({
