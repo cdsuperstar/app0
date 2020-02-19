@@ -106,7 +106,7 @@
           :depth="1"
         ></treemenu>
       </q-list>
-      <nested-test v-model="menutree" v-if="true" class="col-8" />
+      <nested-test v-model="menutree" v-if="false" class="col-8" />
     </q-drawer>
 
     <q-drawer v-model="right" side="right" overlay elevated>

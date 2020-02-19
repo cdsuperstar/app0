@@ -1,5 +1,43 @@
 <template>
   <q-page padding class="q-pa-lg">
+    <q-dialog v-model="DModelTree">
+      <q-card class="q-dialog-plugin">
+        <q-toolbar>
+          <q-icon color="primary" size="30px" name="account_tree" />
+          <q-toolbar-title>
+            <span class="text-weight-bold">
+              {{ $t('modules.editmodeltree') }}</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="EditModeltree()"
+          />
+        </q-card-actions>
+        <q-inner-loading :showing="loading">
+          <q-spinner-gears size="80px" color="primary" />
+        </q-inner-loading>
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
       {{ $t('modules.header') }}
     </div>
@@ -33,7 +71,7 @@
         color="purple-5"
         text-color="white"
         class="q-ma-xs"
-        icon="update"
+        icon="account_tree"
         :label="this.$t('buttons.tree')"
         @click="Modeltree()"
       />
@@ -100,15 +138,20 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import XLSX from 'xlsx'
+import NestedTest from './nested-tree'
 
 export default {
   name: 'modules',
   computed: {},
   components: {
-    AgGridVue
+    AgGridVue,
+    NestedTest
   },
   data() {
     return {
+      loading: true,
+      DModelTree: null,
+      Modeldata: null,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -370,15 +413,60 @@ export default {
       })
     },
     Modeltree() {
+      this.loading = true
+      this.DModelTree = true
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
+            // console.log(res.data.data)
+            this.Modeldata = res.data.data
+            this.loading = false
           } else {
           }
         })
-        .catch(e => {})
+        .catch(e => {
+          this.$zglobal.showMessage(
+            'red-5',
+            'center',
+            this.$t('auth.register.invalid_data')
+          )
+          this.loading = false
+          this.DModelTree = false
+        })
+    },
+    EditModeltree() {
+      console.log(this.Modeldata)
+      this.loading = true
+      this.$router.app.$http
+        .post('/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
+        .then(res => {
+          console.log(res)
+          if (res.data.success) {
+            this.loading = false
+            this.DModelTree = false
+            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
+          }
+        })
+        .catch(error => {
+          this.loading = false
+          if (error.status) {
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
+        .finally(() => {
+          this.loading = false
+          this.DModelTree = false
+          this.$zglobal.showMessage(
+            'red-5',
+            'center',
+            this.$t('auth.register.invalid_data')
+          )
+        })
     }
   }
 }

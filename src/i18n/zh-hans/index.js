@@ -37,6 +37,7 @@ export default {
   },
   modules: {
     header: '模块管理',
+    editmodeltree: '模块树编辑',
     searchall: '全局搜索值'
   },
   users: {
@@ -67,6 +68,7 @@ export default {
     },
     errors: {
       namenull: '请输入用户名.',
+      adderror: '增加用户失败（该用户已存在）.',
       password_length: '密码最少8位.',
       password_match: '密码不匹配.',
       password: '需要输入密码',

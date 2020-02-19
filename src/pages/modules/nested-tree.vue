@@ -1,14 +1,29 @@
 <style scoped>
 .item-container {
-  max-width: 20rem;
+  max-width: 22rem;
   margin: 0;
 }
 .item {
-  border: solid black 1px;
-  background-color: #fefefe;
+  padding: 0.5rem;
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px dashed #000;
+}
+.item:hover {
+  border-radius: 15px 15px 5px 5px;
+  background: -webkit-linear-gradient(#ffffff, #e8e8e8); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#ffffff, #e8e8e8); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#ffffff, #e8e8e8); /* Firefox 3.6 - 15 */
+  background: linear-gradient(
+    #ffffff,
+    #e8e8e8
+  ); /* 标准的语法（必须放在最后） */
 }
 .item-sub {
-  margin: 0 0 0 1rem;
+  margin: 0 0 0 2rem;
+}
+.material-icons {
+  color: #3834c8;
 }
 </style>
 
@@ -22,7 +37,11 @@
     @input="emitter"
   >
     <div class="item-group" :key="el.id" v-for="el in realValue">
-      <div class="item">{{ el.icon }} {{ el.name }}</div>
+      <div class="item" v-ripple>
+        <i class="material-icons" style="font-size: 1.5rem;">{{ el.icon }}</i
+        >&nbsp;&nbsp;
+        <b>{{ el.name }}</b>
+      </div>
       <nested-tree class="item-sub" :list="el.children" />
     </div>
   </draggable>

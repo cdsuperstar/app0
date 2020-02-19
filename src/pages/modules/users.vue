@@ -386,7 +386,7 @@ export default {
       this.$router.app.$http
         .post('/users/', this.data.data)
         .then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.data.success) {
             this.gridApi.updateRowData({
               add: [res.data.data]
@@ -397,11 +397,19 @@ export default {
               this.$t('operation.addsuccess')
             )
           } else {
-            this.$zglobal.showMessage(
-              'red-7',
-              'center',
-              this.$t('operation.addfailed')
-            )
+            if (res.status === 200) {
+              this.$zglobal.showMessage(
+                'red-7',
+                'center',
+                this.$t('auth.errors.adderror')
+              )
+            } else {
+              this.$zglobal.showMessage(
+                'red-7',
+                'center',
+                this.$t('operation.addfailed')
+              )
+            }
           }
         })
         .catch(e => {})
