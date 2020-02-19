@@ -303,7 +303,8 @@ export default {
       return { backgroundColor: this.changerowcolor }
     },
     oncellValueChanged(params) {
-      if (params.newValue.trim() !== params.oldValue.trim()) {
+      if (params.oldValue === null) params.oldValue = ''
+      if (params.newValue !== params.oldValue) {
         this.changerowcolor = '#ffa195'
         this.gridApi.redrawRows({
           rowNodes: [this.gridApi.getDisplayedRowAtIndex(params.rowIndex)]

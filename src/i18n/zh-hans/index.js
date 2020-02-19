@@ -13,6 +13,7 @@ export default {
   },
   buttons: {
     home: '主页',
+    close: '关闭',
     comfirmtitle: '确认操作',
     comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
     send: '发送',
@@ -38,6 +39,10 @@ export default {
     header: '模块管理',
     searchall: '全局搜索值'
   },
+  users: {
+    header: '用户管理',
+    adduser: '添加新用户'
+  },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',
     submit: '@:buttons.submit',
@@ -61,6 +66,7 @@ export default {
       repeat_password: '重复密码'
     },
     errors: {
+      namenull: '请输入用户名.',
       password_length: '密码最少8位.',
       password_match: '密码不匹配.',
       password: '需要输入密码',

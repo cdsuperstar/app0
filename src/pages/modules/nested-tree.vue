@@ -4,7 +4,6 @@
   margin: 0;
 }
 .item {
-  padding: 1rem;
   border: solid black 1px;
   background-color: #fefefe;
 }
@@ -23,7 +22,7 @@
     @input="emitter"
   >
     <div class="item-group" :key="el.id" v-for="el in realValue">
-      <div class="item">{{ el.name }}</div>
+      <div class="item">{{ el.icon }} {{ el.name }}</div>
       <nested-tree class="item-sub" :list="el.children" />
     </div>
   </draggable>

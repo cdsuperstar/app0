@@ -1,83 +1,43 @@
 <template>
   <div class="q-pa-md" align="center">
-    <div style="float:right;">
-      <q-btn
-        round
-        color="purple"
-        glossy
-        text-color="white"
-        icon="add"
-        size="20px"
-        title="添加新备忘"
-      ></q-btn>
-    </div>
-    <span style="color: #9C9C9C">温馨提示：点击进入进行修改</span>
-    <div class="q-gutter-md">
-      <div
-        class="inline bg-brown-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-
-      <div
-        class="inline bg-blue-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-
-      <div
-        class="inline bg-light-green-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-
-      <div
-        class="inline bg-pink-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-
-      <div
-        class="inline bg-purple-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-
-      <div
-        class="inline bg-indigo-2 rounded-borders cursor-pointer"
-        style="max-width: 600px"
-      >
-        <div class="fit flex flex-center text-center non-selectable q-pa-md">
-          I am groot!<br />(Hover me!)
-        </div>
-      </div>
-    </div>
-    <q-page-scroller :scroll-offset="150" :offset="[18, 18]">
-      <q-btn fab icon="keyboard_arrow_up" color="pink"></q-btn>
-    </q-page-scroller>
+    <nested-test v-if="true" v-model="menutree" class="col-8" />
   </div>
 </template>
 
 <style></style>
 
 <script>
+import NestedTest from './nested-tree'
 export default {
-  name: 'NotePad'
+  components: { NestedTest },
+  name: 'NotePad',
+  data() {
+    return {
+      menutree: null
+    }
+  },
+  created() {
+    this.getmyMenu()
+  },
+  methods: {
+    getmyMenu() {
+      this.$router.app.$http
+        .get('/z_module/')
+        .then(res => {
+          if (res.data.success) {
+            console.log(res)
+            this.menutree = res.data.data
+          } else {
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
+        .catch(e => {})
+    }
+  }
 }
 </script>
 
