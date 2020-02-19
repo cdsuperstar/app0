@@ -219,10 +219,11 @@ export default {
       .then(res => {
         if (res.data.success) {
           this.routearr = this.$zglobal.flatten(res.data.data)
+
           if (Array.isArray(this.routearr)) {
             let { routes } = this.$router.options
             let routeData = routes.find(r => r.path === '/user')
-            this.forEach(function(val) {
+            this.routearr.forEach(function(val) {
               // push url to router by Luke
               if (val.url !== '' && val.url !== null) {
                 routeData.children.push({
@@ -241,10 +242,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules', 'setZModules']),
-    test() {
-      console.log('test:', this.ZModules)
-    }
+    ...mapActions('zero', ['getZModules', 'setZModules'])
   }
 }
 </script>
