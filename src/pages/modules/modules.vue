@@ -439,7 +439,7 @@ export default {
       console.log(this.Modeldata)
       this.loading = true
       this.$router.app.$http
-        .post('/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
+        .post('/z_module/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
         .then(res => {
           console.log(res)
           if (res.data.success) {
@@ -457,15 +457,6 @@ export default {
               this.$t('auth.register.invalid_data')
             )
           }
-        })
-        .finally(() => {
-          this.loading = false
-          this.DModelTree = false
-          this.$zglobal.showMessage(
-            'red-5',
-            'center',
-            this.$t('auth.register.invalid_data')
-          )
         })
     }
   }
