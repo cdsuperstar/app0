@@ -2,6 +2,7 @@
 export function someAction (context) {
 }
 */
+// 得到树形结构
 export function getZModules({ commit }) {
   return new Promise((resolve, reject) => {
     // console.log('in action:', this.$router.app.$http)
@@ -20,6 +21,68 @@ export function getZModules({ commit }) {
       })
   })
 }
+
 export function setZModules({ commit }, payload) {
   commit('setZModules', payload)
+}
+// 取得当前用户权限
+export function reqThePermission({ commit, state }, payload) {
+  let module = state.ZPermissions.modules.filter(function(el) {
+    return el.name === payload.module
+  })
+
+  if (module[0] !== undefined) {
+    let cfg = state.ZPermissions.data.filter(function(el) {
+      return el.name === payload.module + '.' + payload.name
+    })
+
+    let ret = {
+      cfg: cfg[0] === undefined ? null : cfg[0].pivot.usrcfg,
+      module: module[0]
+    }
+    return new Promise((resolve, reject) => {
+      resolve(ret)
+    })
+  } else {
+    return new Promise((resolve, reject) => {
+      this.$router.app.$http
+        .post('/zero/reqThePermission', payload)
+        .then(res => {
+          if (res.data.success) {
+            let ret = {
+              cfg:
+                res.data.data === null
+                  ? null
+                  : JSON.parse(res.data.data.pivot.usrcfg),
+              module: res.data.module
+            }
+            resolve(ret)
+          } else {
+            reject(false)
+          }
+        })
+        .catch(e => {
+          reject(e)
+        })
+    })
+  }
+}
+
+export function getMyPermissions({ commit }, payload) {
+  return new Promise((resolve, reject) => {
+    this.$router.app.$http
+      .post('/zero/getMyPermissions', payload)
+      .then(res => {
+        if (res.data.success) {
+          commit('setZPermissions', res.data)
+          console.log(res.data)
+          resolve(res.data)
+        } else {
+          reject(false)
+        }
+      })
+      .catch(e => {
+        reject(e)
+      })
+  })
 }

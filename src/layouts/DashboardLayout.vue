@@ -214,12 +214,11 @@ export default {
       })
     }
   },
-  created() {
+  mounted() {
     this.getZModules()
       .then(res => {
         if (res.data.success) {
           this.routearr = this.$zglobal.flatten(res.data.data)
-
           if (Array.isArray(this.routearr)) {
             let { routes } = this.$router.options
             let routeData = routes.find(r => r.path === '/user')

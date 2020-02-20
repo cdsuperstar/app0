@@ -5,7 +5,7 @@
     <q-btn color="primary" @click="$auth.logout()">
       {{ $t('auth.logout.logout') }}
     </q-btn>
-    <q-btn color="primary" @click="getZModules()">
+    <q-btn color="primary" @click="test()">
       测试state
     </q-btn>
   </q-page>
@@ -18,15 +18,54 @@ export default {
   name: 'PageIndex',
   components: {},
   computed: {
-    ...mapState('zero', ['products'])
+    ...mapState('zero', ['ZPermissions'])
   },
   created() {
     this.$zglobal.showMessage('positive', 'top', '这是个消息的测试  !!')
+    this.getMyPermissions({
+      role: 'w'
+    })
+      .then(res => {})
+      .catch(e => {
+        console.log(e)
+      })
   },
   methods: {
-    ...mapActions('zero', ['getZModules']),
+    ...mapActions('zero', [
+      'getZModules',
+      'reqThePermission',
+      'getMyPermissions'
+    ]),
     test() {
-      console.log('Its a test')
+      var preq = {
+        role: 'w',
+        module: 'users',
+        name: 'add',
+        syscfg: {
+          mynode: { required: false, type: Number, default: null }
+        },
+        title: '调整用户树'
+      }
+
+      this.reqThePermission(preq)
+        .then(res => {
+          console.log('Begin:', res)
+          if (res.cfg) {
+            console.log('Cfg set:', res.cfg)
+          }
+          if (res.module) {
+            console.log('Module set:', res.module)
+          }
+          if (!res.module && !res.cfg) {
+            console.log('Failed')
+          }
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    test1() {
+      console.log(this.ZPermissions)
     }
   }
 }
