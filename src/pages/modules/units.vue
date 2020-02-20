@@ -1,83 +1,289 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-btn @click="test()">值。。。</q-btn>
-    <q-btn @click="del()">测试删除</q-btn>
-    <q-btn @click="addItems()">测试增加</q-btn>
-    <q-btn @click="testadd()">增加选定</q-btn>
+  <q-page padding class="q-pa-lg">
+    <q-dialog v-model="DModelTree">
+      <q-card class="q-dialog-plugin">
+        <q-toolbar>
+          <q-icon color="primary" size="30px" name="account_tree" />
+          <q-toolbar-title>
+            <span class="text-weight-bold">
+              {{ $t('modules.editmodeltree') }}</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
+        </q-card-section>
+        <q-separator />
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="EditModeltree()"
+          />
+        </q-card-actions>
+        <q-inner-loading :showing="loading">
+          <q-spinner-gears size="80px" color="primary" />
+        </q-inner-loading>
+      </q-card>
+    </q-dialog>
+    <div class="text-h5 q-ma-md text-teal-6">
+      测试页面
+    </div>
+    <q-separator color="lime-2" />
+    <div class="row q-ma-md" style="margin: 16px 1px">
+      <q-btn
+        color="lime-7"
+        text-color="white"
+        class="q-ma-xs"
+        icon="post_add"
+        :label="this.$t('buttons.add')"
+        @click="addItems()"
+      />
+      <q-btn
+        color="deep-orange-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="delete_sweep"
+        :label="this.$t('buttons.delete')"
+        @click="delItems()"
+      />
+      <q-btn
+        color="indigo-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="save"
+        :label="this.$t('buttons.save')"
+        @click="saveItems()"
+      />
+      <q-btn
+        color="purple-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="account_tree"
+        :label="this.$t('buttons.tree')"
+        @click="Modeltree()"
+      />
+      <q-btn
+        color="green-6"
+        text-color="white"
+        class="q-ma-xs"
+        icon="cloud_download"
+        :label="this.$t('buttons.export')"
+        @click="ExportDataAsCVS()"
+      />
+      <q-space />
+      <q-file
+        v-model="importfile"
+        color="indigo"
+        style="max-width: 150px"
+        accept=".xlsx, *.xls"
+        dense
+        clearable
+        :label="this.$t('buttons.import')"
+        @input="ImportCVStoData()"
+      >
+        <template v-slot:prepend>
+          <q-icon name="attachment" />
+        </template>
+      </q-file>
 
-    <q-btn @click="testtree()">测试树</q-btn>
-
-    <q-card>
+      <q-input
+        v-model="quickFilter"
+        dense
+        style="max-width: 120px"
+        color="indigo"
+        class="q-ml-md"
+        :label="this.$t('modules.searchall')"
+        @input="onQuickFilterChanged()"
+      >
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
+    <div class="shadow-1">
       <ag-grid-vue
-        style="width: 1000px; height: 500px;"
-        class="ag-theme-balham"
+        style="width: 100%; height: 450px;"
+        class="ag-theme-balham Models-agGrid"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
         :gridOptions="gridOptions"
         :columnDefs="columnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
+        :pagination="true"
+        :paginationPageSize="50"
+        :getRowStyle="getRowStyle"
+        :localeText="this.$t('aggrid')"
+        @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
-        @cellValueChanged="onTest"
-        @rowSelected="onRowSelected"
-        @selectionChanged="onSelectionChanged"
       >
       </ag-grid-vue>
-    </q-card>
+    </div>
   </q-page>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import XLSX from 'xlsx'
+import NestedTest from './nested-tree'
 
 export default {
   name: 'modules',
-  computed: {},
   components: {
-    AgGridVue
+    AgGridVue,
+    NestedTest
   },
   data() {
     return {
+      loading: true,
+      DModelTree: null,
+      Modeldata: null,
+      quickFilter: null,
+      importfile: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
       columnDefs: null,
       rowData: null,
+      getRowStyle: null,
+      changerowcolor: null,
       defaultColDef: null
     }
   },
+  computed: {},
   beforeMount() {
-    this.gridOptions = {}
+    this.gridOptions = {
+      allowShowChangeAfterFilter: true
+    }
     this.columnDefs = [
       {
-        checkboxSelection: true,
-        editable: false,
         headerName: 'ID',
         field: 'id',
-        sortable: true
+        width: 55,
+        sortable: true,
+        minWidth: 55,
+        valueFormatter: currencyFormatter,
+        resizable: false,
+        headerCheckboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: true
       },
       {
-        headerName: '单位名',
+        // 得到id值 并*100
+        headerName: 'ID * 100 合计',
+        colId: 'a&b',
+        sortable: true,
+        width: 100,
+        minWidth: 100,
+        valueFormatter:
+          '"\xA5" + Math.floor(value).toFixed(2).toString().replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, "$1,")',
+        resizable: false,
+        valueGetter: function(params) {
+          return params.data.id * 100
+        }
+      },
+      {
+        // 得到colid a&b 的值，显示出来
+        headerName: 'Chain',
+        cellClass: 'number-cell',
+        valueGetter: function(params) {
+          return params.getValue('a&b') * 2
+        }
+      },
+      {
+        headerName: '选择',
         field: 'name',
+        width: 100,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 100,
+        resizable: false,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: unitgr
       },
       {
-        headerName: '单位简介',
+        headerName: '日期',
         field: 'title',
+        width: 100,
         sortable: true,
-        filter: true
+        minWidth: 100,
+        resizable: false
+      },
+      {
+        headerName: 'ICON',
+        field: 'icon',
+        width: 80,
+        sortable: true,
+        filter: true,
+        minWidth: 80,
+        resizable: false
+      },
+      {
+        headerName: '类型',
+        field: 'ismenu',
+        width: 40,
+        sortable: true,
+        filter: true,
+        minWidth: 20,
+        resizable: false
+      },
+      {
+        headerName: '大输入框',
+        field: 'url',
+        width: 100,
+        sortable: true,
+        filter: true,
+        minWidth: 100,
+        cellEditor: 'agLargeTextCellEditor',
+        cellEditorParams: {
+          maxLength: '300', // override the editor defaults
+          cols: '50',
+          rows: '6'
+        },
+        resizable: false
+      },
+      {
+        headerName: '创建时间',
+        field: 'created_at',
+        width: 80,
+        editable: true,
+        cellEditor: 'agDateInput',
+        sortable: true,
+        filter: true,
+        minWidth: 80,
+        resizable: true
+      },
+      {
+        headerName: '更新时间',
+        field: 'updated_at',
+        width: 80,
+        editable: false,
+        sortable: true,
+        filter: true,
+        minWidth: 80,
+        resizable: false
       }
     ]
     this.defaultColDef = {
       editable: true,
       resizable: true
     }
+    this.getRowStyle = this.onchangerowcolor
   },
-  mounted() {
-    // console.log(this.ZModules)
-    this.gridApi = this.gridOptions.api
-    this.gridColumnApi = this.gridOptions.columnApi
+  created() {
     this.$router.app.$http
       .get('/z_module/')
       .then(res => {
@@ -89,88 +295,243 @@ export default {
       })
       .catch(e => {})
   },
+  mounted() {
+    // console.log(this.ZModules)
+    this.gridApi = this.gridOptions.api
+    this.gridColumnApi = this.gridOptions.columnApi
+  },
   methods: {
     // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
-    test() {
-      console.log(this.rowData)
+    onQuickFilterChanged() {
+      this.gridApi.setQuickFilter(this.quickFilter)
     },
-    del() {
-      var selectedData = this.gridApi.getSelectedRows()
-
-      selectedData.forEach(val => {
-        this.$router.app.$http
-          .delete('/z_module/' + val.id)
-          .then(res => {
-            if (res.data.success) {
-              this.gridApi.updateRowData({ remove: selectedData })
-              console.log(res.data.data)
-            } else {
-            }
+    // 导入开始
+    ImportCVStoData() {
+      let file = this.importfile
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = e => {
+          /* Parse data */
+          const bstr = e.target.result
+          const wb = XLSX.read(bstr, { type: 'binary' })
+          const wsname = wb.SheetNames[0]
+          const ws = wb.Sheets[wsname]
+          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
+          let j = 0
+          data.map(item => {
+            let ret = {}
+            let i = 0
+            console.log(this)
+            this.columnDefs.forEach(function(val) {
+              ret[val.field] = item[i++]
+            })
+            if (j > 0) this.rowData.push(ret)
+            j++
           })
-          .catch(e => {})
-      })
+        }
+        reader.readAsBinaryString(file)
+      }
     },
-    onRowSelected(event) {
-      console.log()
-      // window.alert(
-      //   'row ' + event.node.data.athlete + ' selected = ' + event.node.selected
-      // )
+    // 导入结束
+    delItems() {
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length > 0) {
+        this.$q
+          .dialog({
+            title: this.$t('buttons.comfirmtitle'),
+            message: this.$t('buttons.comfirmdialog'),
+            html: true,
+            cancel: true,
+            persistent: true
+          })
+          .onOk(() => {
+            selectedData.forEach(val => {
+              this.gridApi.updateRowData({ remove: [val] })
+              if (val.id === undefined) return false
+              this.$router.app.$http
+                .delete('/z_module/' + val.id)
+                .then(res => {
+                  if (res.data.success) {
+                    // console.log(res.data.data)
+                    this.$zglobal.showMessage(
+                      'positive',
+                      'center',
+                      this.$t('operation.delsuccess')
+                    )
+                  } else {
+                    this.$zglobal.showMessage(
+                      'red-7',
+                      'center',
+                      this.$t('operation.delfailed')
+                    )
+                  }
+                })
+                .catch(e => {})
+            })
+          })
+          .onCancel(() => {
+            // console.log('>>>> Cancel')
+          })
+          .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+          })
+      }
     },
-    onSelectionChanged(event) {
-      // var rowCount = event.api.getSelectedNodes().length
-      // this.selections = event.api.getSelectedRows()
-      // window.alert('selection changed, ' + rowCount + ' rows selected')
+    ExportDataAsCVS() {
+      var params = {
+        fileName: 'modules.xls',
+        suppressQuotes: true,
+        columnSeparator: ','
+      }
+      this.gridApi.exportDataAsCsv(params)
+    },
+    onchangerowcolor() {
+      return { backgroundColor: this.changerowcolor }
+    },
+    oncellValueChanged(params) {
+      if (params.oldValue === null) params.oldValue = ''
+      if (params.newValue !== params.oldValue) {
+        this.changerowcolor = '#ffa195'
+        this.gridApi.redrawRows({
+          rowNodes: [this.gridApi.getDisplayedRowAtIndex(params.rowIndex)]
+        })
+      }
+      this.changerowcolor = ''
     },
     addItems() {
       var newItems = [{}]
       var res = this.gridApi.updateRowData({ add: newItems })
       console.log(res)
     },
-    testadd() {
-      var selectedData = this.gridApi.getSelectedRows()
-
+    saveItems() {
+      let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        this.$router.app.$http
-          .post('/z_module/', val)
-          .then(res => {
-            if (res.data.success) {
-              this.gridApi.updateRowData({ remove: selectedData })
-              this.gridApi.updateRowData({ add: [res.data.data] })
-            } else {
-            }
-          })
-          .catch(e => {})
+        console.log(val)
+        if (val.id === undefined) {
+          this.$router.app.$http
+            .post('/z_module/', val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.addsuccess')
+                )
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.addfailed')
+                )
+              }
+            })
+            .catch(e => {})
+        } else {
+          this.$router.app.$http
+            .put('/z_module/' + val.id, val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.updatesuccess')
+                )
+                // console.log(res.data.data)
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.updatefailed')
+                )
+              }
+            })
+            .catch(e => {})
+        }
       })
     },
-    testtree() {
+    Modeltree() {
+      this.loading = true
+      this.DModelTree = true
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
           if (res.data.success) {
-            console.log(res.data.data)
+            // console.log(res.data.data)
+            this.Modeldata = res.data.data
+            this.loading = false
           } else {
           }
         })
-        .catch(e => {})
+        .catch(e => {
+          this.$zglobal.showMessage(
+            'red-5',
+            'center',
+            this.$t('auth.register.invalid_data')
+          )
+          this.loading = false
+          this.DModelTree = false
+        })
     },
-    onTest(params) {
-      if (params.data.id === undefined || params.oldValue === params.newValue) {
-        console.log('Edit null or value not changed.')
-        return false
-      }
+    EditModeltree() {
+      this.loading = true
       this.$router.app.$http
-        .put('/z_module/' + params.data.id, params.data)
+        .post('/z_module/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
         .then(res => {
           if (res.data.success) {
-            // console.log(res.data.data)
-          } else {
+            this.loading = false
+            this.DModelTree = false
+            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
         })
-        .catch(e => {})
+        .catch(error => {
+          this.loading = false
+          if (error.status) {
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
     }
   }
 }
+
+function currencyFormatter(params) {
+  return '\xA5' + formatNumber(params.value)
+}
+function formatNumber(number) {
+  return Math.floor(number)
+    .toString()
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
 </script>
+<style>
+/*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
+.Models-agGrid .ag-header {
+  background-color: #666699;
+  color: #ffffff;
+}
+.Models-agGrid .ag-cell {
+  padding-left: 1px;
+}
+.ag-theme-balham .ag-icon,
+.ag-header-icon .ag-sort-ascending-icon {
+  color: #ffffff;
+}
+.ag-theme-balham .ag-icon-checkbox-unchecked {
+  color: #cccccc;
+}
+.ag-theme-balham .ag-icon-checkbox-checked {
+  color: #666699;
+}
+</style>

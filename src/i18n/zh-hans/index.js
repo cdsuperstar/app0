@@ -173,6 +173,7 @@ export default {
     }
   },
   aggrid: {
+    date: '选择日期',
     // for filter panel
     page: '页面',
     more: '更多',

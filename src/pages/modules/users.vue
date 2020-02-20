@@ -282,12 +282,10 @@ export default {
       .catch(e => {})
   },
   mounted() {
-    // console.log(this.ZModules)
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -368,7 +366,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'modules.xls',
+        fileName: 'users.xls',
         suppressQuotes: true,
         columnSeparator: ','
       }
