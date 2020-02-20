@@ -238,10 +238,18 @@ export default {
         }
       })
       .catch(e => {})
+
+    // this.getMyPermissions({
+    //   role: 'w'
+    // })
+    //   .then(res => {})
+    //   .catch(e => {
+    //     console.log(e)
+    //   })
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules', 'setZModules'])
+    ...mapActions('zero', ['getZModules', 'setZModules', 'getMyPermissions'])
   }
 }
 </script>

@@ -22,13 +22,6 @@ export default {
   },
   created() {
     this.$zglobal.showMessage('positive', 'top', '这是个消息的测试  !!')
-    this.getMyPermissions({
-      role: 'w'
-    })
-      .then(res => {})
-      .catch(e => {
-        console.log(e)
-      })
   },
   methods: {
     ...mapActions('zero', [
