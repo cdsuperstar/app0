@@ -75,7 +75,6 @@ export function getMyPermissions({ commit }, payload) {
       .then(res => {
         if (res.data.success) {
           commit('setZPermissions', res.data)
-          console.log(res.data)
           resolve(res.data)
         } else {
           reject(false)
