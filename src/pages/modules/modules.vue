@@ -42,7 +42,7 @@
       {{ $t('modules.header') }}
     </div>
     <q-separator color="lime-2" />
-    <div class="row q-ma-md">
+    <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
         color="lime-7"
         text-color="white"
@@ -115,7 +115,7 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 500px;"
+        style="width: 100%; height: 600px;"
         class="ag-theme-balham Models-agGrid"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
@@ -173,8 +173,10 @@ export default {
         editable: false,
         headerName: 'ID',
         field: 'id',
-        width: 30,
+        width: 55,
         sortable: true,
+        minWidth: 55,
+        resizable: false,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
@@ -184,35 +186,45 @@ export default {
         field: 'name',
         width: 100,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 100,
+        resizable: false
       },
       {
         headerName: '标题',
         field: 'title',
         width: 100,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 100,
+        resizable: false
       },
       {
         headerName: 'ICON',
         field: 'icon',
-        width: 50,
+        width: 80,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 80,
+        resizable: false
       },
       {
         headerName: '类型',
         field: 'ismenu',
         width: 40,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 20,
+        resizable: false
       },
       {
         headerName: '路径名',
         field: 'url',
         width: 100,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 100,
+        resizable: false
       },
       {
         headerName: '创建时间',
@@ -220,7 +232,9 @@ export default {
         width: 80,
         editable: false,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 80,
+        resizable: false
       },
       {
         headerName: '更新时间',
@@ -228,7 +242,9 @@ export default {
         width: 80,
         editable: false,
         sortable: true,
-        filter: true
+        filter: true,
+        minWidth: 80,
+        resizable: false
       }
     ]
     this.defaultColDef = {

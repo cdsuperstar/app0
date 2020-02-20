@@ -7,7 +7,7 @@
   padding: 0.5rem;
   text-align: left;
   cursor: pointer;
-  border-bottom: 1px dashed #000;
+  border-bottom: 1px dashed #b5b5b5;
 }
 .item:hover {
   border-radius: 15px 15px 5px 5px;

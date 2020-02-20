@@ -66,7 +66,7 @@
       {{ $t('users.header') }}
     </div>
     <q-separator color="lime-2" />
-    <div class="row q-ma-md">
+    <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
         color="lime-7"
         text-color="white"
@@ -131,7 +131,7 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 500px;"
+        style="width: 100%; height: 600px;"
         class="ag-theme-balham User-agGrid"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
@@ -193,7 +193,9 @@ export default {
         editable: false,
         headerName: 'ID',
         field: 'id',
-        width: 50,
+        width: 55,
+        minWidth: 55,
+        resizable: false,
         sortable: true,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
@@ -202,16 +204,18 @@ export default {
       {
         headerName: '用户名',
         field: 'name',
-        resizable: false,
         width: 80,
+        minWidth: 80,
+        resizable: false,
         sortable: true,
         filter: true
       },
       {
         headerName: '邮箱',
         field: 'email',
-        resizable: false,
         width: 80,
+        minWidth: 80,
+        resizable: false,
         sortable: true,
         filter: true
       },
@@ -220,6 +224,8 @@ export default {
         field: 'password',
         sortable: true,
         width: 100,
+        minWidth: 100,
+        resizable: false,
         valueFormatter: pwdMask,
         suppressSizeToFit: true,
         filter: true
@@ -239,7 +245,9 @@ export default {
       {
         headerName: '创建时间',
         field: 'created_at',
-        width: 90,
+        width: 80,
+        minWidth: 80,
+        resizable: false,
         editable: false,
         sortable: true,
         filter: true
@@ -247,7 +255,9 @@ export default {
       {
         headerName: '更新时间',
         field: 'updated_at',
-        width: 90,
+        width: 80,
+        minWidth: 80,
+        resizable: false,
         editable: false,
         sortable: true,
         filter: true
