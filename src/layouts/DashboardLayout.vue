@@ -239,13 +239,13 @@ export default {
       })
       .catch(e => {})
 
-    // this.getMyPermissions({
-    //   role: 'w'
-    // })
-    //   .then(res => {})
-    //   .catch(e => {
-    //     console.log(e)
-    //   })
+    this.getMyPermissions({
+      role: 'w'
+    })
+      .then(res => {})
+      .catch(e => {
+        console.log(e)
+      })
   },
 
   methods: {
