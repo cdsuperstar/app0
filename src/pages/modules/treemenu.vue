@@ -16,7 +16,7 @@
     >
       <template v-slot:header>
         <q-item-section avatar>
-          <q-icon class="text-primary" :name="children.icon" />
+          <q-icon :name="children.icon" />
         </q-item-section>
 
         <q-item-section>
@@ -43,7 +43,7 @@
       :title="children.tip"
     >
       <q-item-section avatar>
-        <q-icon class="text-primary" :name="children.icon" />
+        <q-icon :name="children.icon" />
       </q-item-section>
       <q-item-section>{{ children.title }}</q-item-section>
     </q-item>
