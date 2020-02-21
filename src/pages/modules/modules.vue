@@ -151,6 +151,21 @@ export default {
   data() {
     return {
       selectValues: { values: ['A', 'B'] },
+      moduleMap: {
+        role: '角色管理',
+        modules: '模块管理',
+        permission: '权限管理',
+        units: '单位管理',
+        users: '用户管理',
+        profile: '用户信息',
+        system: '系统管理',
+        message: '消息中心',
+        help: '帮助中心',
+        changepwd: '更改密码',
+        notepad: '测试模块',
+        root: '根系统',
+        userprofile: '个人信息'
+      },
       loading: true,
       DModelTree: null,
       Modeldata: null,
@@ -190,6 +205,12 @@ export default {
       {
         headerName: '模块名',
         field: 'name',
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: Object.keys(this.moduleMap),
+          moduleMap: this.moduleMap
+        },
+        refData: this.moduleMap,
         width: 100,
         sortable: true,
         filter: true,
