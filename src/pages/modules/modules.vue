@@ -293,7 +293,7 @@ export default {
           data.map(item => {
             let ret = {}
             let i = 0
-            console.log(this)
+            // console.log(this)
             this.columnDefs.forEach(function(val) {
               ret[val.field] = item[i++]
             })
@@ -373,12 +373,12 @@ export default {
     addItems() {
       var newItems = [{}]
       var res = this.gridApi.updateRowData({ add: newItems })
-      console.log(res)
+      // console.log(res)
     },
     saveItems() {
       let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        console.log(val)
+        // console.log(val)
         if (val.id === undefined) {
           this.$router.app.$http
             .post('/z_module/', val)
