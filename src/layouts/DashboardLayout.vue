@@ -128,7 +128,7 @@
           title="用户中心"
         >
           <q-list separator style="overflow:hidden;">
-            <div v-for="item in routearr" :key="item.id">
+            <div v-for="item in menuB" :key="item.id">
               <q-item
                 v-ripple
                 clickable
@@ -198,11 +198,18 @@ export default {
     ...mapState('zero', ['ZModules']),
     menutree: {
       get() {
-        return JSON.parse(JSON.stringify(this.ZModules))
+        // return JSON.parse(JSON.stringify(this.ZModules))
+        return this.ZModules
       },
       set(value) {
         this.setZModules(value)
       }
+    },
+    menuB: {
+      get() {
+        return this.$zglobal.flatten(this.ZModules)
+      },
+      set(value) {}
     }
   },
   watch: {

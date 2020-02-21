@@ -40,7 +40,7 @@
       <div class="item" v-ripple>
         <i class="material-icons" style="font-size: 1.5rem;">{{ el.icon }}</i
         >&nbsp;&nbsp;
-        <b>{{ el.name }}</b>
+        <b>{{ el.title }}</b>
       </div>
       <nested-tree class="item-sub" :list="el.children" />
     </div>

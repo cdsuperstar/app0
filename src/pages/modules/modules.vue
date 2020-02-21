@@ -123,6 +123,7 @@
         :pagination="true"
         :paginationPageSize="50"
         :getRowStyle="getRowStyle"
+        :frameworkComponents="frameworkComponents"
         :localeText="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
@@ -134,12 +135,15 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import { mapActions, mapState } from 'vuex'
 import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
-
+import agDateCellRender from '../frameworkComponents/agDateCellRender'
 export default {
   name: 'modules',
-  computed: {},
+  computed: {
+    ...mapState('zero', ['ZModules'])
+  },
   components: {
     AgGridVue,
     NestedTest
@@ -158,6 +162,7 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
+      frameworkComponents: null,
       defaultColDef: null
     }
   },
@@ -165,6 +170,10 @@ export default {
     this.gridOptions = {
       allowShowChangeAfterFilter: true
     }
+    this.frameworkComponents = {
+      agDateCellRender: agDateCellRender
+    }
+
     this.columnDefs = [
       {
         editable: false,
@@ -230,7 +239,8 @@ export default {
         headerName: '更新时间',
         field: 'updated_at',
         width: 80,
-        editable: false,
+        cellRendererFramework: agDateCellRender,
+        editable: true,
         sortable: true,
         filter: true,
         minWidth: 80
@@ -260,7 +270,7 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    // ...mapActions('zero', ['getZModules']),
+    ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -447,6 +457,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.loading = false
+            this.getZModules()
             this.DModelTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
