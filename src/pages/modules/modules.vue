@@ -3,12 +3,6 @@
     <q-dialog v-model="DModelTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
-          <q-icon color="primary" size="30px" name="account_tree" />
-          <q-toolbar-title>
-            <span class="text-weight-bold">
-              {{ $t('modules.editmodeltree') }}</span
-            >
-          </q-toolbar-title>
           <q-btn
             v-close-popup
             flat
@@ -18,13 +12,11 @@
             color="negative"
             :title="this.$t('buttons.close')"
           />
-        </q-toolbar>
-        <q-separator />
-        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right" class="bg-white text-teal">
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold">
+              {{ $t('modules.editmodeltree') }}</span
+            >
+          </q-toolbar-title>
           <q-btn
             flat
             color="secondary"
@@ -32,7 +24,12 @@
             :label="this.$t('buttons.confirm')"
             @click="EditModeltree()"
           />
-        </q-card-actions>
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
+        </q-card-section>
+        <q-separator />
         <q-inner-loading :showing="loading">
           <q-spinner-gears size="80px" color="primary" />
         </q-inner-loading>
@@ -176,7 +173,6 @@ export default {
         width: 55,
         sortable: true,
         minWidth: 55,
-        resizable: false,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
@@ -187,8 +183,7 @@ export default {
         width: 100,
         sortable: true,
         filter: true,
-        minWidth: 100,
-        resizable: false
+        minWidth: 100
       },
       {
         headerName: '标题',
@@ -196,8 +191,7 @@ export default {
         width: 100,
         sortable: true,
         filter: true,
-        minWidth: 100,
-        resizable: false
+        minWidth: 100
       },
       {
         headerName: 'ICON',
@@ -205,8 +199,7 @@ export default {
         width: 80,
         sortable: true,
         filter: true,
-        minWidth: 80,
-        resizable: false
+        minWidth: 80
       },
       {
         headerName: '类型',
@@ -214,8 +207,7 @@ export default {
         width: 40,
         sortable: true,
         filter: true,
-        minWidth: 20,
-        resizable: false
+        minWidth: 20
       },
       {
         headerName: '路径名',
@@ -223,8 +215,7 @@ export default {
         width: 100,
         sortable: true,
         filter: true,
-        minWidth: 100,
-        resizable: false
+        minWidth: 100
       },
       {
         headerName: '创建时间',
@@ -233,8 +224,7 @@ export default {
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 80,
-        resizable: false
+        minWidth: 80
       },
       {
         headerName: '更新时间',
@@ -243,8 +233,7 @@ export default {
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 80,
-        resizable: false
+        minWidth: 80
       }
     ]
     this.defaultColDef = {

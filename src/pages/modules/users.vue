@@ -195,7 +195,6 @@ export default {
         field: 'id',
         width: 55,
         minWidth: 55,
-        resizable: false,
         sortable: true,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
@@ -206,7 +205,6 @@ export default {
         field: 'name',
         width: 80,
         minWidth: 80,
-        resizable: false,
         sortable: true,
         filter: true
       },
@@ -215,7 +213,6 @@ export default {
         field: 'email',
         width: 80,
         minWidth: 80,
-        resizable: false,
         sortable: true,
         filter: true
       },
@@ -223,23 +220,10 @@ export default {
         headerName: '密码',
         field: 'password',
         sortable: true,
-        width: 100,
-        minWidth: 100,
-        resizable: false,
+        width: 120,
+        minWidth: 120,
         valueFormatter: pwdMask,
         suppressSizeToFit: true,
-        filter: true
-      },
-      {
-        headerName: '系统配置',
-        field: 'syscfg',
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '用户配置',
-        field: 'usercfg',
-        sortable: true,
         filter: true
       },
       {
@@ -247,7 +231,6 @@ export default {
         field: 'created_at',
         width: 80,
         minWidth: 80,
-        resizable: false,
         editable: false,
         sortable: true,
         filter: true
@@ -257,7 +240,6 @@ export default {
         field: 'updated_at',
         width: 80,
         minWidth: 80,
-        resizable: false,
         editable: false,
         sortable: true,
         filter: true

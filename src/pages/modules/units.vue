@@ -141,13 +141,16 @@ import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
 
 export default {
-  name: 'modules',
+  name: 'units',
   components: {
     AgGridVue,
     NestedTest
   },
   data() {
     return {
+      // start
+      UserNames: null,
+      // end
       loading: true,
       DModelTree: null,
       Modeldata: null,
@@ -164,9 +167,25 @@ export default {
     }
   },
   computed: {},
+  beforeCreate() {
+    // 得到select数据
+    this.$router.app.$http.get('/users/').then(res => {
+      if (res.data.success) {
+        var tmpa = []
+        for (var i = 0; i < res.data.data.length; i++) {
+          tmpa[i] = res.data.data[i].name
+        }
+        this.UserNames = JSON.stringify(tmpa).replace(/"/g, "'")
+        console.log(this.UserNames)
+      }
+    })
+  },
   beforeMount() {
     this.gridOptions = {
-      allowShowChangeAfterFilter: true
+      allowShowChangeAfterFilter: true,
+      components: {
+        agDateCommentInput: agDateCommentInput
+      }
     }
     this.columnDefs = [
       {
@@ -176,7 +195,6 @@ export default {
         sortable: true,
         minWidth: 55,
         valueFormatter: currencyFormatter,
-        resizable: false,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
@@ -188,9 +206,9 @@ export default {
         sortable: true,
         width: 100,
         minWidth: 100,
+        filter: 'agNumberColumnFilter',
         valueFormatter:
           '"\xA5" + Math.floor(value).toFixed(2).toString().replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, "$1,")',
-        resizable: false,
         valueGetter: function(params) {
           return params.data.id * 100
         }
@@ -199,28 +217,74 @@ export default {
         // 得到colid a&b 的值，显示出来
         headerName: 'Chain',
         cellClass: 'number-cell',
+        filter: 'agNumberColumnFilter',
+        width: 100,
+        minwidth: 100,
         valueGetter: function(params) {
           return params.getValue('a&b') * 2
         }
       },
       {
         headerName: '选择',
-        field: 'name',
+        field: 'xz',
         width: 100,
         sortable: true,
         filter: true,
         minWidth: 100,
-        resizable: false,
         cellEditor: 'agSelectCellEditor',
-        cellEditorParams: unitgr
+        cellEditorParams: {
+          values: this.UserNames
+        }
+      },
+      {
+        headerName: '模块名',
+        field: 'name',
+        width: 100,
+        sortable: true,
+        filter: true,
+        minWidth: 100
       },
       {
         headerName: '日期',
+        field: 'birth',
+        colId: 'date',
+        width: 145,
+        sortable: true,
+        minWidth: 145,
+        cellEditor: 'agDateCommentInput',
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: function(filterLocalDateAtMidnight, cellValue) {
+            var dateAsString = cellValue
+            if (dateAsString == null) return -1
+            var dateParts = dateAsString.split('/')
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            )
+
+            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+              return 0
+            }
+
+            if (cellDate < filterLocalDateAtMidnight) {
+              return -1
+            }
+
+            if (cellDate > filterLocalDateAtMidnight) {
+              return 1
+            }
+          },
+          browserDatePicker: true
+        }
+      },
+      {
+        headerName: '标题',
         field: 'title',
         width: 100,
         sortable: true,
-        minWidth: 100,
-        resizable: false
+        minWidth: 100
       },
       {
         headerName: 'ICON',
@@ -228,8 +292,7 @@ export default {
         width: 80,
         sortable: true,
         filter: true,
-        minWidth: 80,
-        resizable: false
+        minWidth: 80
       },
       {
         headerName: '类型',
@@ -237,8 +300,7 @@ export default {
         width: 40,
         sortable: true,
         filter: true,
-        minWidth: 20,
-        resizable: false
+        minWidth: 20
       },
       {
         headerName: '大输入框',
@@ -252,29 +314,7 @@ export default {
           maxLength: '300', // override the editor defaults
           cols: '50',
           rows: '6'
-        },
-        resizable: false
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 80,
-        editable: true,
-        cellEditor: 'agDateInput',
-        sortable: true,
-        filter: true,
-        minWidth: 80,
-        resizable: true
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 80,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 80,
-        resizable: false
+        }
       }
     ]
     this.defaultColDef = {
@@ -288,7 +328,10 @@ export default {
       .get('/z_module/')
       .then(res => {
         if (res.data.success) {
-          // console.log(res.data.data)
+          for (var i = 0; i < res.data.data.length; i++) {
+            res.data.data[i].birth = '2018-10-06 22:03:18'
+            res.data.data[i].xz = '2'
+          }
           this.rowData = res.data.data
         } else {
         }
@@ -410,52 +453,6 @@ export default {
       let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         console.log(val)
-        if (val.id === undefined) {
-          this.$router.app.$http
-            .post('/z_module/', val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.addsuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.addfailed')
-                )
-              }
-            })
-            .catch(e => {})
-        } else {
-          this.$router.app.$http
-            .put('/z_module/' + val.id, val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.updatesuccess')
-                )
-                // console.log(res.data.data)
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.updatefailed')
-                )
-              }
-            })
-            .catch(e => {})
-        }
       })
     },
     Modeltree() {
@@ -514,6 +511,38 @@ function formatNumber(number) {
     .toString()
     .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
 }
+// end
+// agDateCommentInput strat
+function agDateCommentInput() {}
+agDateCommentInput.prototype.init = function(params) {
+  var startValue = params.value
+
+  this.gui = document.createElement('input')
+  this.gui.type = 'date'
+  // this.gui.value = startValue
+  // 直接截取前面的日期
+  var st = startValue.split(' ')
+  this.gui.value = st[0]
+
+  // console.log(this.gui.value, '======')
+  this.gui.classList.add('agDateCommentInput-editor')
+}
+agDateCommentInput.prototype.getGui = function() {
+  return this.gui
+}
+agDateCommentInput.prototype.getValue = function() {
+  return this.gui.value
+}
+agDateCommentInput.prototype.afterGuiAttached = function() {
+  this.gui.focus()
+}
+agDateCommentInput.prototype.myCustomFunction = function() {
+  return {
+    rowIndex: this.params.rowIndex,
+    colId: this.params.column.getId()
+  }
+}
+// agDateCommentInput end
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
@@ -533,5 +562,9 @@ function formatNumber(number) {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: #666699;
+}
+.agDateCommentInput-editor {
+  width: 100%;
+  height: 100%;
 }
 </style>
