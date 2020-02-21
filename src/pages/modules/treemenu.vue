@@ -13,7 +13,6 @@
       "
       :content-inset-level="depth * 0.2"
       :caption="children.tip"
-      default-opened
     >
       <template v-slot:header>
         <q-item-section avatar>
@@ -40,7 +39,6 @@
           : { name: children.url }
       "
       style="border-bottom: 1px dashed #ebebeb;"
-      dense-toggle
       :caption="children.tip"
       :title="children.tip"
     >
@@ -57,7 +55,7 @@ export default {
   props: ['children', 'depth'],
   data() {
     return {
-      epandstate: false
+      epandstate: true
     }
   },
   created() {

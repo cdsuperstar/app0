@@ -372,7 +372,7 @@ export default {
     },
     addItems() {
       var newItems = [{}]
-      var res = this.gridApi.updateRowData({ add: newItems })
+      this.gridApi.updateRowData({ add: newItems })
       // console.log(res)
     },
     saveItems() {
