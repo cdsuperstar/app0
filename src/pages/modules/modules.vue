@@ -150,6 +150,7 @@ export default {
   },
   data() {
     return {
+      selectValues: { values: ['A', 'B'] },
       loading: true,
       DModelTree: null,
       Modeldata: null,
@@ -216,7 +217,10 @@ export default {
         width: 40,
         sortable: true,
         filter: true,
-        minWidth: 20
+        minWidth: 20,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: this.selectValues,
+        valueFormatter: this.getSelector
       },
       {
         headerName: '路径名',
@@ -271,6 +275,10 @@ export default {
   },
   methods: {
     ...mapActions('zero', ['getZModules']),
+    getSelector(params) {
+      let tmpObj = { A: '系统', B: '个人' }
+      return tmpObj[params.value]
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -361,6 +369,7 @@ export default {
       return { backgroundColor: this.changerowcolor }
     },
     oncellValueChanged(params) {
+      // console.log(params.oldValue, params.newValue)
       if (params.oldValue === null) params.oldValue = ''
       if (params.newValue !== params.oldValue) {
         this.changerowcolor = '#ffa195'
