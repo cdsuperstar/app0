@@ -55,7 +55,7 @@ export default {
   props: ['children', 'depth'],
   data() {
     return {
-      epandstate: false
+      epandstate: true
     }
   },
   created() {
