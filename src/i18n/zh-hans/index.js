@@ -33,7 +33,8 @@ export default {
     export: '导出'
   },
   menu: {
-    menuname: '菜单'
+    menuname: '菜单',
+    types: { A: '系统菜单', B: '个人菜单', C: '功能菜单', D: '扩展菜单' }
   },
   modules: {
     header: '模块管理',

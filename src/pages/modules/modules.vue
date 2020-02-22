@@ -150,22 +150,6 @@ export default {
   },
   data() {
     return {
-      selectValues: { values: ['A', 'B'] },
-      moduleMap: {
-        role: '角色管理',
-        modules: '模块管理',
-        permission: '权限管理',
-        units: '单位管理',
-        users: '用户管理',
-        profile: '用户信息',
-        system: '系统管理',
-        message: '消息中心',
-        help: '帮助中心',
-        changepwd: '更改密码',
-        notepad: '测试模块',
-        root: '根系统',
-        userprofile: '个人信息'
-      },
       loading: true,
       DModelTree: null,
       Modeldata: null,
@@ -175,7 +159,7 @@ export default {
       gridApi: null,
       columnApi: null,
       columnDefs: null,
-      rowData: null,
+      rowData: [],
       getRowStyle: null,
       changerowcolor: null,
       frameworkComponents: null,
@@ -183,99 +167,7 @@ export default {
     }
   },
   beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.frameworkComponents = {
-      agDateCellRender: agDateCellRender
-    }
-
-    this.columnDefs = [
-      {
-        editable: false,
-        headerName: 'ID',
-        field: 'id',
-        width: 55,
-        sortable: true,
-        minWidth: 55,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: '模块名',
-        field: 'name',
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-          values: Object.keys(this.moduleMap),
-          moduleMap: this.moduleMap
-        },
-        refData: this.moduleMap,
-        width: 100,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: '标题',
-        field: 'title',
-        width: 100,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: 'ICON',
-        field: 'icon',
-        width: 80,
-        sortable: true,
-        filter: true,
-        minWidth: 80
-      },
-      {
-        headerName: '类型',
-        field: 'ismenu',
-        width: 40,
-        sortable: true,
-        filter: true,
-        minWidth: 20,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: this.selectValues,
-        valueFormatter: this.getSelector
-      },
-      {
-        headerName: '路径名',
-        field: 'url',
-        width: 100,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 80,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 80
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 80,
-        cellRendererFramework: agDateCellRender,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 80
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
+    this.initGrid()
   },
   created() {
     this.$router.app.$http
@@ -297,11 +189,100 @@ export default {
   methods: {
     ...mapActions('zero', ['getZModules']),
     getSelector(params) {
-      let tmpObj = { A: '系统', B: '个人' }
-      return tmpObj[params.value]
+      let mapMenu = this.$t('menu.types')
+      return mapMenu[params.value]
     },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.frameworkComponents = {
+        agDateCellRender: agDateCellRender
+      }
+
+      this.columnDefs = [
+        {
+          editable: false,
+          headerName: 'ID',
+          field: 'id',
+          width: 55,
+          sortable: true,
+          minWidth: 55,
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: '模块名',
+          field: 'name',
+          width: 100,
+          sortable: true,
+          filter: true,
+          minWidth: 100
+        },
+        {
+          headerName: '标题',
+          field: 'title',
+          width: 100,
+          sortable: true,
+          filter: true,
+          minWidth: 100
+        },
+        {
+          headerName: 'ICON',
+          field: 'icon',
+          width: 80,
+          sortable: true,
+          filter: true,
+          minWidth: 80
+        },
+        {
+          headerName: '类型',
+          field: 'ismenu',
+          width: 40,
+          sortable: true,
+          filter: true,
+          minWidth: 20,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: { values: Object.keys(this.$t('menu.types')) },
+          valueFormatter: this.getSelector
+        },
+        {
+          headerName: '路径名',
+          field: 'url',
+          width: 100,
+          sortable: true,
+          filter: true,
+          minWidth: 100
+        },
+        {
+          headerName: '创建时间',
+          field: 'created_at',
+          width: 80,
+          editable: false,
+          sortable: true,
+          filter: true,
+          minWidth: 80
+        },
+        {
+          headerName: '更新时间',
+          field: 'updated_at',
+          width: 80,
+          cellRendererFramework: agDateCellRender,
+          editable: true,
+          sortable: true,
+          filter: true,
+          minWidth: 80
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
