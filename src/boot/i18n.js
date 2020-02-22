@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import messages from 'src/i18n'
+import JsonEditor from 'vue-json-edit'
 
 Vue.use(VueI18n)
+Vue.use(JsonEditor)
 
 const i18n = new VueI18n({
   locale: 'zh-hans',

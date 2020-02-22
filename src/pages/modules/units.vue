@@ -1,14 +1,8 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DModelTree">
+    <q-dialog v-model="DUnitTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
-          <q-icon color="primary" size="30px" name="account_tree" />
-          <q-toolbar-title>
-            <span class="text-weight-bold">
-              {{ $t('modules.editmodeltree') }}</span
-            >
-          </q-toolbar-title>
           <q-btn
             v-close-popup
             flat
@@ -18,28 +12,31 @@
             color="negative"
             :title="this.$t('buttons.close')"
           />
-        </q-toolbar>
-        <q-separator />
-        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
-        </q-card-section>
-        <q-separator />
-        <q-card-actions align="right" class="bg-white text-teal">
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold">
+              {{ $t('units.editunittree') }}</span
+            >
+          </q-toolbar-title>
           <q-btn
             flat
             color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
-            @click="EditModeltree()"
+            @click="EditUnittree()"
           />
-        </q-card-actions>
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <nested-test v-if="true" v-model="Unitdata" class="col-8" />
+        </q-card-section>
+        <q-separator />
         <q-inner-loading :showing="loading">
           <q-spinner-gears size="80px" color="primary" />
         </q-inner-loading>
       </q-card>
     </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
-      测试页面
+      {{ $t('units.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -68,12 +65,12 @@
         @click="saveItems()"
       />
       <q-btn
-        color="purple-5"
+        color="blue-grey-5"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
         :label="this.$t('buttons.tree')"
-        @click="Modeltree()"
+        @click="Unittree()"
       />
       <q-btn
         color="green-6"
@@ -115,8 +112,8 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 450px;"
-        class="ag-theme-balham Models-agGrid"
+        style="width: 100%; height: 500px;"
+        class="ag-theme-balham Units-agGrid"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
         :gridOptions="gridOptions"
@@ -148,12 +145,9 @@ export default {
   },
   data() {
     return {
-      // start
-      UserNames: null,
-      // end
       loading: true,
-      DModelTree: null,
-      Modeldata: null,
+      DUnitTree: null,
+      Unitdata: null,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -167,25 +161,9 @@ export default {
     }
   },
   computed: {},
-  beforeCreate() {
-    // 得到select数据
-    this.$router.app.$http.get('/users/').then(res => {
-      if (res.data.success) {
-        var tmpa = []
-        for (var i = 0; i < res.data.data.length; i++) {
-          tmpa[i] = res.data.data[i].name
-        }
-        this.UserNames = JSON.stringify(tmpa).replace(/"/g, "'")
-        console.log(this.UserNames)
-      }
-    })
-  },
   beforeMount() {
     this.gridOptions = {
-      allowShowChangeAfterFilter: true,
-      components: {
-        agDateCommentInput: agDateCommentInput
-      }
+      allowShowChangeAfterFilter: true
     }
     this.columnDefs = [
       {
@@ -193,128 +171,44 @@ export default {
         field: 'id',
         width: 55,
         sortable: true,
+        editable: false,
         minWidth: 55,
-        valueFormatter: currencyFormatter,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
       },
       {
-        // 得到id值 并*100
-        headerName: 'ID * 100 合计',
-        colId: 'a&b',
-        sortable: true,
-        width: 100,
-        minWidth: 100,
-        filter: 'agNumberColumnFilter',
-        valueFormatter:
-          '"\xA5" + Math.floor(value).toFixed(2).toString().replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, "$1,")',
-        valueGetter: function(params) {
-          return params.data.id * 100
-        }
-      },
-      {
-        // 得到colid a&b 的值，显示出来
-        headerName: 'Chain',
-        cellClass: 'number-cell',
-        filter: 'agNumberColumnFilter',
-        width: 100,
-        minwidth: 100,
-        valueGetter: function(params) {
-          return params.getValue('a&b') * 2
-        }
-      },
-      {
-        headerName: '选择',
-        field: 'xz',
-        width: 100,
-        sortable: true,
-        filter: true,
-        minWidth: 100,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-          values: this.UserNames
-        }
-      },
-      {
-        headerName: '模块名',
+        headerName: '机构名',
         field: 'name',
-        width: 100,
+        width: 130,
+        editable: true,
         sortable: true,
         filter: true,
-        minWidth: 100
+        minWidth: 130
       },
       {
-        headerName: '日期',
-        field: 'birth',
+        headerName: '简介',
+        field: 'brief',
         colId: 'date',
-        width: 145,
+        width: 200,
+        editable: true,
         sortable: true,
-        minWidth: 145,
-        cellEditor: 'agDateCommentInput',
-        filter: 'agDateColumnFilter',
-        filterParams: {
-          comparator: function(filterLocalDateAtMidnight, cellValue) {
-            var dateAsString = cellValue
-            if (dateAsString == null) return -1
-            var dateParts = dateAsString.split('/')
-            var cellDate = new Date(
-              Number(dateParts[2]),
-              Number(dateParts[1]) - 1,
-              Number(dateParts[0])
-            )
-
-            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-              return 0
-            }
-
-            if (cellDate < filterLocalDateAtMidnight) {
-              return -1
-            }
-
-            if (cellDate > filterLocalDateAtMidnight) {
-              return 1
-            }
-          },
-          browserDatePicker: true
-        }
-      },
-      {
-        headerName: '标题',
-        field: 'title',
-        width: 100,
-        sortable: true,
-        minWidth: 100
-      },
-      {
-        headerName: 'ICON',
-        field: 'icon',
-        width: 80,
-        sortable: true,
-        filter: true,
-        minWidth: 80
-      },
-      {
-        headerName: '类型',
-        field: 'ismenu',
-        width: 40,
-        sortable: true,
-        filter: true,
-        minWidth: 20
-      },
-      {
-        headerName: '大输入框',
-        field: 'url',
-        width: 100,
-        sortable: true,
-        filter: true,
-        minWidth: 100,
+        minWidth: 200,
         cellEditor: 'agLargeTextCellEditor',
         cellEditorParams: {
-          maxLength: '300', // override the editor defaults
-          cols: '50',
+          maxLength: '30000', // override the editor defaults
+          cols: '60',
           rows: '6'
         }
+      },
+      {
+        headerName: '创建时间',
+        field: 'created_at',
+        width: 90,
+        editable: false,
+        sortable: true,
+        filter: true,
+        minWidth: 90
       }
     ]
     this.defaultColDef = {
@@ -325,13 +219,9 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_module/')
+      .get('/z_unit/')
       .then(res => {
         if (res.data.success) {
-          for (var i = 0; i < res.data.data.length; i++) {
-            res.data.data[i].birth = '2018-10-06 22:03:18'
-            res.data.data[i].xz = '2'
-          }
           this.rowData = res.data.data
         } else {
         }
@@ -339,12 +229,10 @@ export default {
       .catch(e => {})
   },
   mounted() {
-    // console.log(this.ZModules)
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -357,7 +245,7 @@ export default {
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
-          /* Parse data */
+          /*  Parse data */
           const bstr = e.target.result
           const wb = XLSX.read(bstr, { type: 'binary' })
           const wsname = wb.SheetNames[0]
@@ -395,7 +283,7 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_module/' + val.id)
+                .delete('/z_unit/' + val.id)
                 .then(res => {
                   if (res.data.success) {
                     // console.log(res.data.data)
@@ -425,7 +313,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'modules.xls',
+        fileName: 'units.xls',
         suppressQuotes: true,
         columnSeparator: ','
       }
@@ -446,24 +334,68 @@ export default {
     },
     addItems() {
       var newItems = [{}]
-      var res = this.gridApi.updateRowData({ add: newItems })
-      console.log(res)
+      this.gridApi.updateRowData({ add: newItems })
     },
     saveItems() {
       let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        console.log(val)
+        if (val.id === undefined) {
+          this.$router.app.$http
+            .post('/z_unit/', val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.addsuccess')
+                )
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.addfailed')
+                )
+              }
+            })
+            .catch(e => {})
+        } else {
+          this.$router.app.$http
+            .put('/z_unit/' + val.id, val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.updatesuccess')
+                )
+                // console.log(res.data.data)
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.updatefailed')
+                )
+              }
+            })
+            .catch(e => {})
+        }
       })
     },
-    Modeltree() {
+    Unittree() {
       this.loading = true
-      this.DModelTree = true
+      this.DUnitTree = true
       this.$router.app.$http
-        .get('/z_module/getMyMenu')
+        .get('/z_unit/getUnitTree')
         .then(res => {
           if (res.data.success) {
             // console.log(res.data.data)
-            this.Modeldata = res.data.data
+            this.Unitdata = res.data.data
             this.loading = false
           } else {
           }
@@ -475,17 +407,17 @@ export default {
             this.$t('auth.register.invalid_data')
           )
           this.loading = false
-          this.DModelTree = false
+          this.DUnitTree = false
         })
     },
-    EditModeltree() {
+    EditUnittree() {
       this.loading = true
       this.$router.app.$http
-        .post('/z_module/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
+        .post('/z_unit/setUnitTree/' + this.Unitdata[0].id, this.Unitdata)
         .then(res => {
           if (res.data.success) {
             this.loading = false
-            this.DModelTree = false
+            this.DUnitTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
         })
@@ -502,55 +434,14 @@ export default {
     }
   }
 }
-
-function currencyFormatter(params) {
-  return '\xA5' + formatNumber(params.value)
-}
-function formatNumber(number) {
-  return Math.floor(number)
-    .toString()
-    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
-}
-// end
-// agDateCommentInput strat
-function agDateCommentInput() {}
-agDateCommentInput.prototype.init = function(params) {
-  var startValue = params.value
-
-  this.gui = document.createElement('input')
-  this.gui.type = 'date'
-  // this.gui.value = startValue
-  // 直接截取前面的日期
-  var st = startValue.split(' ')
-  this.gui.value = st[0]
-
-  // console.log(this.gui.value, '======')
-  this.gui.classList.add('agDateCommentInput-editor')
-}
-agDateCommentInput.prototype.getGui = function() {
-  return this.gui
-}
-agDateCommentInput.prototype.getValue = function() {
-  return this.gui.value
-}
-agDateCommentInput.prototype.afterGuiAttached = function() {
-  this.gui.focus()
-}
-agDateCommentInput.prototype.myCustomFunction = function() {
-  return {
-    rowIndex: this.params.rowIndex,
-    colId: this.params.column.getId()
-  }
-}
-// agDateCommentInput end
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
-.Models-agGrid .ag-header {
-  background-color: #666699;
+.Units-agGrid .ag-header {
+  background-color: #996699;
   color: #ffffff;
 }
-.Models-agGrid .ag-cell {
+.Units-agGrid .ag-cell {
   padding-left: 1px;
 }
 .ag-theme-balham .ag-icon,
@@ -561,10 +452,6 @@ agDateCommentInput.prototype.myCustomFunction = function() {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #666699;
-}
-.agDateCommentInput-editor {
-  width: 100%;
-  height: 100%;
+  color: #996699;
 }
 </style>

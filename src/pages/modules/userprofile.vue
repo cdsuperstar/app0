@@ -21,7 +21,7 @@
           hide-upload-progress
           extensions=".gif,.jpg,.jpeg,.png,.bmp"
           color="amber"
-          float-label="个人头像"
+          :float-label="this.$t('auth.users.profile.avatar')"
           url=""
         >
         </q-uploader>

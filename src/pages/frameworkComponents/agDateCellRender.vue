@@ -2,7 +2,13 @@
   <div
     class="ag-cell ag-cell-not-inline-editing ag-cell-with-height ag-cell-value"
   >
-    <q-icon dense name="event" class="cursor-pointer">
+    <q-icon
+      dense
+      name="date_range"
+      class="cursor-pointer text-grey-7"
+      size="18px"
+      style="padding-bottom: 7px"
+    >
       <q-popup-proxy dense transition-show="scale" transition-hide="scale">
         <q-date
           dense

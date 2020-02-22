@@ -261,21 +261,21 @@ export default {
         {
           headerName: '创建时间',
           field: 'created_at',
-          width: 80,
+          width: 90,
           editable: false,
           sortable: true,
           filter: true,
-          minWidth: 80
+          minWidth: 90
         },
         {
           headerName: '更新时间',
           field: 'updated_at',
-          width: 80,
+          width: 90,
           cellRendererFramework: agDateCellRender,
           editable: true,
           sortable: true,
           filter: true,
-          minWidth: 80
+          minWidth: 90
         }
       ]
       this.defaultColDef = {

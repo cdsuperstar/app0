@@ -125,7 +125,7 @@
           flat
           dense
           icon="person_outline"
-          title="用户中心"
+          :title="this.$t('auth.personprfile')"
         >
           <q-list separator style="overflow:hidden;">
             <div v-for="item in menuB" :key="item.id">
@@ -154,7 +154,7 @@
                 <q-avatar
                   color="indigo"
                   text-color="white"
-                  icon="assignment_ind"
+                  icon="exit_to_app"
                   size="30px"
                 ></q-avatar>
               </q-item-section>

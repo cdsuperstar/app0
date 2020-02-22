@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DModelTree">
+    <q-dialog v-model="DUnitTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
           <q-btn
@@ -35,8 +35,52 @@
         </q-inner-loading>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="DJsonEditor" full-width full-height>
+      <q-card class="q-dialog-plugin">
+        <q-toolbar>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold">
+              {{ $t('jsoneditor.header') }}</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="EditJSON()"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          ++++
+          <JsonEditor
+            :options="{
+              confirmText: 'confirm',
+              cancelText: 'cancel'
+            }"
+            v-model="jsonData"
+          >
+          </JsonEditor>
+          vvvvv
+        </q-card-section>
+        <q-separator />
+        <q-inner-loading :showing="loading">
+          <q-spinner-gears size="80px" color="primary" />
+        </q-inner-loading>
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
-      {{ $t('modules.header') }}
+      测试页面
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -71,6 +115,14 @@
         icon="account_tree"
         :label="this.$t('buttons.tree')"
         @click="Modeltree()"
+      />
+      <q-btn
+        color="purple-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="account_tree"
+        :label="this.$t('buttons.json')"
+        @click="DJsonedit()"
       />
       <q-btn
         color="green-6"
@@ -112,7 +164,7 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 600px;"
+        style="width: 100%; height: 500px;"
         class="ag-theme-balham Models-agGrid"
         rowSelection="multiple"
         rowMultiSelectWithClick="true"
@@ -123,6 +175,7 @@
         :pagination="true"
         :paginationPageSize="50"
         :getRowStyle="getRowStyle"
+        :pinnedBottomRowData="pinnedBottomRowData"
         :frameworkComponents="frameworkComponents"
         :localeText="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
@@ -135,39 +188,25 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import { mapActions, mapState } from 'vuex'
 import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
-import agDateCellRender from '../frameworkComponents/agDateCellRender'
+import customPinnedRowRenderer from '../frameworkComponents/customPinnedRowRenderer'
+
 export default {
-  computed: {
-    ...mapState('zero', ['ZModules'])
-  },
+  name: 'test',
   components: {
     AgGridVue,
     NestedTest
   },
   data() {
     return {
-      selectValues: { values: ['A', 'B'] },
-      moduleMap: {
-        role: '角色管理',
-        modules: '模块管理',
-        permission: '权限管理',
-        units: '单位管理',
-        users: '用户管理',
-        profile: '用户信息',
-        system: '系统管理',
-        message: '消息中心',
-        help: '帮助中心',
-        changepwd: '更改密码',
-        notepad: '测试模块',
-        root: '根系统',
-        userprofile: '个人信息'
-      },
       loading: true,
-      DModelTree: null,
+      DUnitTree: null,
       Modeldata: null,
+      DJsonEditor: null,
+      jsonData: null,
+      userMap: {},
+      idtotal: null,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -177,50 +216,139 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      frameworkComponents: null,
-      defaultColDef: null
+      defaultColDef: null,
+      pinnedBottomRowData: null,
+      frameworkComponents: null
     }
+  },
+  computed: {},
+  beforeCreate() {
+    // 得到select数据
+    this.$router.app.$http.get('/users/').then(res => {
+      if (res.data.success) {
+        this.columnDefs[3].cellEditorParams.values = res.data.data.map(
+          ({ name, id }) => id.toString()
+        )
+        this.userMap = res.data.data.reduce((acc, v) => {
+          acc[v.id] = v.name
+          return acc
+        }, {})
+        // console.log(this.columnDefs[3].refData, '------------')
+        // this.UserNames = JSON.stringify(tmpa).replace(/"/g, "'")
+      }
+    })
   },
   beforeMount() {
     this.gridOptions = {
-      allowShowChangeAfterFilter: true
+      allowShowChangeAfterFilter: true,
+      components: {
+        agDateCommentInput: agDateCommentInput
+      }
     }
+    this.pinnedBottomRowData = [{ title: '合计', xz: 'Loading...' }]
     this.frameworkComponents = {
-      agDateCellRender: agDateCellRender
+      customPinnedRowRenderer: customPinnedRowRenderer
     }
-
     this.columnDefs = [
       {
-        editable: false,
         headerName: 'ID',
         field: 'id',
         width: 55,
         sortable: true,
         minWidth: 55,
+        valueFormatter: currencyFormatter,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
       },
       {
-        headerName: '模块名',
-        field: 'name',
+        // 得到id值 并*100
+        headerName: 'ID * 100 合计',
+        colId: 'total',
+        sortable: true,
+        width: 100,
+        minWidth: 100,
+        filter: 'agNumberColumnFilter',
+        valueFormatter:
+          '"\xA5" + Math.floor(value).toFixed(2).toString().replace(/(\\d)(?=(\\d{3})+(?!\\d))/g, "$1,")',
+        valueGetter: function(params) {
+          return params.data.id * 100
+        }
+      },
+      {
+        // 得到colid a&b 的值，显示出来
+        headerName: 'Chain',
+        cellClass: 'number-cell',
+        filter: 'agNumberColumnFilter',
+        width: 100,
+        minwidth: 100,
+        valueGetter: function(params) {
+          return params.getValue('total') * 2
+        }
+      },
+      {
+        headerName: '选择',
+        field: 'xz',
+        width: 100,
+        sortable: true,
+        filter: true,
+        minWidth: 100,
+        pinnedRowCellRenderer: 'customPinnedRowRenderer',
+        pinnedRowCellRendererParams: { style: { color: 'red' } },
         cellEditor: 'agSelectCellEditor',
         cellEditorParams: {
-          values: Object.keys(this.moduleMap),
-          moduleMap: this.moduleMap
+          values: {}
         },
-        refData: this.moduleMap,
+        valueFormatter: this.getUsermap
+      },
+      {
+        headerName: '模块名',
+        field: 'name',
         width: 100,
         sortable: true,
         filter: true,
         minWidth: 100
       },
       {
+        headerName: '日期',
+        field: 'birth',
+        colId: 'date',
+        width: 145,
+        sortable: true,
+        minWidth: 145,
+        cellEditor: 'agDateCommentInput',
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: function(filterLocalDateAtMidnight, cellValue) {
+            var dateAsString = cellValue
+            if (dateAsString == null) return -1
+            var dateParts = dateAsString.split('/')
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            )
+
+            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+              return 0
+            }
+
+            if (cellDate < filterLocalDateAtMidnight) {
+              return -1
+            }
+
+            if (cellDate > filterLocalDateAtMidnight) {
+              return 1
+            }
+          },
+          browserDatePicker: true
+        }
+      },
+      {
         headerName: '标题',
         field: 'title',
         width: 100,
         sortable: true,
-        filter: true,
         minWidth: 100
       },
       {
@@ -237,52 +365,51 @@ export default {
         width: 40,
         sortable: true,
         filter: true,
-        minWidth: 20,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: this.selectValues,
-        valueFormatter: this.getSelector
+        minWidth: 20
       },
       {
-        headerName: '路径名',
+        headerName: '大输入框',
         field: 'url',
         width: 100,
         sortable: true,
         filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 80,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 80
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 80,
-        cellRendererFramework: agDateCellRender,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 80
+        minWidth: 100,
+        cellEditor: 'agLargeTextCellEditor',
+        cellEditorParams: {
+          maxLength: '300', // override the editor defaults
+          cols: '50',
+          rows: '6'
+        }
       }
     ]
     this.defaultColDef = {
       editable: true,
       resizable: true
     }
-    this.getRowStyle = this.onchangerowcolor
+    this.getRowStyle = params => {
+      if (params.node.rowPinned) {
+        return { 'font-weight': 'bold' }
+      } else {
+        return { backgroundColor: this.changerowcolor }
+      }
+    }
   },
   created() {
     this.$router.app.$http
       .get('/z_module/')
       .then(res => {
         if (res.data.success) {
-          // console.log(res.data.data)
+          var sumd = 0
+          for (var i = 0; i < res.data.data.length; i++) {
+            res.data.data[i].birth = '2018-10-06 22:03:18'
+            sumd += res.data.data[i].id
+            res.data.data[i].xz = '4'
+          }
           this.rowData = res.data.data
+
+          // this.idtotal = sumd
+          var topRows = [{ title: '合计', xz: sumd }]
+          this.gridApi.setPinnedBottomRowData(topRows)
         } else {
         }
       })
@@ -294,16 +421,16 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    ...mapActions('zero', ['getZModules']),
-    getSelector(params) {
-      let tmpObj = { A: '系统', B: '个人' }
-      return tmpObj[params.value]
-    },
+    // ...mapActions('zero', ['getZModules']),
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
+    },
+    //
+    getUsermap(params) {
+      return this.userMap[params.value]
     },
     // 导入开始
     ImportCVStoData() {
@@ -311,7 +438,7 @@ export default {
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
-          /* Parse data */
+          /*  Parse data */
           const bstr = e.target.result
           const wb = XLSX.read(bstr, { type: 'binary' })
           const wsname = wb.SheetNames[0]
@@ -321,7 +448,7 @@ export default {
           data.map(item => {
             let ret = {}
             let i = 0
-            // console.log(this)
+            console.log(this)
             this.columnDefs.forEach(function(val) {
               ret[val.field] = item[i++]
             })
@@ -389,7 +516,6 @@ export default {
       return { backgroundColor: this.changerowcolor }
     },
     oncellValueChanged(params) {
-      // console.log(params.oldValue, params.newValue)
       if (params.oldValue === null) params.oldValue = ''
       if (params.newValue !== params.oldValue) {
         this.changerowcolor = '#ffa195'
@@ -401,64 +527,18 @@ export default {
     },
     addItems() {
       var newItems = [{}]
-      this.gridApi.updateRowData({ add: newItems })
-      // console.log(res)
+      var res = this.gridApi.updateRowData({ add: newItems })
+      console.log(res)
     },
     saveItems() {
       let selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        // console.log(val)
-        if (val.id === undefined) {
-          this.$router.app.$http
-            .post('/z_module/', val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.addsuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.addfailed')
-                )
-              }
-            })
-            .catch(e => {})
-        } else {
-          this.$router.app.$http
-            .put('/z_module/' + val.id, val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.updatesuccess')
-                )
-                // console.log(res.data.data)
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.updatefailed')
-                )
-              }
-            })
-            .catch(e => {})
-        }
+        console.log(val)
       })
     },
     Modeltree() {
       this.loading = true
-      this.DModelTree = true
+      this.DUnitTree = true
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
@@ -476,7 +556,7 @@ export default {
             this.$t('auth.register.invalid_data')
           )
           this.loading = false
-          this.DModelTree = false
+          this.DUnitTree = false
         })
     },
     EditModeltree() {
@@ -486,8 +566,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.loading = false
-            this.getZModules()
-            this.DModelTree = false
+            this.DUnitTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
         })
@@ -501,9 +580,72 @@ export default {
             )
           }
         })
-    }
+    },
+    DJsonedit() {
+      this.loading = true
+      this.DJsonEditor = true
+      this.$router.app.$http
+        .get('/z_module/getMyMenu')
+        .then(res => {
+          if (res.data.success) {
+            console.log(res.data.data)
+            this.jsonData = JSON.parse(JSON.stringify(res.data.data))
+            console.log(this.jsonData)
+            this.loading = false
+          } else {
+          }
+        })
+        .catch(e => {
+          this.$zglobal.showMessage('red-5', 'center', e.message)
+          this.loading = false
+          this.DJsonEditor = false
+        })
+    },
+    EditJSON() {}
+    // JSON format print
   }
 }
+
+function currencyFormatter(params) {
+  return '\xA5' + formatNumber(params.value)
+}
+function formatNumber(number) {
+  return Math.floor(number)
+    .toString()
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+// end
+// agDateCommentInput strat
+function agDateCommentInput() {}
+agDateCommentInput.prototype.init = function(params) {
+  var startValue = params.value
+
+  this.gui = document.createElement('input')
+  this.gui.type = 'date'
+  // this.gui.value = startValue
+  // 直接截取前面的日期
+  var st = startValue.split(' ')
+  this.gui.value = st[0]
+
+  // console.log(this.gui.value, '======')
+  this.gui.classList.add('agDateCommentInput-editor')
+}
+agDateCommentInput.prototype.getGui = function() {
+  return this.gui
+}
+agDateCommentInput.prototype.getValue = function() {
+  return this.gui.value
+}
+agDateCommentInput.prototype.afterGuiAttached = function() {
+  this.gui.focus()
+}
+agDateCommentInput.prototype.myCustomFunction = function() {
+  return {
+    rowIndex: this.params.rowIndex,
+    colId: this.params.column.getId()
+  }
+}
+// agDateCommentInput end
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
@@ -523,5 +665,9 @@ export default {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: #666699;
+}
+.agDateCommentInput-editor {
+  width: 100%;
+  height: 100%;
 }
 </style>

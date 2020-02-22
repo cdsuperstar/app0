@@ -36,10 +36,25 @@ export default {
     menuname: '菜单',
     types: { A: '系统菜单', B: '个人菜单', C: '功能菜单', D: '扩展菜单' }
   },
+  jsoneditor: {
+    header: 'JSON编辑器'
+  },
   modules: {
     header: '模块管理',
     editmodeltree: '模块树编辑',
     searchall: '全局搜索值'
+  },
+  roles: {
+    header: '角色管理',
+    editroleltree: '角色树编辑'
+  },
+  permission: {
+    header: '权限管理',
+    editpermissionltree: '权限树编辑'
+  },
+  units: {
+    header: '单位管理',
+    editunittree: '机构树编辑'
   },
   users: {
     header: '用户管理',
@@ -49,6 +64,7 @@ export default {
     network_error: '网络错误，请检查您的网络链接。',
     submit: '@:buttons.submit',
     home: '主界面',
+    personprfile: '用户中心',
     navigation: '@:buttons.navigation',
     my_account: '我的账号',
     administrator: {
@@ -145,8 +161,14 @@ export default {
     },
     users: {
       profile: {
+        sexoptions: {
+          m: '男',
+          f: '女'
+        },
+        pheader: '用户信息管理',
         header: '修改用户个人信息',
         signpic: '更改用户图片',
+        avatar: '用户头像',
         no: '工号',
         nickname: '昵称',
         noerror: '请输入工号',
