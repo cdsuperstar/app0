@@ -189,20 +189,20 @@ export default {
       {
         headerName: '创建时间',
         field: 'created_at',
-        width: 90,
+        width: 130,
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 90
+        minWidth: 130
       },
       {
         headerName: '更新时间',
         field: 'updated_at',
-        width: 90,
+        width: 130,
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 90
+        minWidth: 130
       }
     ]
     this.defaultColDef = {

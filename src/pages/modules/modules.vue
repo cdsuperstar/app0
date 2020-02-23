@@ -138,7 +138,6 @@ import { AgGridVue } from 'ag-grid-vue'
 import { mapActions, mapState } from 'vuex'
 import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
-import agDateCellRender from '../frameworkComponents/agDateCellRender'
 export default {
   name: 'modules',
   computed: {
@@ -199,10 +198,6 @@ export default {
       this.gridOptions = {
         allowShowChangeAfterFilter: true
       }
-      this.frameworkComponents = {
-        agDateCellRender: agDateCellRender
-      }
-
       this.columnDefs = [
         {
           editable: false,
@@ -242,10 +237,10 @@ export default {
         {
           headerName: '类型',
           field: 'ismenu',
-          width: 40,
+          width: 80,
           sortable: true,
           filter: true,
-          minWidth: 20,
+          minWidth: 80,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: { values: Object.keys(this.$t('menu.types')) },
           valueFormatter: this.getSelector
@@ -261,21 +256,20 @@ export default {
         {
           headerName: '创建时间',
           field: 'created_at',
-          width: 90,
+          width: 130,
           editable: false,
           sortable: true,
           filter: true,
-          minWidth: 90
+          minWidth: 130
         },
         {
           headerName: '更新时间',
           field: 'updated_at',
-          width: 90,
-          cellRendererFramework: agDateCellRender,
+          width: 130,
           editable: true,
           sortable: true,
           filter: true,
-          minWidth: 90
+          minWidth: 130
         }
       ]
       this.defaultColDef = {

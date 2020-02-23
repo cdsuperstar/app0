@@ -67,6 +67,7 @@
           </q-list>
         </q-btn-dropdown>
         <q-select
+          v-if="$q.screen.gt.xs"
           v-model="lang"
           stretch
           flat
@@ -96,7 +97,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="left" side="left" overlay bordered>
+    <q-drawer v-model="left" side="left" bordered>
       <!-- drawer content -->
       <q-list bordered link class="rounded-borders">
         <treemenu
@@ -109,8 +110,9 @@
       <nested-test v-model="menutree" v-if="false" class="col-8" />
     </q-drawer>
 
-    <q-drawer v-model="right" side="right" overlay elevated>
+    <q-drawer v-model="right" side="right" elevated>
       <!-- drawer content -->
+      语言选择
     </q-drawer>
 
     <q-page-container>

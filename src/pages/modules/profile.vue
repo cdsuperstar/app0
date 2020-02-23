@@ -148,9 +148,34 @@ export default {
         width: 100,
         editable: true,
         sortable: true,
-        filter: true,
         minWidth: 100,
-        cellRendererFramework: agDateCellRender
+        cellRendererFramework: agDateCellRender,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: function(filterLocalDateAtMidnight, cellValue) {
+            var dateAsString = cellValue
+            if (dateAsString == null) return -1
+            var dateParts = dateAsString.split('/')
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            )
+
+            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+              return 0
+            }
+
+            if (cellDate < filterLocalDateAtMidnight) {
+              return -1
+            }
+
+            if (cellDate > filterLocalDateAtMidnight) {
+              return 1
+            }
+          },
+          browserDatePicker: true
+        }
       },
       {
         headerName: this.$t('auth.users.profile.position'),
@@ -191,11 +216,11 @@ export default {
       {
         headerName: this.$t('auth.users.profile.phone1'),
         field: 'phone',
-        width: 100,
+        width: 115,
         editable: true,
         sortable: true,
         filter: true,
-        minWidth: 100
+        minWidth: 115
       },
       {
         headerName: this.$t('auth.users.profile.phone2'),
@@ -227,11 +252,11 @@ export default {
       {
         headerName: '创建时间',
         field: 'created_at',
-        width: 90,
+        width: 130,
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 90
+        minWidth: 130
       }
     ]
     this.defaultColDef = {

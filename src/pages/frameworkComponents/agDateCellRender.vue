@@ -5,7 +5,7 @@
     <q-icon
       dense
       name="date_range"
-      class="cursor-pointer text-grey-7"
+      class="cursor-pointer text-grey-8"
       size="18px"
       style="padding-bottom: 7px"
     >

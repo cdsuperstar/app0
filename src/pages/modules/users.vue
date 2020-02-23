@@ -229,8 +229,8 @@ export default {
       {
         headerName: '创建时间',
         field: 'created_at',
-        width: 80,
-        minWidth: 80,
+        width: 130,
+        minWidth: 130,
         editable: false,
         sortable: true,
         filter: true
@@ -238,8 +238,8 @@ export default {
       {
         headerName: '更新时间',
         field: 'updated_at',
-        width: 80,
-        minWidth: 80,
+        width: 130,
+        minWidth: 130,
         editable: false,
         sortable: true,
         filter: true

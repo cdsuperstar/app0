@@ -204,11 +204,11 @@ export default {
       {
         headerName: '创建时间',
         field: 'created_at',
-        width: 90,
+        width: 130,
         editable: false,
         sortable: true,
         filter: true,
-        minWidth: 90
+        minWidth: 130
       }
     ]
     this.defaultColDef = {
