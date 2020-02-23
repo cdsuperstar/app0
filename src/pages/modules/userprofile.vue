@@ -139,7 +139,7 @@
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'userprofile.vue',
+  name: 'UserprofileVue',
   data() {
     return {
       data: {
@@ -192,7 +192,7 @@ export default {
       this.data.id = this.$auth.user().id
       // 用户头像
       var formData = new FormData()
-      for (let key in this.data) {
+      for (const key in this.data) {
         formData.append(key, this.data[key])
       }
       formData.append('avatar', this.$refs.fileuper.files[0])

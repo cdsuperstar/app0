@@ -114,16 +114,16 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Units-agGrid"
-        rowSelection="multiple"
-        rowMultiSelectWithClick="true"
-        :gridOptions="gridOptions"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
+        row-selection="multiple"
+        row-multi-select-with-click="true"
+        :grid-options="gridOptions"
+        :column-defs="columnDefs"
+        :row-data="rowData"
+        :default-col-def="defaultColDef"
         :pagination="true"
-        :paginationPageSize="50"
-        :getRowStyle="getRowStyle"
-        :localeText="this.$t('aggrid')"
+        :pagination-page-size="50"
+        :get-row-style="getRowStyle"
+        :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
       >
@@ -138,7 +138,7 @@ import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
 
 export default {
-  name: 'units',
+  name: 'Units',
   components: {
     AgGridVue,
     NestedTest
@@ -241,7 +241,7 @@ export default {
     },
     // 导入开始
     ImportCVStoData() {
-      let file = this.importfile
+      const file = this.importfile
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
@@ -253,7 +253,7 @@ export default {
           const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
           let j = 0
           data.map(item => {
-            let ret = {}
+            const ret = {}
             let i = 0
             console.log(this)
             this.columnDefs.forEach(function(val) {
@@ -337,7 +337,7 @@ export default {
       this.gridApi.updateRowData({ add: newItems })
     },
     saveItems() {
-      let selectedData = this.gridApi.getSelectedRows()
+      const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http

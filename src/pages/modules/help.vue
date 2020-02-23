@@ -68,7 +68,7 @@
 import { required } from 'vuelidate/lib/validators'
 
 export default {
-  name: 'help',
+  name: 'Help',
   components: {},
   data() {
     return {

@@ -114,17 +114,17 @@
       <ag-grid-vue
         style="width: 100%; height: 600px;"
         class="ag-theme-balham Models-agGrid"
-        rowSelection="multiple"
-        rowMultiSelectWithClick="true"
-        :gridOptions="gridOptions"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
+        row-selection="multiple"
+        row-multi-select-with-click="true"
+        :grid-options="gridOptions"
+        :column-defs="columnDefs"
+        :row-data="rowData"
+        :default-col-def="defaultColDef"
         :pagination="true"
-        :paginationPageSize="50"
-        :getRowStyle="getRowStyle"
-        :frameworkComponents="frameworkComponents"
-        :localeText="this.$t('aggrid')"
+        :pagination-page-size="50"
+        :get-row-style="getRowStyle"
+        :framework-components="frameworkComponents"
+        :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
       >
@@ -139,7 +139,7 @@ import { mapActions, mapState } from 'vuex'
 import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
 export default {
-  name: 'modules',
+  name: 'Modules',
   computed: {
     ...mapState('zero', ['ZModules'])
   },
@@ -188,7 +188,7 @@ export default {
   methods: {
     ...mapActions('zero', ['getZModules']),
     getSelector(params) {
-      let mapMenu = this.$t('menu.types')
+      const mapMenu = this.$t('menu.types')
       return mapMenu[params.value]
     },
     onGridReady(params) {
@@ -283,7 +283,7 @@ export default {
     },
     // 导入开始
     ImportCVStoData() {
-      let file = this.importfile
+      const file = this.importfile
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
@@ -295,7 +295,7 @@ export default {
           const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
           let j = 0
           data.map(item => {
-            let ret = {}
+            const ret = {}
             let i = 0
             // console.log(this)
             this.columnDefs.forEach(function(val) {
@@ -381,7 +381,7 @@ export default {
       // console.log(res)
     },
     saveItems() {
-      let selectedData = this.gridApi.getSelectedRows()
+      const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         // console.log(val)
         if (val.id === undefined) {

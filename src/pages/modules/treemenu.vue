@@ -1,9 +1,9 @@
 <template>
   <div v-if="children.ismenu.indexOf('A') !== -1">
     <q-expansion-item
-      v-model="epandstate"
       v-if="children.children.length > 0"
-      v-bind:key="children.id"
+      :key="children.id"
+      v-model="epandstate"
       :header-class="{ 'text-primary text-weight-bold': epandstate }"
       expand-separator
       :to="
@@ -25,7 +25,7 @@
       </template>
       <treemenu
         v-for="node in children.children"
-        v-bind:key="node.id"
+        :key="node.id"
         :children="node"
         :depth="depth + 1"
       ></treemenu>
@@ -51,7 +51,7 @@
 </template>
 <script>
 export default {
-  name: 'treemenu',
+  name: 'Treemenu',
   props: ['children', 'depth'],
   data() {
     return {

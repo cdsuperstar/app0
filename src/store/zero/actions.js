@@ -27,16 +27,16 @@ export function setZModules({ commit }, payload) {
 }
 // 取得当前用户权限
 export function reqThePermission({ commit, state }, payload) {
-  let module = state.ZPermissions.modules.filter(function(el) {
+  const module = state.ZPermissions.modules.filter(function(el) {
     return el.name === payload.module
   })
 
   if (module[0] !== undefined) {
-    let cfg = state.ZPermissions.data.filter(function(el) {
+    const cfg = state.ZPermissions.data.filter(function(el) {
       return el.name === payload.module + '.' + payload.name
     })
 
-    let ret = {
+    const ret = {
       cfg: cfg[0] === undefined ? null : cfg[0].pivot.usrcfg,
       module: module[0]
     }
@@ -49,7 +49,7 @@ export function reqThePermission({ commit, state }, payload) {
         .post('/zero/reqThePermission', payload)
         .then(res => {
           if (res.data.success) {
-            let ret = {
+            const ret = {
               cfg:
                 res.data.data === null
                   ? null

@@ -28,13 +28,13 @@
         <q-separator />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
           <JsonEditor
+            v-model="jsonData"
             style="border: 1px dashed #b5b5b5;padding-left: 1px;"
             :options="{
               confirmText: 'confirm',
               cancelText: 'cancel'
             }"
-            :objData="jsonData"
-            v-model="jsonData"
+            :obj-data="jsonData"
           >
           </JsonEditor>
         </q-card-section>
@@ -123,16 +123,16 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Permission-agGrid"
-        rowSelection="multiple"
-        rowMultiSelectWithClick="true"
-        :gridOptions="gridOptions"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
+        row-selection="multiple"
+        row-multi-select-with-click="true"
+        :grid-options="gridOptions"
+        :column-defs="columnDefs"
+        :row-data="rowData"
+        :default-col-def="defaultColDef"
         :pagination="true"
-        :paginationPageSize="50"
-        :getRowStyle="getRowStyle"
-        :localeText="this.$t('aggrid')"
+        :pagination-page-size="50"
+        :get-row-style="getRowStyle"
+        :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
       >
@@ -146,7 +146,7 @@ import { AgGridVue } from 'ag-grid-vue'
 import XLSX from 'xlsx'
 
 export default {
-  name: 'permission',
+  name: 'Permission',
   components: {
     AgGridVue
   },
@@ -242,7 +242,7 @@ export default {
     },
     // 导入开始
     ImportCVStoData() {
-      let file = this.importfile
+      const file = this.importfile
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
@@ -254,7 +254,7 @@ export default {
           const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
           let j = 0
           data.map(item => {
-            let ret = {}
+            const ret = {}
             let i = 0
             console.log(this)
             this.columnDefs.forEach(function(val) {
@@ -338,7 +338,7 @@ export default {
       this.gridApi.updateRowData({ add: newItems })
     },
     saveItems() {
-      let selectedData = this.gridApi.getSelectedRows()
+      const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http

@@ -40,17 +40,17 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Profile-agGrid"
-        rowSelection="multiple"
-        rowMultiSelectWithClick="true"
-        :gridOptions="gridOptions"
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
+        row-selection="multiple"
+        row-multi-select-with-click="true"
+        :grid-options="gridOptions"
+        :column-defs="columnDefs"
+        :row-data="rowData"
+        :default-col-def="defaultColDef"
         :pagination="true"
-        :paginationPageSize="50"
-        :getRowStyle="getRowStyle"
-        :frameworkComponents="frameworkComponents"
-        :localeText="this.$t('aggrid')"
+        :pagination-page-size="50"
+        :get-row-style="getRowStyle"
+        :framework-components="frameworkComponents"
+        :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
       >
@@ -64,7 +64,7 @@ import { AgGridVue } from 'ag-grid-vue'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'roles',
+  name: 'Roles',
   components: {
     AgGridVue
   },
@@ -288,7 +288,7 @@ export default {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
     getSelector(params) {
-      let mapMenu = this.$t('auth.users.profile.sexoptions')
+      const mapMenu = this.$t('auth.users.profile.sexoptions')
       return mapMenu[params.value]
     },
     ExportDataAsCVS() {
@@ -313,7 +313,7 @@ export default {
       this.changerowcolor = ''
     },
     saveItems() {
-      let selectedData = this.gridApi.getSelectedRows()
+      const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http

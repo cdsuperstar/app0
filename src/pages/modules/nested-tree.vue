@@ -36,8 +36,8 @@
     :value="value"
     @input="emitter"
   >
-    <div class="item-group" :key="el.id" v-for="el in realValue">
-      <div class="item" v-ripple>
+    <div v-for="el in realValue" :key="el.id" class="item-group">
+      <div v-ripple class="item">
         <i class="material-icons" style="font-size: 1.5rem;">{{ el.icon }}</i
         >&nbsp;&nbsp;
         <b>{{ el.title }}</b>
@@ -50,14 +50,21 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
-  name: 'nested-tree',
-  methods: {
-    emitter(value) {
-      this.$emit('input', value)
-    }
-  },
+  name: 'NestedTree',
   components: {
     draggable
+  },
+  props: {
+    value: {
+      required: false,
+      type: Array,
+      default: null
+    },
+    list: {
+      required: false,
+      type: Array,
+      default: null
+    }
   },
   computed: {
     dragOptions() {
@@ -74,16 +81,9 @@ export default {
       return this.value ? this.value : this.list
     }
   },
-  props: {
-    value: {
-      required: false,
-      type: Array,
-      default: null
-    },
-    list: {
-      required: false,
-      type: Array,
-      default: null
+  methods: {
+    emitter(value) {
+      this.$emit('input', value)
     }
   }
 }

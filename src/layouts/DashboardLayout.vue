@@ -131,7 +131,7 @@
           ></treemenu>
         </div>
       </q-list>
-      <nested-test v-model="menutree" v-if="false" class="col-8" />
+      <nested-test v-if="false" v-model="menutree" class="col-8" />
     </q-drawer>
 
     <q-drawer v-model="right" bordered side="right" :width="rightdrawer">
@@ -140,19 +140,19 @@
       <div class="q-mt-sm">
         <q-list>
           <q-expansion-item
+            v-if="!$q.screen.gt.xs"
             expand-separator
             icon="language"
             class="text-primary text-weight-bold"
-            v-if="!$q.screen.gt.xs"
             :label="this.$t('langs.title')"
           >
             <q-item
               v-for="n in langs"
-              v-close-popup
-              clickable
-              v-ripple
-              style="border-bottom: 1px dashed #b5b5b5;"
               :key="n.value"
+              v-close-popup
+              v-ripple
+              clickable
+              style="border-bottom: 1px dashed #b5b5b5;"
               @click="setlanguage(n)"
             >
               <q-item-section avatar top>
@@ -191,11 +191,11 @@
           <q-list separator style="overflow:hidden;">
             <div v-for="item in menuB" :key="item.id">
               <q-item
+                v-if="item.ismenu.indexOf('B') !== -1"
                 v-ripple
                 clickable
                 tag="a"
                 :to="item.url"
-                v-if="item.ismenu.indexOf('B') !== -1"
               >
                 <q-item-section avatar>
                   <q-avatar
@@ -290,8 +290,8 @@ export default {
         if (res.data.success) {
           this.routearr = this.$zglobal.flatten(res.data.data)
           if (Array.isArray(this.routearr)) {
-            let { routes } = this.$router.options
-            let routeData = routes.find(r => r.path === '/user')
+            const { routes } = this.$router.options
+            const routeData = routes.find(r => r.path === '/user')
             this.routearr.forEach(function(val) {
               // push url to router by Luke
               if (val.url !== '' && val.url !== null) {
