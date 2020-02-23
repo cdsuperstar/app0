@@ -20,6 +20,7 @@ export default {
     confirm: '确定',
     cancel: '取消',
     tree: '树形',
+    json: 'Json编辑器',
     navigation: '浏览',
     search: '搜索',
     back: '返回',
@@ -38,6 +39,10 @@ export default {
   },
   jsoneditor: {
     header: 'JSON编辑器'
+  },
+  langs: {
+    header: '语言',
+    title: '支持的语言列表'
   },
   modules: {
     header: '模块管理',

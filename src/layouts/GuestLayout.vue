@@ -7,17 +7,39 @@
             <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
           </q-avatar>
         </q-toolbar-title>
-        <q-select
-          v-model="lang"
+        <q-btn-dropdown
+          v-if="$q.screen.gt.xs"
           stretch
           flat
-          dark
-          popup-content-style="background-color:#bdbdbd"
-          borderless
-          options-dense
-          map-options
-          :options="langs"
-        />
+          :label="this.$t('langs.header')"
+        >
+          <q-list>
+            <q-item-label
+              header
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;"
+              >{{ $t('langs.title') }}</q-item-label
+            >
+            <q-item
+              v-for="n in langs"
+              :key="n.value"
+              v-close-popup
+              clickable
+              @click="setlanguage(n)"
+            >
+              <q-item-section avatar top>
+                <q-avatar
+                  color="primary"
+                  text-color="white"
+                  size="30px"
+                  icon="directions"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ n.label }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -62,6 +84,11 @@ export default {
       import(`quasar/lang/${lang.value}`).then(language => {
         this.$q.lang.set(language.default)
       })
+    }
+  },
+  methods: {
+    setlanguage(lang) {
+      this.lang = lang
     }
   }
 }

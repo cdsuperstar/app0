@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DPermissiondata">
+    <q-dialog v-model="DJsonEditor" full-width full-height>
       <q-card class="q-dialog-plugin">
         <q-toolbar>
           <q-btn
@@ -14,7 +14,7 @@
           />
           <q-toolbar-title>
             <span class="text-subtitle1 text-weight-bold">
-              {{ $t('permission.editpermissionltree') }}</span
+              {{ $t('jsoneditor.header') }}</span
             >
           </q-toolbar-title>
           <q-btn
@@ -22,12 +22,21 @@
             color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
-            @click="EditPermissiontree()"
+            @click="EditJSON()"
           />
         </q-toolbar>
         <q-separator />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Permissiondata" class="col-8" />
+          <JsonEditor
+            style="border: 1px dashed #b5b5b5;padding-left: 1px;"
+            :options="{
+              confirmText: 'confirm',
+              cancelText: 'cancel'
+            }"
+            :objData="jsonData"
+            v-model="jsonData"
+          >
+          </JsonEditor>
         </q-card-section>
         <q-separator />
         <q-inner-loading :showing="loading">
@@ -65,12 +74,12 @@
         @click="saveItems()"
       />
       <q-btn
-        color="blue-grey-5"
+        color="purple-5"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
-        :label="this.$t('buttons.tree')"
-        @click="Permissiontree()"
+        :label="this.$t('buttons.json')"
+        @click="DJsonedit()"
       />
       <q-btn
         color="green-6"
@@ -135,19 +144,17 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import XLSX from 'xlsx'
-import NestedTest from './nested-tree'
 
 export default {
   name: 'permission',
   components: {
-    AgGridVue,
-    NestedTest
+    AgGridVue
   },
   data() {
     return {
       loading: true,
-      DPermissiondata: null,
-      Permissiondata: null,
+      DJsonEditor: null,
+      jsonData: null,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -381,54 +388,28 @@ export default {
         }
       })
     },
-    Permissiontree() {
+    DJsonedit() {
       this.loading = true
-      this.DPermissiondata = true
+      this.DJsonEditor = true
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
           if (res.data.success) {
-            // console.log(res.data.data)
-            this.Permissiondata = res.data.data
+            // this.jsonData = JSON.parse(JSON.stringify(res.data.data))
+            this.jsonData = res.data.data
+            console.log(this.jsonData)
             this.loading = false
           } else {
           }
         })
         .catch(e => {
-          this.$zglobal.showMessage(
-            'red-5',
-            'center',
-            this.$t('auth.register.invalid_data')
-          )
+          this.$zglobal.showMessage('red-5', 'center', e.message)
           this.loading = false
-          this.DPermissiondata = false
+          this.DJsonEditor = false
         })
     },
-    EditPermissiontree() {
-      this.loading = true
-      this.$router.app.$http
-        .post(
-          '/z_permission/setTree/' + this.Permissiondata[0].id,
-          this.Permissiondata
-        )
-        .then(res => {
-          if (res.data.success) {
-            this.loading = false
-            this.DPermissiondata = false
-            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
-          }
-        })
-        .catch(error => {
-          this.loading = false
-          if (error.status) {
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
-    }
+    EditJSON() {}
+    // JSON format print
   }
 }
 </script>
@@ -450,5 +431,8 @@ export default {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: #006699;
+}
+.block_content .block .clearfix {
+  border-bottom: 1px dotted #b5b5b5;
 }
 </style>

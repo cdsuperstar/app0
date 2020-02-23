@@ -66,18 +66,40 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-select
+        <!-- 语言选择--->
+        <q-btn-dropdown
           v-if="$q.screen.gt.xs"
-          v-model="lang"
           stretch
           flat
-          dark
-          popup-content-style="background-color:#bdbdbd"
-          borderless
-          options-dense
-          map-options
-          :options="langs"
-        />
+          :label="this.$t('langs.header')"
+        >
+          <q-list>
+            <q-item-label
+              header
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;"
+              >{{ $t('langs.title') }}</q-item-label
+            >
+            <q-item
+              v-for="n in langs"
+              :key="n.value"
+              v-close-popup
+              clickable
+              @click="setlanguage(n)"
+            >
+              <q-item-section avatar top>
+                <q-avatar
+                  color="primary"
+                  text-color="white"
+                  size="30px"
+                  icon="directions"
+                />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ n.label }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-btn
           v-if="$q.screen.gt.xs"
           dense
@@ -97,7 +119,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="left" side="left" bordered>
+    <q-drawer v-model="left" side="left" bordered :width="leftdrawer">
       <!-- drawer content -->
       <q-list bordered link class="rounded-borders">
         <treemenu
@@ -110,9 +132,44 @@
       <nested-test v-model="menutree" v-if="false" class="col-8" />
     </q-drawer>
 
-    <q-drawer v-model="right" side="right" elevated>
+    <q-drawer v-model="right" bordered side="right" :width="rightdrawer">
       <!-- drawer content -->
-      语言选择
+      <!-- 语言选择--->
+      <div class="q-mt-sm">
+        <q-list>
+          <q-expansion-item
+            expand-separator
+            icon="language"
+            class="text-primary text-weight-bold"
+            v-if="!$q.screen.gt.xs"
+            :label="this.$t('langs.title')"
+          >
+            <q-item
+              v-for="n in langs"
+              v-close-popup
+              clickable
+              v-ripple
+              style="border-bottom: 1px dashed #b5b5b5;"
+              :key="n.value"
+              @click="setlanguage(n)"
+            >
+              <q-item-section avatar top>
+                <q-avatar
+                  color="primary"
+                  text-color="white"
+                  size="30px"
+                  icon="directions"
+                />
+              </q-item-section>
+              <q-item-section
+                class="column text-black text-weight-medium text-left"
+              >
+                <q-item-label>{{ n.label }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+        </q-list>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -183,6 +240,8 @@ export default {
       routearr: [],
       left: false,
       right: false,
+      leftdrawer: 210,
+      rightdrawer: 230,
       langs: [
         {
           label: '中文',
@@ -258,7 +317,11 @@ export default {
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules', 'setZModules', 'getMyPermissions'])
+    ...mapActions('zero', ['getZModules', 'setZModules', 'getMyPermissions']),
+    setlanguage(lang) {
+      console.log(lang)
+      this.lang = lang
+    }
   }
 }
 </script>
