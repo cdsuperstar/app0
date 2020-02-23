@@ -179,7 +179,7 @@ export default {
       },
       {
         headerName: '机构名',
-        field: 'name',
+        field: 'title',
         width: 130,
         editable: true,
         sortable: true,
@@ -396,6 +396,7 @@ export default {
           if (res.data.success) {
             // console.log(res.data.data)
             this.Unitdata = res.data.data
+            console.log(this.Unitdata)
             this.loading = false
           } else {
           }

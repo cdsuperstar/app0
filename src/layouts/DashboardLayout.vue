@@ -122,12 +122,14 @@
     <q-drawer v-model="left" side="left" bordered :width="leftdrawer">
       <!-- drawer content -->
       <q-list bordered link class="rounded-borders">
-        <treemenu
-          v-for="item in menutree"
-          :key="item.id"
-          :children="item"
-          :depth="1"
-        ></treemenu>
+        <div v-for="menus in menutree" :key="menus.id">
+          <treemenu
+            v-for="item in menus.children"
+            :key="item.id"
+            :children="item"
+            :depth="1"
+          ></treemenu>
+        </div>
       </q-list>
       <nested-test v-model="menutree" v-if="false" class="col-8" />
     </q-drawer>
