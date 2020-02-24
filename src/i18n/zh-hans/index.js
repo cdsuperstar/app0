@@ -44,6 +44,9 @@ export default {
     header: '语言',
     title: '支持的语言列表'
   },
+  history: {
+    title: '历史记录'
+  },
   modules: {
     header: '模块管理',
     editmodeltree: '模块树编辑',
@@ -51,7 +54,8 @@ export default {
   },
   roles: {
     header: '角色管理',
-    editroleltree: '角色树编辑'
+    editroleltree: '角色树编辑',
+    rowserror: '数据选择有误！'
   },
   permission: {
     header: '权限管理',

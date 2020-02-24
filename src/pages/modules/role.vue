@@ -1,40 +1,5 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DRoleTree">
-      <q-card class="q-dialog-plugin">
-        <q-toolbar>
-          <q-btn
-            v-close-popup
-            flat
-            round
-            dense
-            icon="close"
-            color="negative"
-            :title="this.$t('buttons.close')"
-          />
-          <q-toolbar-title>
-            <span class="text-subtitle1 text-weight-bold">
-              {{ $t('roles.editroleltree') }}</span
-            >
-          </q-toolbar-title>
-          <q-btn
-            flat
-            color="secondary"
-            icon="save"
-            :label="this.$t('buttons.confirm')"
-            @click="EditUnittree()"
-          />
-        </q-toolbar>
-        <q-separator />
-        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Roledata" class="col-8" />
-        </q-card-section>
-        <q-separator />
-        <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
-        </q-inner-loading>
-      </q-card>
-    </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
       {{ $t('roles.header') }}
     </div>
@@ -65,37 +30,13 @@
         @click="saveItems()"
       />
       <q-btn
-        color="blue-grey-5"
+        color="green-5"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
         :label="this.$t('buttons.tree')"
         @click="Unittree()"
       />
-      <q-btn
-        color="green-6"
-        text-color="white"
-        class="q-ma-xs"
-        icon="cloud_download"
-        :label="this.$t('buttons.export')"
-        @click="ExportDataAsCVS()"
-      />
-      <q-space />
-      <q-file
-        v-model="importfile"
-        color="indigo"
-        style="max-width: 150px"
-        accept=".xlsx, *.xls"
-        dense
-        clearable
-        :label="this.$t('buttons.import')"
-        @input="ImportCVStoData()"
-      >
-        <template v-slot:prepend>
-          <q-icon name="attachment" />
-        </template>
-      </q-file>
-
       <q-input
         v-model="quickFilter"
         dense
@@ -110,46 +51,82 @@
         </template>
       </q-input>
     </div>
-    <div class="shadow-1">
-      <ag-grid-vue
-        style="width: 100%; height: 500px;"
-        class="ag-theme-balham Role-agGrid"
-        row-selection="multiple"
-        row-multi-select-with-click="true"
-        :grid-options="gridOptions"
-        :column-defs="columnDefs"
-        :row-data="rowData"
-        :default-col-def="defaultColDef"
-        :pagination="true"
-        :pagination-page-size="50"
-        :get-row-style="getRowStyle"
-        :locale-text="this.$t('aggrid')"
-        @cellValueChanged="oncellValueChanged"
-        @grid-ready="onGridReady"
-      >
-      </ag-grid-vue>
+    <div class="row q-ma-md">
+      <div class="col-ma-md-5">
+        <ag-grid-vue
+          style="width: 100%; height: 500px;"
+          class="ag-theme-balham Role-agGrid"
+          row-selection="single"
+          row-multi-select-with-click="true"
+          :grid-options="gridOptions"
+          :column-defs="columnDefs"
+          :row-data="rowData"
+          :default-col-def="defaultColDef"
+          :pagination="true"
+          :pagination-page-size="50"
+          :get-row-style="getRowStyle"
+          :locale-text="this.$t('aggrid')"
+          @cellValueChanged="oncellValueChanged"
+          @rowSelected="ShowUnittree()"
+          @grid-ready="onGridReady"
+        >
+        </ag-grid-vue>
+      </div>
+      <div class="col-md-5" style="margin-left: 15px;">
+        <q-card flat>
+          <q-toolbar style="min-height:20px;">
+            <q-toolbar-title dense>
+              <span class="text-subtitle1 text-weight-bold">
+                {{ $t('roles.editroleltree') }}</span
+              >
+            </q-toolbar-title>
+            <q-btn
+              flat
+              color="orange-10"
+              icon="save_alt"
+              :label="this.$t('buttons.confirm')"
+              @click="EditUnittree()"
+            />
+          </q-toolbar>
+          <q-separator />
+          <q-card-section
+            style="min-height:10vh;max-height: 80vh"
+            class="scroll"
+          >
+            <q-tree
+              node-key="id"
+              ref="myroletree"
+              label-key="title"
+              tick-strategy="strict"
+              control-color="deep-orange-6"
+              :nodes="Roledata"
+              :ticked.sync="roleticked"
+            />
+          </q-card-section>
+          <q-inner-loading :showing="loading">
+            <q-spinner-gears size="80px" color="primary" />
+          </q-inner-loading>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import XLSX from 'xlsx'
-import NestedTest from './nested-tree'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Roles',
   components: {
-    AgGridVue,
-    NestedTest
+    AgGridVue
   },
   data() {
     return {
-      loading: true,
-      DRoleTree: null,
-      Roledata: null,
+      loading: false,
+      Roledata: [],
+      roleticked: null,
       quickFilter: null,
-      importfile: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
@@ -160,7 +137,9 @@ export default {
       defaultColDef: null
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('zero', ['ZModules'])
+  },
   beforeMount() {
     this.gridOptions = {
       allowShowChangeAfterFilter: true
@@ -169,49 +148,29 @@ export default {
       {
         headerName: 'ID',
         field: 'id',
-        width: 55,
+        width: 50,
         sortable: true,
         editable: false,
-        minWidth: 55,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
+        minWidth: 50,
         checkboxSelection: true
       },
       {
         headerName: '标识',
         field: 'name',
-        width: 130,
+        width: 100,
         editable: true,
         sortable: true,
         filter: true,
-        minWidth: 130
+        minWidth: 100
       },
       {
         headerName: '名称',
         field: 'title',
-        width: 130,
+        width: 120,
         editable: true,
         sortable: true,
         filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 130,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 130,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 130
+        minWidth: 120
       }
     ]
     this.defaultColDef = {
@@ -242,34 +201,6 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    // 导入开始
-    ImportCVStoData() {
-      const file = this.importfile
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          /*  Parse data */
-          const bstr = e.target.result
-          const wb = XLSX.read(bstr, { type: 'binary' })
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          let j = 0
-          data.map(item => {
-            const ret = {}
-            let i = 0
-            console.log(this)
-            this.columnDefs.forEach(function(val) {
-              ret[val.field] = item[i++]
-            })
-            if (j > 0) this.rowData.push(ret)
-            j++
-          })
-        }
-        reader.readAsBinaryString(file)
-      }
-    },
-    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -314,14 +245,6 @@ export default {
           })
       }
     },
-    ExportDataAsCVS() {
-      var params = {
-        fileName: 'roles.xls',
-        suppressQuotes: true,
-        columnSeparator: ','
-      }
-      this.gridApi.exportDataAsCsv(params)
-    },
     onchangerowcolor() {
       return { backgroundColor: this.changerowcolor }
     },
@@ -344,8 +267,9 @@ export default {
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http
-            .post('/z_role/', val)
+            .post('/z_role', val)
             .then(res => {
+              console.log(res.data.data)
               if (res.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
@@ -366,7 +290,7 @@ export default {
             .catch(e => {})
         } else {
           this.$router.app.$http
-            .put('/z_role/' + val.id, val)
+            .put('/z_role' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -390,50 +314,59 @@ export default {
         }
       })
     },
-    Unittree() {
+    ShowUnittree() {
       this.loading = true
-      this.DRoleTree = true
-      this.$router.app.$http
-        .get('/z_module/getMyMenu')
-        .then(res => {
-          if (res.data.success) {
-            // console.log(res.data.data)
-            this.Roledata = res.data.data
-            this.loading = false
-          } else {
-          }
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1 && selectedData[0].id !== undefined) {
+        this.loading = true
+        this.Roledata = this.ZModules
+        this.$nextTick(() => {
+          this.$refs.myroletree.setExpanded(1, true)
         })
-        .catch(e => {
-          this.$zglobal.showMessage(
-            'red-5',
-            'center',
-            this.$t('auth.register.invalid_data')
-          )
-          this.loading = false
-          this.DRoleTree = false
-        })
+        this.$router.app.$http
+          .get('/zero/getRoleModules/' + selectedData[0].id)
+          .then(resmy => {
+            if (resmy.data.success) {
+              this.roleticked = resmy.data.data
+              this.loading = false
+            } else {
+            }
+          })
+        this.loading = false
+      } else {
+        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
+      }
     },
     EditUnittree() {
       this.loading = true
-      this.$router.app.$http
-        .post('/z_role/setTree/' + this.Roledata[0].id, this.Roledata)
-        .then(res => {
-          if (res.data.success) {
-            this.loading = false
-            this.DRoleTree = false
-            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
-          }
-        })
-        .catch(error => {
-          this.loading = false
-          if (error.status) {
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1 && selectedData[0].id !== undefined) {
+        this.$router.app.$http
+          .post('/zero/setRoleModules/' + selectedData[0].id, {
+            modules: this.roleticked
+          })
+          .then(res => {
+            if (res.data.success) {
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('success') + ':' + res.data.data
+              )
+            }
+          })
+          .catch(error => {
+            if (error.status) {
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
+            }
+          })
+        this.loading = false
+      } else {
+        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
+      }
     }
   }
 }
