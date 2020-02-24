@@ -175,7 +175,11 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <transition>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
+      </transition>
     </q-page-container>
 
     <q-footer reveal bordered class="bg-white text-black">
