@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DModelTree">
+    <q-dialog v-model="DRoleTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
           <q-btn
@@ -14,7 +14,7 @@
           />
           <q-toolbar-title>
             <span class="text-subtitle1 text-weight-bold">
-              {{ $t('modules.editmodeltree') }}</span
+              {{ $t('roles.editroleltree') }}</span
             >
           </q-toolbar-title>
           <q-btn
@@ -22,12 +22,12 @@
             color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
-            @click="EditModeltree()"
+            @click="EditUnittree()"
           />
         </q-toolbar>
         <q-separator />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Modeldata" class="col-8" />
+          <nested-test v-if="true" v-model="Roledata" class="col-8" />
         </q-card-section>
         <q-separator />
         <q-inner-loading :showing="loading">
@@ -36,7 +36,7 @@
       </q-card>
     </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
-      {{ $t('modules.header') }}
+      {{ $t('roles.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -65,12 +65,12 @@
         @click="saveItems()"
       />
       <q-btn
-        color="purple-5"
+        color="blue-grey-5"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
         :label="this.$t('buttons.tree')"
-        @click="Modeltree()"
+        @click="Unittree()"
       />
       <q-btn
         color="green-6"
@@ -112,8 +112,8 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 600px;"
-        class="ag-theme-balham Models-agGrid"
+        style="width: 100%; height: 500px;"
+        class="ag-theme-balham Role-agGrid"
         row-selection="multiple"
         row-multi-select-with-click="true"
         :grid-options="gridOptions"
@@ -123,7 +123,6 @@
         :pagination="true"
         :pagination-page-size="50"
         :get-row-style="getRowStyle"
-        :framework-components="frameworkComponents"
         :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
@@ -135,14 +134,11 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import { mapActions, mapState } from 'vuex'
 import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
+
 export default {
-  name: 'Modules',
-  computed: {
-    ...mapState('zero', ['ZModules'])
-  },
+  name: 'Articlelist',
   components: {
     AgGridVue,
     NestedTest
@@ -150,8 +146,8 @@ export default {
   data() {
     return {
       loading: true,
-      DModelTree: null,
-      Modeldata: null,
+      DRoleTree: null,
+      Roledata: null,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -161,19 +157,65 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      frameworkComponents: null,
       defaultColDef: null
     }
   },
+  computed: {},
   beforeMount() {
-    this.initGrid()
+    this.gridOptions = {
+      allowShowChangeAfterFilter: true
+    }
+    this.columnDefs = [
+      {
+        headerName: 'ID',
+        field: 'id',
+        width: 55,
+        sortable: true,
+        editable: false,
+        minWidth: 55,
+        headerCheckboxSelection: true,
+        headerCheckboxSelectionFilteredOnly: true,
+        checkboxSelection: true
+      },
+      {
+        headerName: '角色名',
+        field: 'name',
+        width: 130,
+        editable: true,
+        sortable: true,
+        filter: true,
+        minWidth: 130
+      },
+      {
+        headerName: '创建时间',
+        field: 'created_at',
+        width: 130,
+        editable: false,
+        sortable: true,
+        filter: true,
+        minWidth: 130
+      },
+      {
+        headerName: '更新时间',
+        field: 'updated_at',
+        width: 130,
+        editable: false,
+        sortable: true,
+        filter: true,
+        minWidth: 130
+      }
+    ]
+    this.defaultColDef = {
+      editable: true,
+      resizable: true
+    }
+    this.getRowStyle = this.onchangerowcolor
   },
   created() {
     this.$router.app.$http
-      .get('/z_module/')
+      .get('/z_role/')
       .then(res => {
         if (res.data.success) {
-          // console.log(res.data.data)
           this.rowData = res.data.data
         } else {
         }
@@ -181,102 +223,12 @@ export default {
       .catch(e => {})
   },
   mounted() {
-    // console.log(this.ZModules)
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    ...mapActions('zero', ['getZModules']),
-    getSelector(params) {
-      const mapMenu = this.$t('menu.types')
-      return mapMenu[params.value]
-    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
-    },
-    initGrid() {
-      this.gridOptions = {
-        allowShowChangeAfterFilter: true
-      }
-      this.columnDefs = [
-        {
-          editable: false,
-          headerName: 'ID',
-          field: 'id',
-          width: 55,
-          sortable: true,
-          minWidth: 55,
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
-          checkboxSelection: true
-        },
-        {
-          headerName: '模块名',
-          field: 'name',
-          width: 100,
-          sortable: true,
-          filter: true,
-          minWidth: 100
-        },
-        {
-          headerName: '标题',
-          field: 'title',
-          width: 100,
-          sortable: true,
-          filter: true,
-          minWidth: 100
-        },
-        {
-          headerName: 'ICON',
-          field: 'icon',
-          width: 80,
-          sortable: true,
-          filter: true,
-          minWidth: 80
-        },
-        {
-          headerName: '类型',
-          field: 'ismenu',
-          width: 80,
-          sortable: true,
-          filter: true,
-          minWidth: 80,
-          cellEditor: 'agSelectCellEditor',
-          cellEditorParams: { values: Object.keys(this.$t('menu.types')) },
-          valueFormatter: this.getSelector
-        },
-        {
-          headerName: '路径名',
-          field: 'url',
-          width: 100,
-          sortable: true,
-          filter: true,
-          minWidth: 100
-        },
-        {
-          headerName: '创建时间',
-          field: 'created_at',
-          width: 130,
-          editable: false,
-          sortable: true,
-          filter: true,
-          minWidth: 130
-        },
-        {
-          headerName: '更新时间',
-          field: 'updated_at',
-          width: 130,
-          editable: true,
-          sortable: true,
-          filter: true,
-          minWidth: 130
-        }
-      ]
-      this.defaultColDef = {
-        editable: true,
-        resizable: true
-      }
-      this.getRowStyle = this.onchangerowcolor
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
@@ -287,7 +239,7 @@ export default {
       if (file) {
         const reader = new FileReader()
         reader.onload = e => {
-          /* Parse data */
+          /*  Parse data */
           const bstr = e.target.result
           const wb = XLSX.read(bstr, { type: 'binary' })
           const wsname = wb.SheetNames[0]
@@ -297,7 +249,7 @@ export default {
           data.map(item => {
             const ret = {}
             let i = 0
-            // console.log(this)
+            console.log(this)
             this.columnDefs.forEach(function(val) {
               ret[val.field] = item[i++]
             })
@@ -325,7 +277,7 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_module/' + val.id)
+                .delete('/z_role/' + val.id)
                 .then(res => {
                   if (res.data.success) {
                     // console.log(res.data.data)
@@ -355,7 +307,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'modules.xls',
+        fileName: 'roles.xls',
         suppressQuotes: true,
         columnSeparator: ','
       }
@@ -365,7 +317,6 @@ export default {
       return { backgroundColor: this.changerowcolor }
     },
     oncellValueChanged(params) {
-      // console.log(params.oldValue, params.newValue)
       if (params.oldValue === null) params.oldValue = ''
       if (params.newValue !== params.oldValue) {
         this.changerowcolor = '#ffa195'
@@ -378,15 +329,13 @@ export default {
     addItems() {
       var newItems = [{}]
       this.gridApi.updateRowData({ add: newItems })
-      // console.log(res)
     },
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        // console.log(val)
         if (val.id === undefined) {
           this.$router.app.$http
-            .post('/z_module/', val)
+            .post('/z_role/', val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -408,7 +357,7 @@ export default {
             .catch(e => {})
         } else {
           this.$router.app.$http
-            .put('/z_module/' + val.id, val)
+            .put('/z_role/' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -432,15 +381,15 @@ export default {
         }
       })
     },
-    Modeltree() {
+    Unittree() {
       this.loading = true
-      this.DModelTree = true
+      this.DRoleTree = true
       this.$router.app.$http
         .get('/z_module/getMyMenu')
         .then(res => {
           if (res.data.success) {
             // console.log(res.data.data)
-            this.Modeldata = res.data.data
+            this.Roledata = res.data.data
             this.loading = false
           } else {
           }
@@ -452,18 +401,17 @@ export default {
             this.$t('auth.register.invalid_data')
           )
           this.loading = false
-          this.DModelTree = false
+          this.DRoleTree = false
         })
     },
-    EditModeltree() {
+    EditUnittree() {
       this.loading = true
       this.$router.app.$http
-        .post('/z_module/setModuleTree/' + this.Modeldata[0].id, this.Modeldata)
+        .post('/z_role/setTree/' + this.Roledata[0].id, this.Roledata)
         .then(res => {
           if (res.data.success) {
             this.loading = false
-            this.getZModules()
-            this.DModelTree = false
+            this.DRoleTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
         })
@@ -483,11 +431,11 @@ export default {
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
-.Models-agGrid .ag-header {
-  background-color: #666699;
+.Role-agGrid .ag-header {
+  background-color: #339999;
   color: #ffffff;
 }
-.Models-agGrid .ag-cell {
+.Role-agGrid .ag-cell {
   padding-left: 1px;
 }
 .ag-theme-balham .ag-icon,
@@ -498,6 +446,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #666699;
+  color: #339999;
 }
 </style>
