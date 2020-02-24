@@ -5,12 +5,11 @@ export function someAction (context) {
 // 得到树形结构
 export function getZModules({ commit }) {
   return new Promise((resolve, reject) => {
-    // console.log('in action:', this.$router.app.$http)
     this.$router.app.$http
       .get('/z_module/getMyMenu')
       .then(res => {
         if (res.data.success) {
-          commit('setZModules', res.data.data)
+          commit('storeZModules', res.data.data)
           resolve(res)
         } else {
           reject(res.data.errors)
@@ -23,7 +22,7 @@ export function getZModules({ commit }) {
 }
 
 export function setZModules({ commit }, payload) {
-  commit('setZModules', payload)
+  commit('storeZModules', payload)
 }
 // 取得当前用户权限
 export function reqThePermission({ commit, state }, payload) {
@@ -74,7 +73,7 @@ export function getMyPermissions({ commit }, payload) {
       .post('/zero/getMyPermissions', payload)
       .then(res => {
         if (res.data.success) {
-          commit('setZPermissions', res.data)
+          commit('storeZPermissions', res.data)
           resolve(res.data)
         } else {
           reject(false)
@@ -83,5 +82,17 @@ export function getMyPermissions({ commit }, payload) {
       .catch(e => {
         reject(e)
       })
+  })
+}
+
+export function setZUIcfg({ commit }, payload) {
+  return new Promise((resolve, reject) => {
+    commit('storeZUIcfg', payload)
+  })
+}
+
+export function setZOptHist({ commit }, payload) {
+  return new Promise((resolve, reject) => {
+    commit('storeZOptHist', payload)
   })
 }

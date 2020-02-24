@@ -2,6 +2,9 @@ export default function() {
   return {
     //
     ZModules: [],
-    ZPermissions: []
+    ZPermissions: [],
+    ZUIcfg: {},
+    // 访问历史
+    ZOptHist: []
   }
 }

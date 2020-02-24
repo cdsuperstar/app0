@@ -13,7 +13,7 @@ Vue.use(VueRouter)
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-export default function(/* { store, ssrContext } */) {
+export default function({ store } /* { store, ssrContext } */) {
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -90,6 +90,8 @@ export default function(/* { store, ssrContext } */) {
     // next({ name: 'not-found' })
     // } else {
     console.log('from to check:', from.name, to.name, Vue.auth.check())
+    store.dispatch('zero/setZOptHist', to.name)
+
     // Inject instance to zglobal by Luke
     Router.app.$root.$zglobal.self = Router.app.$root
 
