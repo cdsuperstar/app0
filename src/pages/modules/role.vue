@@ -178,8 +178,17 @@ export default {
         checkboxSelection: true
       },
       {
-        headerName: '角色名',
+        headerName: '标识',
         field: 'name',
+        width: 130,
+        editable: true,
+        sortable: true,
+        filter: true,
+        minWidth: 130
+      },
+      {
+        headerName: '名称',
+        field: 'title',
         width: 130,
         editable: true,
         sortable: true,
