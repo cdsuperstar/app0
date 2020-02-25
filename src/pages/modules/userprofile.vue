@@ -83,7 +83,6 @@
         <q-input
           v-model.trim="data.birth"
           color="orange"
-          mask="date"
           :rules="['date']"
           :label="this.$t('auth.users.profile.birthday')"
         >
@@ -97,6 +96,7 @@
                 <q-date
                   v-model.trim="data.birth"
                   color="orange"
+                  mask="YYYY-MM-DD"
                   text-color="black"
                   first-day-of-week="1"
                   @input="() => $refs.qDateProxy.hide()"
@@ -191,6 +191,8 @@ export default {
     changeprofile() {
       this.data.id = this.$auth.user().id
       // 用户头像
+      // console.log(this.data)
+      if (!this.data.birth) this.data.birth = '1996-06-06'
       var formData = new FormData()
       for (const key in this.data) {
         formData.append(key, this.data[key])
@@ -204,29 +206,25 @@ export default {
         this.$router.app.$http
           .post('/profile/updateMyProfile/', formData)
           .then(res => {
-            if (res.data.success) {
+            console.log(res)
+            if (res.data.success === true) {
               this.loading = false
               this.$zglobal.showMessage(
                 'positive',
                 'center',
                 this.$t('auth.users.profile.success')
               )
-            }
-            this.getmyprofile()
-          })
-          .catch(error => {
-            this.loading = false
-            if (error.status) {
+              this.getmyprofile()
+            } else {
+              this.loading = false
               this.$zglobal.showMessage(
                 'red-5',
                 'center',
-                this.$t('auth.register.invalid_data')
+                this.$t('auth.register.invalid_data') + ':' + res.data.code
               )
             }
           })
-          .finally(() => {
-            this.loading = false
-          })
+        this.loading = false
       }
     }
   },

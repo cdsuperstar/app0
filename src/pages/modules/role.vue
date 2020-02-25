@@ -34,8 +34,8 @@
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
-        :label="this.$t('buttons.tree')"
-        @click="Unittree()"
+        :label="this.$t('buttons.setrole')"
+        @click="ShowUnittree()"
       />
       <q-input
         v-model="quickFilter"
@@ -67,7 +67,6 @@
           :get-row-style="getRowStyle"
           :locale-text="this.$t('aggrid')"
           @cellValueChanged="oncellValueChanged"
-          @rowSelected="ShowUnittree()"
           @grid-ready="onGridReady"
         >
         </ag-grid-vue>
@@ -269,7 +268,7 @@ export default {
           this.$router.app.$http
             .post('/z_role', val)
             .then(res => {
-              console.log(res.data.data)
+              // console.log(res.data.data)
               if (res.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
@@ -329,13 +328,18 @@ export default {
             if (resmy.data.success) {
               this.roleticked = resmy.data.data
               this.loading = false
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('roles.getrowssuccess')
+              )
             } else {
             }
           })
-        this.loading = false
       } else {
         this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
       }
+      this.loading = false
     },
     EditUnittree() {
       this.loading = true

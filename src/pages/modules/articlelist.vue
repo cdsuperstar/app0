@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DRoleTree">
-      <q-card class="q-dialog-plugin">
+    <q-dialog v-model="DaddArticle">
+      <q-card style="width: 1000px; max-width: 80vw;">
         <q-toolbar>
           <q-btn
             v-close-popup
@@ -14,7 +14,7 @@
           />
           <q-toolbar-title>
             <span class="text-subtitle1 text-weight-bold">
-              {{ $t('roles.editroleltree') }}</span
+              {{ $t('article.addarticle') }}</span
             >
           </q-toolbar-title>
           <q-btn
@@ -22,21 +22,83 @@
             color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
-            @click="EditUnittree()"
+            @click="aDDNewArticle()"
           />
         </q-toolbar>
         <q-separator />
-        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <nested-test v-if="true" v-model="Roledata" class="col-8" />
+        <q-card-section style="max-height: 80vh" class="scroll">
+          <div class="col-md-6">
+            <q-input
+              v-model.trim="data.title"
+              color="orange"
+              type="text"
+              style="max-width: 500px"
+              autofocus
+              :label="this.$t('article.title')"
+              :error="$v.data.title.$error"
+              :error-message="this.$t('article.titlenull')"
+              @blur="$v.data.title.$touch"
+            />
+          </div>
+          <div class="col-md-6 row">
+            <div class="col-5 ">
+              <q-select
+                v-model.trim="data.user_id"
+                color="orange"
+                style="max-width: 150px"
+                :options="useroptions"
+                :label="this.$t('article.user')"
+                emit-value
+                map-options
+              />
+            </div>
+            <div class="col-5 q-ml-lg">
+              <q-input
+                v-model.trim="data.created_date"
+                color="orange"
+                style="max-width: 150px"
+                :rules="['date']"
+                :label="this.$t('article.createddate')"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model.trim="data.created_date"
+                        color="orange"
+                        mask="YYYY-MM-DD"
+                        text-color="black"
+                        first-day-of-week="1"
+                        @input="() => $refs.qDateProxy.hide()"
+                      />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <q-editor
+              v-model.trim="data.content"
+              class="col-md-8"
+              color="orange"
+              type="textarea"
+              :label="this.$t('article.content')"
+              :definitions="{
+                bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
+              }"
+            />
+          </div>
         </q-card-section>
         <q-separator />
-        <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
-        </q-inner-loading>
       </q-card>
     </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
-      {{ $t('roles.header') }}
+      {{ $t('article.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -65,14 +127,6 @@
         @click="saveItems()"
       />
       <q-btn
-        color="blue-grey-5"
-        text-color="white"
-        class="q-ma-xs"
-        icon="account_tree"
-        :label="this.$t('buttons.tree')"
-        @click="Unittree()"
-      />
-      <q-btn
         color="green-6"
         text-color="white"
         class="q-ma-xs"
@@ -81,20 +135,6 @@
         @click="ExportDataAsCVS()"
       />
       <q-space />
-      <q-file
-        v-model="importfile"
-        color="indigo"
-        style="max-width: 150px"
-        accept=".xlsx, *.xls"
-        dense
-        clearable
-        :label="this.$t('buttons.import')"
-        @input="ImportCVStoData()"
-      >
-        <template v-slot:prepend>
-          <q-icon name="attachment" />
-        </template>
-      </q-file>
 
       <q-input
         v-model="quickFilter"
@@ -112,8 +152,8 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 500px;"
-        class="ag-theme-balham Role-agGrid"
+        style="width: 100%; height: 600px;"
+        class="ag-theme-balham Article-agGrid"
         row-selection="multiple"
         row-multi-select-with-click="true"
         :grid-options="gridOptions"
@@ -123,6 +163,7 @@
         :pagination="true"
         :pagination-page-size="50"
         :get-row-style="getRowStyle"
+        :framework-components="frameworkComponents"
         :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
@@ -133,31 +174,35 @@
 </template>
 
 <script>
+import { required } from 'vuelidate/lib/validators'
 import { AgGridVue } from 'ag-grid-vue'
-import XLSX from 'xlsx'
-import NestedTest from './nested-tree'
+import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'Articlelist',
+  name: 'thearticle',
   components: {
-    AgGridVue,
-    NestedTest
+    AgGridVue
   },
   data() {
     return {
-      loading: true,
-      DRoleTree: null,
-      Roledata: null,
+      DaddArticle: false,
       quickFilter: null,
-      importfile: null,
+      useroptions: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
       columnDefs: null,
       rowData: null,
+      userMap: {},
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      data: {
+        title: '',
+        user_id: '',
+        created_date: '',
+        content: ''
+      }
     }
   },
   computed: {},
@@ -165,44 +210,101 @@ export default {
     this.gridOptions = {
       allowShowChangeAfterFilter: true
     }
+    this.frameworkComponents = {
+      agDateCellRender: agDateCellRender
+    }
     this.columnDefs = [
       {
+        editable: false,
         headerName: 'ID',
         field: 'id',
         width: 55,
-        sortable: true,
-        editable: false,
         minWidth: 55,
+        sortable: true,
         headerCheckboxSelection: true,
         headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
       },
       {
-        headerName: '角色名',
-        field: 'name',
-        width: 130,
-        editable: true,
+        headerName: '标题',
+        field: 'title',
+        width: 120,
+        minWidth: 120,
+        sortable: true,
+        filter: true
+      },
+      {
+        headerName: '发布人',
+        field: 'user_id',
+        width: 100,
+        minWidth: 100,
         sortable: true,
         filter: true,
-        minWidth: 130
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: {}
+        },
+        valueFormatter: this.getUsermap
+      },
+      {
+        headerName: '发布日期',
+        field: 'created_date',
+        width: 100,
+        minWidth: 100,
+        sortable: true,
+        cellRendererFramework: agDateCellRender,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: function(filterLocalDateAtMidnight, cellValue) {
+            var dateAsString = cellValue
+            if (dateAsString == null) return -1
+            var dateParts = dateAsString.split('/')
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            )
+
+            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+              return 0
+            }
+
+            if (cellDate < filterLocalDateAtMidnight) {
+              return -1
+            }
+
+            if (cellDate > filterLocalDateAtMidnight) {
+              return 1
+            }
+          },
+          browserDatePicker: true
+        }
+      },
+      {
+        headerName: '内容',
+        field: 'content',
+        sortable: true,
+        width: 200,
+        minWidth: 200,
+        filter: true
       },
       {
         headerName: '创建时间',
         field: 'created_at',
         width: 130,
+        minWidth: 130,
         editable: false,
         sortable: true,
-        filter: true,
-        minWidth: 130
+        filter: true
       },
       {
         headerName: '更新时间',
         field: 'updated_at',
         width: 130,
+        minWidth: 130,
         editable: false,
         sortable: true,
-        filter: true,
-        minWidth: 130
+        filter: true
       }
     ]
     this.defaultColDef = {
@@ -213,7 +315,7 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_role/')
+      .get('/article/')
       .then(res => {
         if (res.data.success) {
           this.rowData = res.data.data
@@ -221,6 +323,27 @@ export default {
         }
       })
       .catch(e => {})
+    // 获得useroptions
+    this.$router.app.$http.get('/users/').then(res => {
+      if (res.data.success) {
+        // console.log(res.data.data)
+        this.columnDefs[2].cellEditorParams.values = res.data.data.map(
+          ({ name, id }) => id.toString()
+        )
+        this.userMap = res.data.data.reduce((acc, v) => {
+          acc[v.id] = v.name
+          return acc
+        }, {})
+        this.useroptions = res.data.data.map(item => {
+          return {
+            value: item.id,
+            label: item.name
+          }
+        })
+      } else {
+      }
+    })
+    // end
   },
   mounted() {
     this.gridApi = this.gridOptions.api
@@ -233,34 +356,10 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    // 导入开始
-    ImportCVStoData() {
-      const file = this.importfile
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          /*  Parse data */
-          const bstr = e.target.result
-          const wb = XLSX.read(bstr, { type: 'binary' })
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          let j = 0
-          data.map(item => {
-            const ret = {}
-            let i = 0
-            console.log(this)
-            this.columnDefs.forEach(function(val) {
-              ret[val.field] = item[i++]
-            })
-            if (j > 0) this.rowData.push(ret)
-            j++
-          })
-        }
-        reader.readAsBinaryString(file)
-      }
+    // 用户列表
+    getUsermap(params) {
+      return this.userMap[params.value]
     },
-    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -277,9 +376,9 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_role/' + val.id)
+                .delete('/article/' + val.id)
                 .then(res => {
-                  if (res.data.success) {
+                  if (res.data.data.success) {
                     // console.log(res.data.data)
                     this.$zglobal.showMessage(
                       'positive',
@@ -307,7 +406,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'roles.xls',
+        fileName: 'article.xls',
         suppressQuotes: true,
         columnSeparator: ','
       }
@@ -326,18 +425,42 @@ export default {
       }
       this.changerowcolor = ''
     },
+    // Dialog start
     addItems() {
-      var newItems = [{}]
-      this.gridApi.updateRowData({ add: newItems })
+      this.DaddArticle = true
     },
+    aDDNewArticle() {
+      this.$router.app.$http.post('/article/', this.data).then(res => {
+        // console.log(res)
+        if (res.data.success) {
+          this.gridApi.updateRowData({
+            add: [res.data.data]
+          })
+          this.$zglobal.showMessage(
+            'positive',
+            'center',
+            this.$t('operation.addsuccess')
+          )
+        } else {
+          this.$zglobal.showMessage(
+            'red-7',
+            'center',
+            this.$t('auth.errors.adderror')
+          )
+        }
+      })
+      this.DaddArticle = false
+    },
+    // Dialog end
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
+        // console.log(val)
         if (val.id === undefined) {
           this.$router.app.$http
-            .post('/z_role/', val)
+            .post('/article/', val)
             .then(res => {
-              if (res.data.success) {
+              if (res.data.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
                 })
@@ -357,9 +480,9 @@ export default {
             .catch(e => {})
         } else {
           this.$router.app.$http
-            .put('/z_role/' + val.id, val)
+            .put('/article/' + val.id, val)
             .then(res => {
-              if (res.data.success) {
+              if (res.data.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
                 })
@@ -380,62 +503,27 @@ export default {
             .catch(e => {})
         }
       })
-    },
-    Unittree() {
-      this.loading = true
-      this.DRoleTree = true
-      this.$router.app.$http
-        .get('/z_module/getMyMenu')
-        .then(res => {
-          if (res.data.success) {
-            // console.log(res.data.data)
-            this.Roledata = res.data.data
-            this.loading = false
-          } else {
-          }
-        })
-        .catch(e => {
-          this.$zglobal.showMessage(
-            'red-5',
-            'center',
-            this.$t('auth.register.invalid_data')
-          )
-          this.loading = false
-          this.DRoleTree = false
-        })
-    },
-    EditUnittree() {
-      this.loading = true
-      this.$router.app.$http
-        .post('/z_role/setTree/' + this.Roledata[0].id, this.Roledata)
-        .then(res => {
-          if (res.data.success) {
-            this.loading = false
-            this.DRoleTree = false
-            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
-          }
-        })
-        .catch(error => {
-          this.loading = false
-          if (error.status) {
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
+    }
+  },
+  validations: {
+    data: {
+      title: {
+        required
+      },
+      createddate: {
+        required
+      }
     }
   }
 }
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
-.Role-agGrid .ag-header {
-  background-color: #339999;
+.Article-agGrid .ag-header {
+  background-color: #ff6600;
   color: #ffffff;
 }
-.Role-agGrid .ag-cell {
+.Article-agGrid .ag-cell {
   padding-left: 1px;
 }
 .ag-theme-balham .ag-icon,
@@ -446,6 +534,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #339999;
+  color: #ff6600;
 }
 </style>

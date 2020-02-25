@@ -18,6 +18,7 @@ export default {
     comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
     send: '发送',
     confirm: '确定',
+    setrole: '设置角色',
     cancel: '取消',
     tree: '树形',
     json: 'Json编辑器',
@@ -55,7 +56,18 @@ export default {
   roles: {
     header: '角色管理',
     editroleltree: '角色树编辑',
+    getrowssuccess: '数据加载成功！',
     rowserror: '数据选择有误！'
+  },
+  article: {
+    header: '文章列表',
+    addarticle: '添加文章',
+    user: '发布人',
+    title: '标题',
+    titlenull: '请输入标题！',
+    createddate: '发布日期',
+    createddatenull: '请输入发布日期',
+    content: '内容'
   },
   permission: {
     header: '权限管理',
