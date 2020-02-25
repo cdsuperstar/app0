@@ -27,20 +27,18 @@
         </q-toolbar>
         <q-separator />
         <q-card-section style="max-height: 80vh" class="scroll">
-          <div class="col-md-6">
-            <q-input
-              v-model.trim="data.title"
-              color="orange"
-              type="text"
-              style="max-width: 500px"
-              autofocus
-              :label="this.$t('article.title')"
-              :error="$v.data.title.$error"
-              :error-message="this.$t('article.titlenull')"
-              @blur="$v.data.title.$touch"
-            />
-          </div>
-          <div class="col-md-6 row">
+          <q-input
+            v-model.trim="data.title"
+            color="orange"
+            type="text"
+            style="max-width: 500px"
+            autofocus
+            :label="this.$t('article.title')"
+            :error="$v.data.title.$error"
+            :error-message="this.$t('article.titlenull')"
+            @blur="$v.data.title.$touch"
+          />
+          <div class="col-3 row">
             <div class="col-5 ">
               <q-select
                 v-model.trim="data.user_id"
@@ -80,6 +78,49 @@
                 </template>
               </q-input>
             </div>
+          </div>
+          <div class="col-5">
+            <q-uploader
+              url="http://localhost:4444/upload"
+              ref="fileuper"
+              style="max-width: 300px"
+              multiple
+              hide-upload-btn
+              :filter="checkFileSize"
+              :label="this.$t('article.attachment')"
+            >
+              <template v-slot:list="scope">
+                <q-list separator>
+                  <q-item v-for="file in scope.files" :key="file.name">
+                    <q-item-section>
+                      <q-item-label class="full-width ellipsis">
+                        {{ file.name }}
+                      </q-item-label>
+
+                      <q-item-label caption>
+                        Size:{{ file.__sizeLabel }}
+                      </q-item-label>
+                    </q-item-section>
+
+                    <q-item-section v-if="file.__img" thumbnail class="gt-xs">
+                      <img :src="file.__img.src" />
+                    </q-item-section>
+
+                    <q-item-section top side>
+                      <q-btn
+                        class="gt-xs"
+                        size="12px"
+                        flat
+                        dense
+                        round
+                        icon="delete"
+                        @click="scope.removeFile(file)"
+                      />
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </template>
+            </q-uploader>
           </div>
           <div class="col-md-8">
             <q-editor
@@ -356,6 +397,9 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
+    checkFileSize(files) {
+      return files.filter(file => file.size < 20480000)
+    },
     // 用户列表
     getUsermap(params) {
       return this.userMap[params.value]
@@ -430,8 +474,17 @@ export default {
       this.DaddArticle = true
     },
     aDDNewArticle() {
-      this.$router.app.$http.post('/article/', this.data).then(res => {
-        // console.log(res)
+      // 文件上传
+      // console.log(this.data)
+      var formData = new FormData()
+      for (const key in this.data) {
+        formData.append(key, this.data[key])
+      }
+      formData.append('files', this.$refs.fileuper.files)
+      // 文件结束
+
+      this.$router.app.$http.post('/article/', formData).then(res => {
+        console.log(res)
         if (res.data.success) {
           this.gridApi.updateRowData({
             add: [res.data.data]

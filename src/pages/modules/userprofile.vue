@@ -17,8 +17,7 @@
         <q-uploader
           ref="fileuper"
           auto-expand
-          hide-upload-button
-          hide-upload-progress
+          hide-upload-btn
           extensions=".gif,.jpg,.jpeg,.png,.bmp"
           color="amber"
           :float-label="this.$t('auth.users.profile.avatar')"

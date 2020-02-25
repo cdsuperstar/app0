@@ -64,6 +64,7 @@ export default {
     addarticle: '添加文章',
     user: '发布人',
     title: '标题',
+    attachment: '附件(<20M)',
     titlenull: '请输入标题！',
     createddate: '发布日期',
     createddatenull: '请输入发布日期',
