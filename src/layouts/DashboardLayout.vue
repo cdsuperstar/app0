@@ -316,7 +316,9 @@ export default {
     this.getMyPermissions({
       role: 'w'
     })
-      .then(res => {})
+      .then(res => {
+        console.log(res)
+      })
       .catch(e => {
         console.log(e)
       })
