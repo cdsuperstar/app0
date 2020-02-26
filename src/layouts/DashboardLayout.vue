@@ -327,7 +327,7 @@ export default {
   methods: {
     ...mapActions('zero', ['getZModules', 'setZModules', 'getMyPermissions']),
     setlanguage(lang) {
-      console.log(lang)
+      // console.log(lang)
       this.lang = lang
     }
   }
