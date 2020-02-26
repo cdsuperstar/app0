@@ -3,7 +3,7 @@
     <q-dialog v-model="DaddFiles">
       <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
         <q-uploader
-          url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
+          :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
           method="POST"
           multiple
           auto-expand
