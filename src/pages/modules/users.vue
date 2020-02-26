@@ -62,6 +62,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
     <div class="text-h5 q-ma-md text-teal-6">
       {{ $t('users.header') }}
     </div>
@@ -92,12 +93,12 @@
         @click="saveItems()"
       />
       <q-btn
-        color="green-6"
+        color="green-5"
         text-color="white"
         class="q-ma-xs"
-        icon="cloud_download"
-        :label="this.$t('buttons.export')"
-        @click="ExportDataAsCVS()"
+        icon="account_tree"
+        :label="this.$t('buttons.setrole')"
+        @click="ShowRoletree()"
       />
       <q-space />
       <q-file
@@ -129,24 +130,53 @@
         </template>
       </q-input>
     </div>
-    <div class="shadow-1">
-      <ag-grid-vue
-        style="width: 100%; height: 600px;"
-        class="ag-theme-balham User-agGrid"
-        row-selection="multiple"
-        row-multi-select-with-click="true"
-        :grid-options="gridOptions"
-        :column-defs="columnDefs"
-        :row-data="rowData"
-        :default-col-def="defaultColDef"
-        :pagination="true"
-        :pagination-page-size="50"
-        :get-row-style="getRowStyle"
-        :locale-text="this.$t('aggrid')"
-        @cellValueChanged="oncellValueChanged"
-        @grid-ready="onGridReady"
-      >
-      </ag-grid-vue>
+    <div class="row q-ma-md" style="margin: 16px 1px">
+      <div class="col-md-6 shadow-1">
+        <ag-grid-vue
+          style="min-width:100%; height: 500px;"
+          class="ag-theme-balham User-agGrid"
+          row-selection="multiple"
+          row-multi-select-with-click="true"
+          :grid-options="gridOptions"
+          :column-defs="columnDefs"
+          :row-data="rowData"
+          :default-col-def="defaultColDef"
+          :pagination="true"
+          :pagination-page-size="50"
+          :get-row-style="getRowStyle"
+          :locale-text="this.$t('aggrid')"
+          @cellValueChanged="oncellValueChanged"
+          @grid-ready="onGridReady"
+        >
+        </ag-grid-vue>
+      </div>
+      <div class="col-md-3 shadow-1" style="margin-left: 15px;">
+        <q-item-label class="row" style="min-height:20px;">
+          <div class="text-weight-bold" style="padding:15px 15px">
+            {{ $t('users.rolelist') }}
+          </div>
+          <q-space />
+          <q-btn
+            flat
+            color="orange-10"
+            icon="save_alt"
+            :label="this.$t('buttons.confirm')"
+            @click="EditRolelist()"
+          />
+        </q-item-label>
+        <q-separator />
+        <q-list>
+          <q-item v-for="re in Roledata" v-ripple :key="re.title">
+            <q-item-section side top>
+              <q-checkbox v-model="rolechecks" :val="re.id" />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>{{ re.title }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </div>
     </div>
   </q-page>
 </template>
@@ -167,12 +197,14 @@ export default {
       quickFilter: null,
       importfile: null,
       gridOptions: null,
+      Roledata: null,
       gridApi: null,
       columnApi: null,
       columnDefs: null,
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
+      rolechecks: [],
       defaultColDef: null,
       data: {
         data: {
@@ -193,11 +225,9 @@ export default {
         editable: false,
         headerName: 'ID',
         field: 'id',
-        width: 55,
-        minWidth: 55,
+        width: 40,
+        minWidth: 40,
         sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
         checkboxSelection: true
       },
       {
@@ -211,8 +241,8 @@ export default {
       {
         headerName: '邮箱',
         field: 'email',
-        width: 80,
-        minWidth: 80,
+        width: 120,
+        minWidth: 120,
         sortable: true,
         filter: true
       },
@@ -220,28 +250,10 @@ export default {
         headerName: '密码',
         field: 'password',
         sortable: true,
-        width: 120,
-        minWidth: 120,
+        width: 110,
+        minWidth: 110,
         valueFormatter: pwdMask,
         suppressSizeToFit: true,
-        filter: true
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 130,
-        minWidth: 130,
-        editable: false,
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 130,
-        minWidth: 130,
-        editable: false,
-        sortable: true,
         filter: true
       }
     ]
@@ -346,14 +358,6 @@ export default {
           })
       }
     },
-    ExportDataAsCVS() {
-      var params = {
-        fileName: 'users.xls',
-        suppressQuotes: true,
-        columnSeparator: ','
-      }
-      this.gridApi.exportDataAsCsv(params)
-    },
     onchangerowcolor() {
       return { backgroundColor: this.changerowcolor }
     },
@@ -457,6 +461,19 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    ShowRoletree() {
+      this.$router.app.$http.get('/z_role/').then(res => {
+        if (res.data.success) {
+          this.Roledata = res.data.data
+        }
+      })
+
+      // var selectedData = this.gridApi.getSelectedRows()
+      // 获得已有角色
+    },
+    EditRolelist() {
+      console.log(this.rolechecks, '---------')
     }
   },
   validations: {
