@@ -64,6 +64,7 @@ export default {
     addarticle: '添加文章',
     user: '发布人',
     title: '标题',
+    addattachment: '上传文件',
     attachment: '附件(<20M)',
     titlenull: '请输入标题！',
     createddate: '发布日期',
@@ -80,7 +81,8 @@ export default {
   },
   users: {
     header: '用户管理',
-    adduser: '添加新用户'
+    adduser: '添加新用户',
+    rolelist: '角色列表'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',

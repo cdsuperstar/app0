@@ -25,6 +25,22 @@
         >
         </q-uploader>
 
+        <q-uploader
+          url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
+          method="POST"
+          auto-expand
+          :filter="checkFileSize"
+          :label="this.$t('article.attachment')"
+          :headers="[
+            {
+              name: 'enctype',
+              value: 'form-data'
+            },
+            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+          ]"
+          style="max-width: 300px"
+        />
+
         <q-input
           v-model.trim="data.no"
           color="orange"
@@ -82,7 +98,6 @@
         <q-input
           v-model.trim="data.birth"
           color="orange"
-          :rules="['date']"
           :label="this.$t('auth.users.profile.birthday')"
         >
           <template v-slot:append>

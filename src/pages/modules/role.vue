@@ -52,7 +52,7 @@
       </q-input>
     </div>
     <div class="row q-ma-md">
-      <div class="col-ma-md-5">
+      <div class="col-md-4">
         <ag-grid-vue
           style="width: 100%; height: 500px;"
           class="ag-theme-balham Role-agGrid"
@@ -71,7 +71,7 @@
         >
         </ag-grid-vue>
       </div>
-      <div class="col-md-5" style="margin-left: 15px;">
+      <div class="col-md-4" style="margin-left: 15px;">
         <q-card flat>
           <q-toolbar style="min-height:20px;">
             <q-toolbar-title dense>
