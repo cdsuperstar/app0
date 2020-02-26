@@ -81,7 +81,6 @@
           </div>
           <div class="col-5">
             <q-uploader
-              url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
               label="上传附件"
               method="POST"
               multiple
@@ -91,8 +90,10 @@
                   name: 'enctype',
                   value: 'multipart/form-data'
                 },
+                { name: 'Access-Control-Allow-Origin', value: '*' },
                 { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
               ]"
+              :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
               style="max-width: 300px"
             />
 
