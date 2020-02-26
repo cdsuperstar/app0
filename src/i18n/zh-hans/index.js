@@ -14,6 +14,7 @@ export default {
   buttons: {
     home: '主页',
     close: '关闭',
+    closethiswindow: '关闭此窗口',
     comfirmtitle: '确认操作',
     comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
     send: '发送',

@@ -34,7 +34,7 @@
           :headers="[
             {
               name: 'enctype',
-              value: 'form-data'
+              value: 'multipart/form-data'
             },
             { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
           ]"

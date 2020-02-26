@@ -1,8 +1,9 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <q-dialog v-model="DaddFiles">
+    <q-dialog v-model="DaddFiles" seamless>
       <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
         <q-uploader
+          style="max-width: 300px"
           :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
           method="POST"
           multiple
@@ -16,9 +17,20 @@
             },
             { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
           ]"
-          style="max-width: 300px"
+          @uploaded="upfilished"
         >
           <template v-slot:list="scope">
+            <div class="text-right">
+              <q-btn
+                flat
+                round
+                color="primary"
+                size="sm"
+                icon="close"
+                title="关闭此窗口"
+                v-close-popup
+              />
+            </div>
             <q-list separator>
               <q-item v-for="file in scope.files" :key="file.name">
                 <q-item-section>
@@ -581,8 +593,13 @@ export default {
         }
       })
     },
+    // 文件上传
     uploadFile() {
       this.DaddFiles = true
+    },
+    upfilished(info) {
+      console.log(info)
+      // this.DaddFiles = false
     }
   },
   validations: {
