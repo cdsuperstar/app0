@@ -1,5 +1,61 @@
 <template>
   <q-page padding class="q-pa-lg">
+    <q-dialog v-model="DaddFiles">
+      <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
+        <q-uploader
+          url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
+          method="POST"
+          multiple
+          auto-expand
+          :filter="checkFileSize"
+          :label="this.$t('article.attachment')"
+          :headers="[
+            {
+              name: 'enctype',
+              value: 'multipart/form-data'
+            },
+            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+          ]"
+          style="max-width: 300px"
+        >
+          <template v-slot:list="scope">
+            <q-list separator>
+              <q-item v-for="file in scope.files" :key="file.name">
+                <q-item-section>
+                  <q-item-label class="full-width ellipsis">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    Status: {{ file.__status }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    {{ file.__sizeLabel }} / {{ file.__progressLabel }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section v-if="file.__img" thumbnail class="gt-xs">
+                  <img :src="file.__img.src" />
+                </q-item-section>
+
+                <q-item-section top side>
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    icon="delete"
+                    @click="scope.removeFile(file)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+        </q-uploader>
+      </q-item-section>
+    </q-dialog>
     <q-dialog v-model="DaddArticle">
       <q-card style="width: 1000px; max-width: 80vw;">
         <q-toolbar>
@@ -55,7 +111,6 @@
                 v-model.trim="data.created_date"
                 color="orange"
                 style="max-width: 150px"
-                :rules="['date']"
                 :label="this.$t('article.createddate')"
               >
                 <template v-slot:append>
@@ -79,76 +134,24 @@
               </q-input>
             </div>
           </div>
-          <div class="col-5">
-            <q-uploader
-              label="上传附件"
-              method="POST"
-              multiple
-              auto-expand
-              :headers="[
-                {
-                  name: 'enctype',
-                  value: 'multipart/form-data'
-                },
-                { name: 'Access-Control-Allow-Origin', value: '*' },
-                { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
-              ]"
-              :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
-              style="max-width: 300px"
-            />
-
-            <q-uploader
-              url="http://localhost:4444/upload"
-              ref="fileuper"
-              style="max-width: 300px"
-              multiple
-              hide-upload-btn
-              :filter="checkFileSize"
-              :label="this.$t('article.attachment')"
-            >
-              <template v-slot:list="scope">
-                <q-list separator>
-                  <q-item v-for="file in scope.files" :key="file.name">
-                    <q-item-section>
-                      <q-item-label class="full-width ellipsis">
-                        {{ file.name }}
-                      </q-item-label>
-
-                      <q-item-label caption>
-                        Size:{{ file.__sizeLabel }}
-                      </q-item-label>
-                    </q-item-section>
-
-                    <q-item-section v-if="file.__img" thumbnail class="gt-xs">
-                      <img :src="file.__img.src" />
-                    </q-item-section>
-
-                    <q-item-section top side>
-                      <q-btn
-                        class="gt-xs"
-                        size="12px"
-                        flat
-                        dense
-                        round
-                        icon="delete"
-                        @click="scope.removeFile(file)"
-                      />
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </template>
-            </q-uploader>
-          </div>
-          <div class="col-md-8">
+          <div class="col-md-8 q-mt-md">
             <q-editor
-              v-model.trim="data.content"
-              class="col-md-8"
-              color="orange"
-              type="textarea"
-              :label="this.$t('article.content')"
+              v-model="data.content"
               :definitions="{
-                bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' }
+                upload: {
+                  label: '附件',
+                  icon: 'cloud_upload',
+                  tip: '上传附件',
+                  handler: uploadFile
+                }
               }"
+              :label="this.$t('article.content')"
+              :toolbar="[
+                ['left', 'center', 'right', 'justify'],
+                ['bold', 'italic', 'strike', 'underline'],
+                ['print', 'fullscreen'],
+                ['upload', 'viewsource']
+              ]"
             />
           </div>
         </q-card-section>
@@ -244,6 +247,7 @@ export default {
   data() {
     return {
       DaddArticle: false,
+      DaddFiles: false,
       quickFilter: null,
       useroptions: null,
       gridOptions: null,
@@ -496,14 +500,14 @@ export default {
     aDDNewArticle() {
       // 文件上传
       // console.log(this.data)
-      var formData = new FormData()
-      for (const key in this.data) {
-        formData.append(key, this.data[key])
-      }
-      formData.append('files[]', this.$refs.fileuper.files)
-      // 文件结束
+      // var formData = new FormData()
+      // for (const key in this.data) {
+      //   formData.append(key, this.data[key])
+      // }
+      // formData.append('files[]', this.$refs.fileuper.files)
+      // // 文件结束
 
-      this.$router.app.$http.post('/article/', formData).then(res => {
+      this.$router.app.$http.post('/article/', this.data).then(res => {
         console.log(res)
         if (res.data.success) {
           this.gridApi.updateRowData({
@@ -576,6 +580,9 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    uploadFile() {
+      this.DaddFiles = true
     }
   },
   validations: {
