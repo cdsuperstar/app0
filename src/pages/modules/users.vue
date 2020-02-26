@@ -468,12 +468,59 @@ export default {
           this.Roledata = res.data.data
         }
       })
-
-      // var selectedData = this.gridApi.getSelectedRows()
       // 获得已有角色
+      // this.rolechecks = [1, 2]
+      var selectedData = this.gridApi.getSelectedRows()
+      if (
+        (selectedData.length === 1 && selectedData[0].id !== undefined) ||
+        selectedData.length > 1
+      ) {
+        this.$router.app.$http
+          .get('/users/getUserRoles/' + selectedData[0].id)
+          .then(resmy => {
+            if (resmy.data.success) {
+              this.rolechecks = resmy.data.data.map(({ name, id }) => id)
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('roles.getrowssuccess')
+              )
+            }
+          })
+      } else {
+      }
     },
     EditRolelist() {
-      console.log(this.rolechecks, '---------')
+      var selectedData = this.gridApi.getSelectedRows()
+      var selectarr = selectedData.map(({ name, id }) => id)
+      console.log(selectarr, '========', this.rolechecks)
+      if (selectedData.length === 1 && selectedData[0].id !== undefined) {
+        this.$router.app.$http
+          .post('/users/setUsersRoles/', {
+            users: selectarr,
+            roles: this.rolechecks
+          })
+          .then(res => {
+            if (res.data.success) {
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('success')
+              )
+            }
+          })
+          .catch(error => {
+            if (error.status) {
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
+            }
+          })
+      } else {
+        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
+      }
     }
   },
   validations: {

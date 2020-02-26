@@ -275,6 +275,7 @@ export default {
         title: '',
         user_id: '',
         created_date: '',
+        files: [],
         content: ''
       }
     }
@@ -596,9 +597,11 @@ export default {
     // 文件上传
     uploadFile() {
       this.DaddFiles = true
+      this.data.files = []
     },
     upfilished(info) {
       console.log(info)
+      this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     }
   },
