@@ -81,6 +81,22 @@
           </div>
           <div class="col-5">
             <q-uploader
+              url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
+              label="上传附件"
+              method="POST"
+              multiple
+              auto-expand
+              :headers="[
+                {
+                  name: 'enctype',
+                  value: 'multipart/form-data'
+                },
+                { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+              ]"
+              style="max-width: 300px"
+            />
+
+            <q-uploader
               url="http://localhost:4444/upload"
               ref="fileuper"
               style="max-width: 300px"
@@ -391,6 +407,9 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
+    testup(i) {
+      console.log(i.files)
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -480,7 +499,7 @@ export default {
       for (const key in this.data) {
         formData.append(key, this.data[key])
       }
-      formData.append('files', this.$refs.fileuper.files)
+      formData.append('files[]', this.$refs.fileuper.files)
       // 文件结束
 
       this.$router.app.$http.post('/article/', formData).then(res => {
