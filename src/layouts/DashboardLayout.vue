@@ -24,9 +24,9 @@
           stretch
           flat
           :label="
-            this.currectRole === null
+            this.currectRole === undefined
               ? this.$t('roles.rolelist')
-              : this.ZPermissions.currectrole.title
+              : this.currectRole.title
           "
           :title="this.$t('roles.rolelistheader')"
         >

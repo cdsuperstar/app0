@@ -8,6 +8,9 @@ export function storeZModules(state, value) {
 export function storeZPermissions(state, value) {
   state.ZPermissions = value
 }
+export function storeZPermissionsPerms(state, value) {
+  state.ZPermissions.perms.push(value)
+}
 
 export function storeZUIcfg(state, value) {
   state.ZUIcfg = value

@@ -24,47 +24,58 @@ export function getZModules({ commit }) {
 export function setZModules({ commit }, payload) {
   commit('storeZModules', payload)
 }
+
 // 取得当前用户权限
 export function reqThePermission({ commit, state }, payload) {
-  const module = state.ZPermissions.modules.filter(function(el) {
-    return el.name === payload.module
-  })
-
-  if (module[0] !== undefined) {
-    const cfg = state.ZPermissions.data.filter(function(el) {
-      return el.name === payload.module + '.' + payload.name
-    })
-
-    const ret = {
-      cfg: cfg[0] === undefined ? null : cfg[0].pivot.usrcfg,
-      module: module[0]
-    }
-    return new Promise((resolve, reject) => {
-      resolve(ret)
-    })
+  let aReqs = []
+  if (Array.isArray(payload)) {
+    aReqs = payload
   } else {
-    return new Promise((resolve, reject) => {
+    aReqs.push(payload)
+  }
+  const aCfgs = []
+  // 判断库里是否有权限
+  aReqs.forEach(function(iReq) {
+    const perm = state.ZPermissions.perms.filter(function(el) {
+      return el.name === iReq.name
+    })
+
+    if (perm[0] === undefined) {
+      iReq.syscfg = JSON.stringify(iReq.syscfg)
       this.$router.app.$http
-        .post('/zero/reqThePermission', payload)
+        .post('/zero/reqThePermission', iReq)
         .then(res => {
           if (res.data.success) {
-            const ret = {
-              cfg:
-                res.data.data === null
-                  ? null
-                  : JSON.parse(res.data.data.pivot.usrcfg),
-              module: res.data.module
-            }
-            resolve(ret)
+            commit('storeZPermissionsPerms', res.data.data)
           } else {
-            reject(false)
           }
         })
-        .catch(e => {
-          reject(e)
-        })
+        .catch(e => {})
+    }
+  }, this)
+
+  aReqs.forEach(function(iReq) {
+    const module = state.ZPermissions.modules.filter(function(el) {
+      return el.name === iReq.module
     })
-  }
+
+    const cfg = state.ZPermissions.data.filter(function(el) {
+      return el.name === iReq.name
+    })
+
+    if (cfg[0] !== undefined) {
+      const tCfg =
+        cfg[0].pivot === undefined ? null : JSON.parse(cfg[0].pivot.usrcfg)
+      aCfgs[cfg[0].name] = tCfg
+    }
+    if (module[0].name) {
+      aCfgs[module[0].name] = module[0] === undefined ? null : module[0]
+    }
+  })
+
+  return new Promise((resolve, reject) => {
+    resolve(aCfgs)
+  })
 }
 
 export function getMyPermissions({ commit }, payload) {

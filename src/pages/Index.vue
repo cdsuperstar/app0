@@ -30,28 +30,36 @@ export default {
       'getMyPermissions'
     ]),
     test() {
-      var preq = {
-        role: 'w',
-        module: 'users',
-        name: 'add',
-        syscfg: {
-          mynode: { required: false, type: Number, default: null }
+      var preq = [
+        {
+          module: 'modules',
+          name: 'modules.bSetTree',
+          syscfg: {
+            bSetTree: { required: false, type: 'Boolean', default: null }
+          },
+          title: '是否可调整树'
         },
-        title: '调整用户树'
-      }
+        {
+          module: 'modules',
+          name: 'modules.bSetTree1',
+          syscfg: {
+            bSetTree: { required: false, type: 'Boolean', default: null }
+          },
+          title: '是否可调整树'
+        },
+        {
+          module: 'modules',
+          name: 'modules.bSetTree2',
+          syscfg: {
+            bSetTree: { required: false, type: 'Boolean', default: null }
+          },
+          title: '是否可调整树'
+        }
+      ]
 
       this.reqThePermission(preq)
         .then(res => {
-          console.log('Begin:', res)
-          if (res.cfg) {
-            console.log('Cfg set:', res.cfg)
-          }
-          if (res.module) {
-            console.log('Module set:', res.module)
-          }
-          if (!res.module && !res.cfg) {
-            console.log('Failed')
-          }
+          console.log('mPerms:', res)
         })
         .catch(e => {
           console.log(e)

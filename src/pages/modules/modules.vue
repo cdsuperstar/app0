@@ -49,6 +49,7 @@
         @click="addItems()"
       />
       <q-btn
+        v-if="this.mPermissions['modules.bDelete']"
         color="deep-orange-5"
         text-color="white"
         class="q-ma-xs"
@@ -65,6 +66,7 @@
         @click="saveItems()"
       />
       <q-btn
+        v-if="this.mPermissions['modules.bSetTree']"
         color="purple-5"
         text-color="white"
         class="q-ma-xs"
@@ -162,7 +164,8 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       frameworkComponents: null,
-      defaultColDef: null
+      defaultColDef: null,
+      mPermissions: []
     }
   },
   beforeMount() {
@@ -184,9 +187,38 @@ export default {
     // console.log(this.ZModules)
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
-    ...mapActions('zero', ['getMyPermissions']),
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'modules',
+          name: 'modules.bSetTree',
+          syscfg: {
+            bSetTree: { required: false, type: 'Boolean', default: null }
+          },
+          title: '是否可调整树'
+        },
+        {
+          module: 'modules',
+          name: 'modules.bDelete',
+          syscfg: {
+            bDelete: { required: false, type: 'Boolean', default: null }
+          },
+          title: '是否可删除'
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
     getSelector(params) {
       const mapMenu = this.$t('menu.types')
       return mapMenu[params.value]
