@@ -219,7 +219,6 @@ export default {
     return {
       routearr: [],
       MyRoleList: null,
-      currectRole: null,
       left: false,
       right: false,
       leftdrawer: 210,
@@ -250,6 +249,11 @@ export default {
         return this.ZPermissions.modules
       },
       set(value) {}
+    },
+    currectRole: {
+      get() {
+        return this.ZPermissions.currectrole
+      }
     }
   },
   watch: {
@@ -267,7 +271,6 @@ export default {
     })
       .then(res => {
         this.MyRoleList = res.roles
-        this.currectRole = res.currectrole
         this.routearr = res.modules
         if (Array.isArray(this.routearr)) {
           const { routes } = this.$router.options
@@ -297,7 +300,9 @@ export default {
       this.lang = lang
     },
     setRole(val) {
-      this.getMyPermissions({ role: val.name })
+      if (val.name !== this.currectRole.name) {
+        this.getMyPermissions({ role: val.name })
+      }
     }
   }
 }
