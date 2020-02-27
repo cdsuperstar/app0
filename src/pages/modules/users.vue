@@ -493,34 +493,26 @@ export default {
     EditRolelist() {
       var selectedData = this.gridApi.getSelectedRows()
       var selectarr = selectedData.map(({ name, id }) => id)
-      console.log(selectarr, '========', this.rolechecks)
-      if (selectedData.length === 1 && selectedData[0].id !== undefined) {
-        this.$router.app.$http
-          .post('/users/setUsersRoles/', {
-            users: selectarr,
-            roles: this.rolechecks
-          })
-          .then(res => {
-            if (res.data.success) {
-              this.$zglobal.showMessage(
-                'positive',
-                'center',
-                this.$t('success')
-              )
-            }
-          })
-          .catch(error => {
-            if (error.status) {
-              this.$zglobal.showMessage(
-                'red-5',
-                'center',
-                this.$t('auth.register.invalid_data')
-              )
-            }
-          })
-      } else {
-        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
-      }
+      // console.log(selectarr, '========', this.rolechecks)
+      this.$router.app.$http
+        .post('/users/setUsersRoles/', {
+          users: selectarr,
+          roles: this.rolechecks
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
+          }
+        })
+        .catch(error => {
+          if (error.status) {
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
     }
   },
   validations: {

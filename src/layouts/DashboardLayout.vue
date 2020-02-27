@@ -19,49 +19,26 @@
           to="/user/dashboard"
           :title="this.$t('buttons.home')"
         />
-        <q-btn-dropdown v-if="$q.screen.gt.xs" stretch flat label="功能">
+        <!-- 角色选择--->
+        <q-btn-dropdown
+          stretch
+          flat
+          :label="this.$t('roles.rolelist')"
+          :title="this.$t('roles.rolelistheader')"
+        >
           <q-list>
-            <q-item-label header>Folders</q-item-label>
             <q-item
-              v-for="n in 3"
-              :key="`x.${n}`"
+              v-for="ro in MyRoleList"
               v-close-popup
               clickable
-              tabindex="0"
+              :key="ro.id"
+              @click="setRole(ro)"
             >
               <q-item-section avatar>
-                <q-avatar icon="folder" color="secondary" text-color="white" />
+                <q-icon name="person" size="25px" color="primary" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>Photos</q-item-label>
-                <q-item-label caption>February 22, 2016</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="info" />
-              </q-item-section>
-            </q-item>
-            <q-separator inset spaced />
-            <q-item-label header>Files</q-item-label>
-            <q-item
-              v-for="n in 3"
-              :key="`y.${n}`"
-              v-close-popup
-              clickable
-              tabindex="0"
-            >
-              <q-item-section avatar>
-                <q-avatar
-                  icon="assignment"
-                  color="primary"
-                  text-color="white"
-                />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Vacation</q-item-label>
-                <q-item-label caption>February 22, 2016</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="info" />
+                <q-item-label>{{ ro.title }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -86,13 +63,8 @@
               clickable
               @click="setlanguage(n)"
             >
-              <q-item-section avatar top>
-                <q-avatar
-                  color="primary"
-                  text-color="white"
-                  size="30px"
-                  icon="directions"
-                />
+              <q-item-section avatar>
+                <q-icon color="primary" size="30px" name="directions" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ n.label }}</q-item-label>
@@ -155,13 +127,8 @@
               style="border-bottom: 1px dashed #b5b5b5;"
               @click="setlanguage(n)"
             >
-              <q-item-section avatar top>
-                <q-avatar
-                  color="primary"
-                  text-color="white"
-                  size="30px"
-                  icon="directions"
-                />
+              <q-item-section avatar>
+                <q-icon color="primary" size="30px" name="directions" />
               </q-item-section>
               <q-item-section
                 class="column text-black text-weight-medium text-left"
@@ -244,6 +211,7 @@ export default {
   data() {
     return {
       routearr: [],
+      MyRoleList: null,
       left: false,
       right: false,
       leftdrawer: 210,
@@ -315,13 +283,10 @@ export default {
 
     this.getMyPermissions({
       role: 'w'
+    }).then(res => {
+      // console.log(res)
+      if (res.success) this.MyRoleList = res.roles
     })
-      .then(res => {
-        console.log(res)
-      })
-      .catch(e => {
-        console.log(e)
-      })
   },
 
   methods: {
@@ -329,6 +294,9 @@ export default {
     setlanguage(lang) {
       // console.log(lang)
       this.lang = lang
+    },
+    setRole(val) {
+      console.log(val)
     }
   }
 }

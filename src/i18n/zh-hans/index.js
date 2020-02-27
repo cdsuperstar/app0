@@ -58,7 +58,9 @@ export default {
     header: '角色管理',
     editroleltree: '角色树编辑',
     getrowssuccess: '数据加载成功！',
-    rowserror: '数据选择有误！'
+    rowserror: '数据选择有误！',
+    rolelist: '角色',
+    rolelistheader: '切换角色'
   },
   article: {
     header: '文章列表',
