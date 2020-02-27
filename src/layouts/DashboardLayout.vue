@@ -24,9 +24,9 @@
           stretch
           flat
           :label="
-            this.ZPermissions.currectrole.name !== undefined
-              ? this.ZPermissions.currectrole.title
-              : this.$t('roles.rolelist')
+            this.currectRole === null
+              ? this.$t('roles.rolelist')
+              : this.ZPermissions.currectrole.title
           "
           :title="this.$t('roles.rolelistheader')"
         >
@@ -219,6 +219,7 @@ export default {
     return {
       routearr: [],
       MyRoleList: null,
+      currectRole: null,
       left: false,
       right: false,
       leftdrawer: 210,
@@ -266,6 +267,7 @@ export default {
     })
       .then(res => {
         this.MyRoleList = res.roles
+        this.currectRole = res.currectrole
         this.routearr = res.modules
         if (Array.isArray(this.routearr)) {
           const { routes } = this.$router.options
