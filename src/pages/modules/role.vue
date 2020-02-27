@@ -180,7 +180,7 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_role/')
+      .get('/z_role/getSelfOrLowRoles/' + this.ZPermissions.currectrole.id)
       .then(res => {
         if (res.data.success) {
           this.rowData = res.data.data

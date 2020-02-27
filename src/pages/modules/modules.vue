@@ -173,7 +173,7 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_module/')
+      .get('/z_module/getSelfLowModules/' + this.ZPermissions.currectrole.id)
       .then(res => {
         if (res.data.success) {
           // console.log(res.data.data)
@@ -468,7 +468,7 @@ export default {
       this.loading = true
       this.DModelTree = true
       this.$router.app.$http
-        .get('/z_module/getMyMenu')
+        .get('/z_module/getMyMenu/' + this.ZPermissions.currectrole.id)
         .then(res => {
           if (res.data.success) {
             // console.log(res.data.data)
@@ -494,7 +494,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.loading = false
-            this.getMyPermissions(this.ZPermissions.currectrole.name)
+            this.getMyPermissions({ role: this.ZPermissions.currectrole.name })
             this.DModelTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
