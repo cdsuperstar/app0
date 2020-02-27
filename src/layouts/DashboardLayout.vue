@@ -23,7 +23,11 @@
         <q-btn-dropdown
           stretch
           flat
-          :label="this.$t('roles.rolelist')"
+          :label="
+            this.ZPermissions.currectrole.name !== undefined
+              ? this.ZPermissions.currectrole.title
+              : this.$t('roles.rolelist')
+          "
           :title="this.$t('roles.rolelistheader')"
         >
           <q-list>
@@ -34,11 +38,14 @@
               :key="ro.id"
               @click="setRole(ro)"
             >
-              <q-item-section avatar>
-                <q-icon name="person" size="25px" color="primary" />
-              </q-item-section>
               <q-item-section>
                 <q-item-label>{{ ro.title }}</q-item-label>
+              </q-item-section>
+              <q-item-section
+                avatar
+                v-if="ro.name == ZPermissions.currectrole.name"
+              >
+                <q-icon name="person" size="25px" color="primary" />
               </q-item-section>
             </q-item>
           </q-list>
@@ -230,19 +237,16 @@ export default {
     }
   },
   computed: {
-    ...mapState('zero', ['ZModules']),
+    ...mapState('zero', ['ZPermissions']),
     menutree: {
       get() {
-        // return JSON.parse(JSON.stringify(this.ZModules))
-        return this.ZModules
+        return this.ZPermissions.moduletree
       },
-      set(value) {
-        this.setZModules(value)
-      }
+      set(value) {}
     },
     menuB: {
       get() {
-        return this.$zglobal.flatten(this.ZModules)
+        return this.ZPermissions.modules
       },
       set(value) {}
     }
@@ -257,46 +261,41 @@ export default {
     }
   },
   mounted() {
-    this.getZModules()
+    this.getMyPermissions({
+      role: ''
+    })
       .then(res => {
-        if (res.data.success) {
-          this.routearr = this.$zglobal.flatten(res.data.data)
-          if (Array.isArray(this.routearr)) {
-            const { routes } = this.$router.options
-            const routeData = routes.find(r => r.path === '/user')
-            this.routearr.forEach(function(val) {
-              // push url to router by Luke
-              if (val.url !== '' && val.url !== null) {
-                routeData.children.push({
-                  path: val.url,
-                  name: val.name,
-                  component: () => import('pages/modules/' + val.url + '.vue')
-                })
-              }
-            })
-            this.$router.addRoutes([routeData])
-          }
-        } else {
+        this.MyRoleList = res.roles
+        this.routearr = res.modules
+        if (Array.isArray(this.routearr)) {
+          const { routes } = this.$router.options
+          const routeData = routes.find(r => r.path === '/user')
+          this.routearr.forEach(function(val) {
+            // push url to router by Luke
+            if (val.url !== '' && val.url !== null) {
+              routeData.children.push({
+                path: val.url,
+                name: val.name,
+                component: () => import('pages/modules/' + val.url + '.vue')
+              })
+            }
+          })
+          this.$router.addRoutes([routeData])
         }
       })
-      .catch(e => {})
-
-    this.getMyPermissions({
-      role: 'w'
-    }).then(res => {
-      // console.log(res)
-      if (res.success) this.MyRoleList = res.roles
-    })
+      .catch(e => {
+        console.log(e)
+      })
   },
 
   methods: {
-    ...mapActions('zero', ['getZModules', 'setZModules', 'getMyPermissions']),
+    ...mapActions('zero', ['getMyPermissions']),
     setlanguage(lang) {
       // console.log(lang)
       this.lang = lang
     },
     setRole(val) {
-      console.log(val)
+      this.getMyPermissions({ role: val.name })
     }
   }
 }

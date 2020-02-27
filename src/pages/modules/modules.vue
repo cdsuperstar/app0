@@ -141,7 +141,7 @@ import NestedTest from './nested-tree'
 export default {
   name: 'Modules',
   computed: {
-    ...mapState('zero', ['ZModules'])
+    ...mapState('zero', ['ZModules', 'ZPermissions'])
   },
   components: {
     AgGridVue,
@@ -186,7 +186,7 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    ...mapActions('zero', ['getZModules']),
+    ...mapActions('zero', ['getMyPermissions']),
     getSelector(params) {
       const mapMenu = this.$t('menu.types')
       return mapMenu[params.value]
@@ -462,7 +462,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.loading = false
-            this.getZModules()
+            this.getMyPermissions(this.ZPermissions.currectrole.name)
             this.DModelTree = false
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           }
