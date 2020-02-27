@@ -185,6 +185,7 @@
 import { AgGridVue } from 'ag-grid-vue'
 import XLSX from 'xlsx'
 import { email, required, minLength } from 'vuelidate/lib/validators'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Users',
@@ -215,7 +216,9 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
+  },
   beforeMount() {
     this.gridOptions = {
       allowShowChangeAfterFilter: true
@@ -463,11 +466,13 @@ export default {
       })
     },
     ShowRoletree() {
-      this.$router.app.$http.get('/z_role/').then(res => {
-        if (res.data.success) {
-          this.Roledata = res.data.data
-        }
-      })
+      this.$router.app.$http
+        .get('/z_role/getSelfOrLowRoles/' + this.ZPermissions.currectrole.id)
+        .then(res => {
+          if (res.data.success) {
+            this.Roledata = res.data.data
+          }
+        })
       // 获得已有角色
       // this.rolechecks = [1, 2]
       var selectedData = this.gridApi.getSelectedRows()
