@@ -194,7 +194,7 @@ export default {
         },
         pheader: '用户信息管理',
         header: '修改用户个人信息',
-        signpic: '更改用户图片',
+        signpic: '更改用户头像',
         avatar: '用户头像',
         no: '工号',
         nickname: '昵称',

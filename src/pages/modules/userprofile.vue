@@ -1,5 +1,72 @@
 <template>
   <q-page class="flex flex-center">
+    <q-dialog v-model="DaddFiles" seamless>
+      <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
+        <q-uploader
+          style="max-width: 300px"
+          :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
+          method="POST"
+          auto-expand
+          :filter="checkFileSize"
+          :label="this.$t('article.attachment')"
+          :headers="[
+            {
+              name: 'enctype',
+              value: 'multipart/form-data'
+            },
+            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+          ]"
+          @uploaded="upfilished"
+        >
+          <template v-slot:list="scope">
+            <div class="text-right">
+              <q-btn
+                flat
+                round
+                color="primary"
+                size="sm"
+                icon="close"
+                title="关闭此窗口"
+                v-close-popup
+              />
+            </div>
+            <q-list separator>
+              <q-item v-for="file in scope.files" :key="file.name">
+                <q-item-section>
+                  <q-item-label class="full-width ellipsis">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    Status: {{ file.__status }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    {{ file.__sizeLabel }} / {{ file.__progressLabel }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section v-if="file.__img" thumbnail class="gt-xs">
+                  <img :src="file.__img.src" />
+                </q-item-section>
+
+                <q-item-section top side>
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    icon="delete"
+                    @click="scope.removeFile(file)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+        </q-uploader>
+      </q-item-section>
+    </q-dialog>
     <!-- content -->
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
@@ -14,33 +81,15 @@
             <img :src="data.avatar" />
           </q-avatar>
         </div>
-        <q-uploader
-          ref="fileuper"
-          auto-expand
-          hide-upload-btn
-          extensions=".gif,.jpg,.jpeg,.png,.bmp"
-          color="amber"
-          :float-label="this.$t('auth.users.profile.avatar')"
-          url=""
-        >
-        </q-uploader>
-
-        <q-uploader
-          url="http://0apps.test/api/v1/zero/uploadMyTmpFiles"
-          method="POST"
-          auto-expand
-          :filter="checkFileSize"
-          :label="this.$t('article.attachment')"
-          :headers="[
-            {
-              name: 'enctype',
-              value: 'multipart/form-data'
-            },
-            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
-          ]"
-          style="max-width: 300px"
-        />
-
+        <div class="text-center">
+          <q-btn
+            flat
+            color="secondary"
+            icon="image"
+            :label="this.$t('auth.users.profile.signpic')"
+            @click="uploadFile()"
+          />
+        </div>
         <q-input
           v-model.trim="data.no"
           color="orange"
@@ -156,6 +205,7 @@ export default {
   name: 'UserprofileVue',
   data() {
     return {
+      DaddFiles: false,
       data: {
         avatar: null,
         no: null,
@@ -204,21 +254,21 @@ export default {
     },
     changeprofile() {
       this.data.id = this.$auth.user().id
+      if (!this.data.birth) this.data.birth = '1996-06-06'
       // 用户头像
       // console.log(this.data)
-      if (!this.data.birth) this.data.birth = '1996-06-06'
-      var formData = new FormData()
-      for (const key in this.data) {
-        formData.append(key, this.data[key])
-      }
-      formData.append('avatar', this.$refs.fileuper.files[0])
+      // var formData = new FormData()
+      // for (const key in this.data) {
+      //   formData.append(key, this.data[key])
+      // }
+      // formData.append('avatar', this.$refs.fileuper.files[0])
       // 用户头像结束
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
         // console.log('formData:', formData)
         this.$router.app.$http
-          .post('/profile/updateMyProfile/', formData)
+          .post('/profile/updateMyProfile/', this.data)
           .then(res => {
             console.log(res)
             if (res.data.success === true) {
@@ -240,6 +290,19 @@ export default {
           })
         this.loading = false
       }
+    },
+    // 文件上传
+    checkFileSize(files) {
+      return files.filter(file => file.size < 20480000)
+    },
+    uploadFile() {
+      this.DaddFiles = true
+      this.data.files = []
+    },
+    upfilished(info) {
+      console.log(info)
+      this.data.files.push(info.files[0].name)
+      this.DaddFiles = false
     }
   },
   validations: {
