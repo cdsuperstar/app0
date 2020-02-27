@@ -137,7 +137,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('zero', ['ZModules'])
+    ...mapState('zero', ['ZPermissions'])
   },
   beforeMount() {
     this.gridOptions = {
@@ -318,7 +318,7 @@ export default {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length === 1 && selectedData[0].id !== undefined) {
         this.loading = true
-        this.Roledata = this.ZModules
+        this.Roledata = this.ZPermissions.moduletree
         this.$nextTick(() => {
           this.$refs.myroletree.setExpanded(1, true)
         })
