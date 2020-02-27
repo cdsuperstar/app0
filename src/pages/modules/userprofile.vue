@@ -270,7 +270,7 @@ export default {
         this.$router.app.$http
           .post('/profile/updateMyProfile/', this.data)
           .then(res => {
-            console.log(res)
+            // console.log(res)
             if (res.data.success === true) {
               this.loading = false
               this.$zglobal.showMessage(
@@ -300,7 +300,7 @@ export default {
       this.data.files = []
     },
     upfilished(info) {
-      console.log(info)
+      // console.log(info)
       this.data.files.push(info.files[0].name)
       this.DaddFiles = false
     }
