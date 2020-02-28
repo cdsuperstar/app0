@@ -302,7 +302,9 @@ export default {
     setRole(val) {
       if (val.name !== this.currectRole.name) {
         this.getMyPermissions({ role: val.name })
-        this.$router.push('dashboard')
+        if (this.$router.currentRoute.name !== 'dashboard') {
+          this.$router.push('dashboard')
+        }
       }
     }
   }
