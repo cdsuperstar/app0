@@ -62,7 +62,54 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="DaddPermission">
+      <q-card>
+        <q-toolbar class="bg-primary text-white">
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            :title="this.$t('buttons.close')"
+          />
+          <q-toolbar-title>
+            <span class="text-weight-bold"> 设置权限 </span>
+          </q-toolbar-title>
+          <q-btn
+            flat
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="EditUserPermission()"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="max-height: 70vh" class="scroll">
+          <q-list v-for="modeule in PermissData" :key="modeule.id">
+            <q-item-label>{{ modeule.title }}</q-item-label>
+            <q-item v-for="per in modeule.permissions" :key="per.id">
+              <q-item-section>{{ per.title }}</q-item-section>
+              <q-item-section side>
+                <q-toggle
+                  v-if="JSON.parse(per.syscfg).type === 'Boolean'"
+                  v-model="per.usrcfg"
+                  true-value="1"
+                  false-value="0"
+                />
+                <q-input
+                  v-if="JSON.parse(per.syscfg).type === 'string'"
+                  v-model="per.usrcfg"
+                  type="text"
+                  color="orange"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
 
+        <q-separator />
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
       {{ $t('users.header') }}
     </div>
@@ -174,7 +221,7 @@
         </q-item-label>
         <q-separator />
         <q-list>
-          <q-item v-for="re in Roledata" v-ripple :key="re.title">
+          <q-item v-for="re in Roledata" :key="re.title" v-ripple>
             <q-item-section side top>
               <q-checkbox v-model="rolechecks" :val="re.id" />
             </q-item-section>
@@ -202,7 +249,9 @@ export default {
   },
   data() {
     return {
+      PermissData: null,
       DaddUser: false,
+      DaddPermission: false,
       quickFilter: null,
       importfile: null,
       gridOptions: null,
@@ -535,7 +584,50 @@ export default {
         })
     },
     SetUserPermisson() {
-      console.log('权限设置！')
+      this.DaddPermission = true
+      // 获得已有权限
+      var selectedData = this.gridApi.getSelectedRows()
+      var selectarr = selectedData.map(({ name, id }) => id)
+      this.$router.app.$http
+        .post('/users/getUsersPermisstionCfgs/', {
+          users: selectarr
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.PermissData = res.data.data
+            console.log(res, '++++++get')
+            if (res.data.success) {
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.getdatasuccess')
+              )
+            }
+          }
+        })
+    },
+    EditUserPermission() {
+      // console.log(this.PermissData)
+      // 获得已有权限
+      var selectedData = this.gridApi.getSelectedRows()
+      var selectarr = selectedData.map(({ name, id }) => id)
+
+      const per = this.PermissData.map(value =>
+        value.permissions.map(({ usrcfg, id }) => ({ id, usrcfg }))
+      ).flat()
+      this.$router.app.$http
+        .post('/users/setUsersPermissionCfgs', {
+          users: selectarr,
+          permissions: per
+        })
+        .then(res => {
+          console.log(res, '====set')
+          if (res.data.success) {
+            this.$zglobal.showMessage('positive', 'center', this.$t('success'))
+          }
+        })
+      console.log(per, '=========')
+      console.log(selectarr, '设置成功！')
     }
   },
   validations: {

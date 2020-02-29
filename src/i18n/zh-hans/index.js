@@ -10,6 +10,7 @@ export default {
     delfailed: '删除失败！',
     updatesuccess: '更新成功！',
     updatefailed: '更新失败！',
+    getdatasuccess: '数据获取成功！',
     rowserror: '数据选择有误！'
   },
   buttons: {

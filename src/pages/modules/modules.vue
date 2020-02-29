@@ -197,7 +197,9 @@ export default {
           module: 'modules',
           name: 'modules.bSetTree',
           syscfg: {
-            bSetTree: { required: false, type: 'Boolean', default: null }
+            required: false,
+            type: 'Boolean',
+            default: null
           },
           title: '是否可调整树'
         },
@@ -205,7 +207,9 @@ export default {
           module: 'modules',
           name: 'modules.bDelete',
           syscfg: {
-            bDelete: { required: false, type: 'Boolean', default: null }
+            required: false,
+            type: 'Boolean',
+            default: null
           },
           title: '是否可删除'
         }

@@ -78,8 +78,8 @@ export default {
       isPwd: true,
       data: {
         data: {
-          username: '',
-          password: ''
+          username: '1@1.com',
+          password: '12345678'
         },
         rememberMe: false
       },
