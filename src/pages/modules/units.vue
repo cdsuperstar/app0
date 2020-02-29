@@ -68,7 +68,7 @@
         color="blue-grey-5"
         text-color="white"
         class="q-ma-xs"
-        icon="account_tree"
+        icon="apartment"
         :label="this.$t('buttons.tree')"
         @click="Unittree()"
       />

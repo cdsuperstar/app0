@@ -187,6 +187,15 @@ export default {
       {
         headerName: '标题',
         field: 'title',
+        width: 100,
+        editable: true,
+        sortable: true,
+        filter: true,
+        minWidth: 100
+      },
+      {
+        headerName: '权限名',
+        field: 'name',
         width: 130,
         editable: true,
         sortable: true,
@@ -194,8 +203,8 @@ export default {
         minWidth: 130
       },
       {
-        headerName: '权限名',
-        field: 'name',
+        headerName: '配置',
+        field: 'syscfg',
         width: 130,
         editable: true,
         sortable: true,

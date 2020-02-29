@@ -11,28 +11,25 @@
           v-if="$q.screen.gt.xs"
           stretch
           flat
-          :label="this.$t('langs.header')"
+          :label="this.lang.label"
         >
-          <q-list>
+          <q-list dense>
             <q-item-label
               header
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;"
-              >{{ $t('langs.title') }}</q-item-label
-            >
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 8px;"
+              >{{ $t('langs.title') }}
+            </q-item-label>
             <q-item
               v-for="n in langs"
-              :key="n.value"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               v-close-popup
               clickable
+              :key="n.value"
               @click="setlanguage(n)"
             >
-              <q-item-section avatar top>
-                <q-avatar
-                  color="primary"
-                  text-color="white"
-                  size="30px"
-                  icon="directions"
-                />
+              <q-item-section avatar style="min-width:30px;">
+                <q-icon size="25px" name="directions" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ n.label }}</q-item-label>
@@ -85,6 +82,9 @@ export default {
         this.$q.lang.set(language.default)
       })
     }
+  },
+  mounted() {
+    this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
   },
   methods: {
     setlanguage(lang) {

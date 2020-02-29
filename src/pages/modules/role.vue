@@ -34,7 +34,7 @@
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
-        :label="this.$t('buttons.setrole')"
+        :label="this.$t('buttons.setmodule')"
         @click="ShowUnittree()"
       />
       <q-input
@@ -337,7 +337,11 @@ export default {
             }
           })
       } else {
-        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
+        this.$zglobal.showMessage(
+          'red-5',
+          'center',
+          this.$t('operation.rowserror')
+        )
       }
       this.loading = false
     },
@@ -369,7 +373,11 @@ export default {
           })
         this.loading = false
       } else {
-        this.$zglobal.showMessage('red-5', 'center', this.$t('roles.rowserror'))
+        this.$zglobal.showMessage(
+          'red-5',
+          'center',
+          this.$t('operation.rowserror')
+        )
       }
     }
   }

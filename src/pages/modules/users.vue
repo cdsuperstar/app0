@@ -96,9 +96,17 @@
         color="green-5"
         text-color="white"
         class="q-ma-xs"
-        icon="account_tree"
+        icon="person"
         :label="this.$t('buttons.setrole')"
         @click="ShowRoletree()"
+      />
+      <q-btn
+        color="pink-5"
+        text-color="white"
+        class="q-ma-xs"
+        icon="settings_applications"
+        :label="this.$t('buttons.setpermission')"
+        @click="SetUserPermisson()"
       />
       <q-space />
       <q-file
@@ -466,20 +474,22 @@ export default {
       })
     },
     ShowRoletree() {
-      this.$router.app.$http
-        .get('/z_role/getSelfOrLowRoles/' + this.ZPermissions.currectrole.id)
-        .then(res => {
-          if (res.data.success) {
-            this.Roledata = res.data.data
-          }
-        })
-      // 获得已有角色
       // this.rolechecks = [1, 2]
       var selectedData = this.gridApi.getSelectedRows()
       if (
         (selectedData.length === 1 && selectedData[0].id !== undefined) ||
         selectedData.length > 1
       ) {
+        // 获取列表
+        this.$router.app.$http
+          .get('/z_role/getSelfOrLowRoles/' + this.ZPermissions.currectrole.id)
+          .then(res => {
+            if (res.data.success) {
+              this.Roledata = res.data.data
+            }
+          })
+        // end
+        // 获得已有角色
         this.$router.app.$http
           .get('/users/getUserRoles/' + selectedData[0].id)
           .then(resmy => {
@@ -493,6 +503,11 @@ export default {
             }
           })
       } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
       }
     },
     EditRolelist() {
@@ -518,6 +533,9 @@ export default {
             )
           }
         })
+    },
+    SetUserPermisson() {
+      console.log('权限设置！')
     }
   },
   validations: {

@@ -9,7 +9,8 @@ export default {
     delsuccess: '删除成功！',
     delfailed: '删除失败！',
     updatesuccess: '更新成功！',
-    updatefailed: '更新失败！'
+    updatefailed: '更新失败！',
+    rowserror: '数据选择有误！'
   },
   buttons: {
     home: '主页',
@@ -19,7 +20,9 @@ export default {
     comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
     send: '发送',
     confirm: '确定',
+    setmodule: '设置模块',
     setrole: '设置角色',
+    setpermission: '设置权限',
     cancel: '取消',
     tree: '树形',
     json: 'Json编辑器',
@@ -57,8 +60,7 @@ export default {
   roles: {
     header: '角色管理',
     editroleltree: '角色树编辑',
-    getrowssuccess: '数据加载成功！',
-    rowserror: '数据选择有误！',
+    getrowssuccess: '角色数据加载成功！',
     rolelist: '角色',
     rolelistheader: '切换角色'
   },

@@ -30,22 +30,25 @@
           "
           :title="this.$t('roles.rolelistheader')"
         >
-          <q-list>
+          <q-list dense>
             <q-item
               v-for="ro in MyRoleList"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :class="
+                ro.name == ZPermissions.currectrole.name
+                  ? 'text-primary'
+                  : 'text-grey-7'
+              "
               v-close-popup
               clickable
               :key="ro.id"
               @click="setRole(ro)"
             >
-              <q-item-section>
-                <q-item-label>{{ ro.title }}</q-item-label>
+              <q-item-section avatar style="min-width:30px;">
+                <q-icon name="person" size="25px" />
               </q-item-section>
-              <q-item-section
-                avatar
-                v-if="ro.name == ZPermissions.currectrole.name"
-              >
-                <q-icon name="person" size="25px" color="primary" />
+              <q-item-section>
+                <q-item-label>{{ ro.title }} </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -55,23 +58,25 @@
           v-if="$q.screen.gt.xs"
           stretch
           flat
-          :label="this.$t('langs.header')"
+          :label="this.lang.label"
         >
-          <q-list>
+          <q-list dense>
             <q-item-label
               header
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;"
-              >{{ $t('langs.title') }}</q-item-label
-            >
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 8px;"
+              >{{ $t('langs.title') }}
+            </q-item-label>
             <q-item
               v-for="n in langs"
-              :key="n.value"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               v-close-popup
               clickable
+              :key="n.value"
               @click="setlanguage(n)"
             >
-              <q-item-section avatar>
-                <q-icon color="primary" size="30px" name="directions" />
+              <q-item-section avatar style="min-width:30px;">
+                <q-icon size="25px" name="directions" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ n.label }}</q-item-label>
@@ -127,19 +132,18 @@
           >
             <q-item
               v-for="n in langs"
-              :key="n.value"
               v-close-popup
               v-ripple
               clickable
               style="border-bottom: 1px dashed #b5b5b5;"
+              :key="n.value"
+              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               @click="setlanguage(n)"
             >
               <q-item-section avatar>
-                <q-icon color="primary" size="30px" name="directions" />
+                <q-icon size="30px" name="directions" />
               </q-item-section>
-              <q-item-section
-                class="column text-black text-weight-medium text-left"
-              >
+              <q-item-section class="column text-weight-medium text-left">
                 <q-item-label>{{ n.label }}</q-item-label>
               </q-item-section>
             </q-item>
@@ -266,6 +270,7 @@ export default {
     }
   },
   mounted() {
+    this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
     this.getMyPermissions({
       role: ''
     })
@@ -296,7 +301,6 @@ export default {
   methods: {
     ...mapActions('zero', ['getMyPermissions']),
     setlanguage(lang) {
-      // console.log(lang)
       this.lang = lang
     },
     setRole(val) {
