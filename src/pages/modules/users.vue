@@ -612,9 +612,15 @@ export default {
       var selectedData = this.gridApi.getSelectedRows()
       var selectarr = selectedData.map(({ name, id }) => id)
 
-      const per = this.PermissData.map(value =>
-        value.permissions.map(({ usrcfg, id }) => ({ id, usrcfg }))
-      ).flat()
+      console.log(this.PermissData)
+      const per = Object.keys(this.PermissData)
+        .map(k =>
+          this.PermissData[k].permissions.map(({ usrcfg, id }) => ({
+            id,
+            usrcfg
+          }))
+        )
+        .flat()
       this.$router.app.$http
         .post('/users/setUsersPermissionCfgs', {
           users: selectarr,
