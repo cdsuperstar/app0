@@ -332,7 +332,7 @@
   </q-page>
 </template>
 <script>
-import { required } from 'vuelidate/lib/validators'
+// import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'UserprofileVue',
