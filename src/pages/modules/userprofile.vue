@@ -319,7 +319,7 @@
             <q-icon color="primary" name="double_arrow" />
           </q-item-section>
           <q-item-section>
-            {{ $t('auth.users.profile.department') }}：{{ data.department }}
+            {{ $t('auth.users.profile.department') }}：{{ department }}
           </q-item-section>
         </q-item>
         <q-separator
@@ -340,6 +340,8 @@ export default {
     return {
       DaddFiles: false,
       Duserprfile: false,
+      department: null,
+      unitMap: null,
       data: {
         avatar: null,
         no: null,
@@ -365,7 +367,23 @@ export default {
   loading: false,
   created() {
     this.data.id = this.$auth.user().id
+  },
+  mounted() {
     this.getmyprofile()
+    // 得到机构数据
+    this.$router.app.$http.get('/z_unit/').then(res => {
+      if (res.data.success) {
+        // value and label
+        this.unitMap = res.data.data.map(val => {
+          return { value: val.id, label: val.title }
+        })
+        // id==>title
+        this.department = res.data.data.reduce((acc, c) => {
+          if (c.id === this.data.unitid) acc = c.title
+          return acc
+        })
+      }
+    })
   },
   methods: {
     getmyprofile() {

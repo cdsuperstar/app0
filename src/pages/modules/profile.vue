@@ -78,7 +78,8 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      unitMap: {}
     }
   },
   computed: {},
@@ -211,7 +212,12 @@ export default {
         editable: true,
         sortable: true,
         filter: true,
-        minWidth: 150
+        minWidth: 150,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: {}
+        },
+        valueFormatter: this.getUnitmap
       },
       {
         headerName: this.$t('auth.users.profile.phone1'),
@@ -275,6 +281,21 @@ export default {
         }
       })
       .catch(e => {})
+
+    // 得到机构数据
+    this.$router.app.$http.get('/z_unit/').then(res => {
+      if (res.data.success) {
+        this.columnDefs[9].cellEditorParams.values = res.data.data.map(
+          ({ title, id }) => id.toString()
+        )
+        this.unitMap = res.data.data.reduce((acc, v) => {
+          acc[v.id] = v.title
+          return acc
+        }, {})
+        // console.log(this.columnDefs[3].refData, '------------')
+        // this.UserNames = JSON.stringify(tmpa).replace(/"/g, "'")
+      }
+    })
   },
   mounted() {
     this.gridApi = this.gridOptions.api
@@ -290,6 +311,9 @@ export default {
     getSelector(params) {
       const mapMenu = this.$t('auth.users.profile.sexoptions')
       return mapMenu[params.value]
+    },
+    getUnitmap(params) {
+      return this.unitMap[params.value]
     },
     ExportDataAsCVS() {
       var params = {
