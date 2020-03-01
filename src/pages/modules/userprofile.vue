@@ -471,11 +471,7 @@ export default {
     }
   },
   validations: {
-    data: {
-      no: {
-        required
-      }
-    }
+    data: {}
   }
 }
 </script>
