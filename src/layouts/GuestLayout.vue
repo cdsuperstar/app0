@@ -11,7 +11,11 @@
           v-if="$q.screen.gt.xs"
           stretch
           flat
-          :label="this.lang.label"
+          :label="
+            this.lang.label === undefined
+              ? this.$t('langs.header')
+              : this.lang.label
+          "
         >
           <q-list dense>
             <q-item-label

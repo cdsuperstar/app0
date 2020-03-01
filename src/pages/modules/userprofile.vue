@@ -168,7 +168,7 @@
       <p class="text-weight-bold">
         {{ data.name }}
       </p>
-      <p caption>个性签名：{{ data.memo }}</p>
+      <p caption>个性签名：{{ data.memo | filterChar }}</p>
     </div>
     <div class="row q-gutter-md">
       <q-list class="userprile-list">
@@ -444,6 +444,14 @@ export default {
       this.DaddFiles = false
     }
   },
+  filters: {
+    filterChar: function(value) {
+      if (value && value.length > 20) {
+        value = value.substring(0, 20) + '...'
+      }
+      return value
+    }
+  },
   validations: {
     data: {
       no: {
@@ -455,11 +463,11 @@ export default {
 </script>
 <style scoped>
 .userprile-list {
+  margin: 20px auto;
   width: 100%;
-  max-width: 400px;
+  max-width: 460px;
 }
 .userprile-header {
   width: 100%;
-  max-width: 800px;
 }
 </style>

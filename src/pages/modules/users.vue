@@ -63,7 +63,7 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="DaddPermission">
-      <q-card>
+      <q-card class="q-dialog-plugin">
         <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
@@ -85,9 +85,21 @@
         </q-toolbar>
         <q-separator />
         <q-card-section style="max-height: 70vh" class="scroll">
-          <q-list v-for="modeule in PermissData" :key="modeule.id">
-            <q-item-label>{{ modeule.title }}</q-item-label>
-            <q-item v-for="per in modeule.permissions" :key="per.id">
+          <q-list v-for="modeule in PermissData" dense :key="modeule.id">
+            <q-item-label
+              header
+              style="text-align:left;border-bottom: 3px solid #027be3;padding: 12px;"
+              ><q-icon
+                name="perm_data_setting"
+                size="25px"
+                color="orange-5"
+              />&nbsp;&nbsp;{{ modeule.title }}</q-item-label
+            >
+            <q-item
+              v-for="per in modeule.permissions"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :key="per.id"
+            >
               <q-item-section>{{ per.title }}</q-item-section>
               <q-item-section side>
                 <q-toggle
@@ -95,12 +107,14 @@
                   v-model="per.usrcfg"
                   true-value="1"
                   false-value="0"
+                  color="orange"
                 />
                 <q-input
-                  v-if="JSON.parse(per.syscfg).type === 'string'"
+                  v-if="JSON.parse(per.syscfg).type !== 'Boolean'"
                   v-model="per.usrcfg"
                   type="text"
                   color="orange"
+                  style="max-height: 40px;"
                 />
               </q-item-section>
             </q-item>
@@ -595,7 +609,6 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.PermissData = res.data.data
-            console.log(res, '++++++get')
             if (res.data.success) {
               this.$zglobal.showMessage(
                 'positive',
@@ -611,8 +624,6 @@ export default {
       // 获得已有权限
       var selectedData = this.gridApi.getSelectedRows()
       var selectarr = selectedData.map(({ name, id }) => id)
-
-      console.log(this.PermissData)
       const per = Object.keys(this.PermissData)
         .map(k =>
           this.PermissData[k].permissions.map(({ usrcfg, id }) => ({
@@ -627,13 +638,12 @@ export default {
           permissions: per
         })
         .then(res => {
-          console.log(res, '====set')
           if (res.data.success) {
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
+          } else {
+            this.$zglobal.showMessage('red-5', 'center', this.$t('failed'))
           }
         })
-      console.log(per, '=========')
-      console.log(selectarr, '设置成功！')
     }
   },
   validations: {
