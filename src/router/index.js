@@ -86,19 +86,14 @@ export default function({ store } /* { store, ssrContext } */) {
   //   'Content-Type': 'application/json'
   // }
   Router.beforeEach((to, from, next) => {
-    // if (!to.matched.length) {
-    // next({ name: 'not-found' })
-    // } else {
-    console.log('from to check:', from.name, to.name, Vue.auth.check())
+    if (process.env.DEV) {
+      console.log('from to check:', from.name, to.name, Vue.auth.check())
+    }
     store.dispatch('zero/setZOptHist', to.name)
 
     // Inject instance to zglobal by Luke
     Router.app.$root.$zglobal.self = Router.app.$root
 
-    // if (!from.name && to.name === 'not-found' && Vue.auth.check())
-    //   next({ name: '/#/dashboard' })
-    // next()
-    // }
     if (Vue.auth.check() && to.name === 'not-found') {
       next({ name: 'dashboard' })
     } else {
