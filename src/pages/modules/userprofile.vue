@@ -380,22 +380,6 @@ export default {
   },
   mounted() {
     this.getmyprofile()
-    // 得到机构数据
-    this.$router.app.$http.get('/z_unit/').then(res => {
-      if (res.data.success) {
-        // value and label
-        this.unitMap = res.data.data.map(val => {
-          return { value: val.id, label: val.title }
-        })
-        // id==>title
-        if (this.data.unitid) {
-          this.department = res.data.data.reduce((acc, c) => {
-            if (c.id === this.data.unitid) acc = c.title
-            return acc
-          })
-        }
-      }
-    })
   },
   methods: {
     getmyprofile() {
@@ -406,6 +390,7 @@ export default {
             // 将性别赋过去
             res.data.data.sexoptions = this.data.sexoptions
             this.data = res.data.data
+            this.getunitname()
           } else {
             this.$zglobal.showMessage(
               'red-5',
@@ -415,6 +400,24 @@ export default {
           }
         })
         .catch(e => {})
+    },
+    getunitname() {
+      // 得到机构数据
+      this.$router.app.$http.get('/z_unit/').then(res => {
+        if (res.data.success) {
+          // value and label
+          this.unitMap = res.data.data.map(val => {
+            return { value: val.id, label: val.title }
+          })
+          // id==>title
+          if (this.data.unitid) {
+            this.department = res.data.data.reduce((acc, c) => {
+              if (c.id === this.data.unitid) acc = c.title
+              return acc
+            })
+          }
+        }
+      })
     },
     changeprofile() {
       this.data.id = this.$auth.user().id

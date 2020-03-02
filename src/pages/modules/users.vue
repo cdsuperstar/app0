@@ -155,10 +155,9 @@
             ref="myunittree"
             node-key="id"
             label-key="title"
-            tick-strategy="strict"
-            control-color="deep-orange-6"
+            selected-color="primary"
             :nodes="Unitdata"
-            :ticked.sync="unitticked"
+            :selected.sync="unitticked"
             default-expand-all
           />
         </q-card-section>
@@ -732,11 +731,11 @@ export default {
     Editusertounit() {
       var selectedData = this.gridApi.getSelectedRows()
       var selectarr = selectedData.map(({ name, id }) => id)
-      // console.log(this.unitticked)
+      console.log(this.unitticked, '----------')
       this.$router.app.$http
         .post('/users/setUserUnit/', {
           users: selectarr,
-          units: this.unitticked
+          units: [this.unitticked]
         })
         .then(res => {
           if (res.data.success) {

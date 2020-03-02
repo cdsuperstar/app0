@@ -217,7 +217,7 @@ export default {
         cellEditorParams: {
           values: {}
         },
-        valueFormatter: this.getUnitmap
+        cellRenderer: this.getUnitmap
       },
       {
         headerName: this.$t('auth.users.profile.phone1'),
