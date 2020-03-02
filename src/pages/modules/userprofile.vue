@@ -161,173 +161,172 @@
         <q-separator />
       </q-card>
     </q-dialog>
-    <div class="userprile-header text-center">
-      <q-avatar size="100px" style="cursor: pointer;">
-        <img :src="data.avatar" @click="uploadFile()" />
-      </q-avatar>
-      <p class="text-weight-bold">
-        {{ data.name }}
-      </p>
-      <p caption>个性签名：{{ data.memo | filterChar }}</p>
+    <div class="text-h5 q-ma-md text-primary">
+      {{ $t('auth.users.profile.pheader') }}
     </div>
-    <div class="row q-gutter-md">
-      <q-list class="userprile-list">
-        <q-item style="padding: 4px 4px;">
-          <q-item-section
-            style="padding: 4px 4px;border-top-left-radius:5px;border-top-right-radius:5px;"
-            class="row bg-blue-grey-5 text-white"
-            @click="modiprfile"
-          >
-            个人信息
+    <q-separator color="lime-2" />
+    <div align="center" style="margin: 16px 1px">
+      <div class="row q-gutter-md">
+        <q-card class="userprile-list" flat bordered>
+          <q-card-section>
+            <q-avatar size="100px" style="cursor: pointer;">
+              <img :src="data.avatar" @click="uploadFile()" />
+            </q-avatar>
+            <p class="text-weight-bold text-overline text-orange-9">
+              {{ data.name }}
+            </p>
+            <p class="text-caption text-grey">
+              {{ $t('auth.users.profile.sex') }}：
+              {{
+                data.sex === 'm'
+                  ? $t('auth.users.profile.male')
+                  : $t('auth.users.profile.female')
+              }}
+            </p>
+            <p><q-icon color="orange-7" name="cake" /> : {{ data.birth }}</p>
+          </q-card-section>
+
+          <q-card-actions>
+            <q-btn
+              flat
+              color="primary"
+              :label="this.$t('auth.users.profile.header')"
+              @click="modiprfile"
+            />
             <q-space />
-          </q-item-section>
-        </q-item>
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="accessibility" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.sex') }}：
-            {{
-              data.sex === 'm'
-                ? $t('auth.users.profile.male')
-                : $t('auth.users.profile.female')
-            }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="cake" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.birthday') }}：{{ data.birth }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="contact_phone" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.phone1') }}：{{ data.phone }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="phone" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.phone2') }}：{{ data.tel }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="home_work" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.address') }}：{{ data.address }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-      </q-list>
-      <q-list class="userprile-list">
-        <q-item style="padding: 4px 4px;">
-          <q-item-section
-            style="padding: 4px 4px;border-top-left-radius:5px;border-top-right-radius:5px;"
-            class="bg-blue-grey-5 text-white"
-          >
-            工作信息
-          </q-item-section>
-        </q-item>
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="double_arrow" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.no') }}：{{ data.no }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="double_arrow" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.title') }}：{{ data.title }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="double_arrow" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.position') }}：{{ data.position }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="double_arrow" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.jobs') }}：{{ data.jobs }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-        <q-item style="padding: 4px 4px;">
-          <q-item-section avatar style="padding-right: 4px;min-width:35px;">
-            <q-icon color="primary" name="double_arrow" />
-          </q-item-section>
-          <q-item-section>
-            {{ $t('auth.users.profile.department') }}：{{ department }}
-          </q-item-section>
-        </q-item>
-        <q-separator
-          spaced
-          inset="item"
-          style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
-        />
-      </q-list>
+            <q-btn
+              color="grey"
+              round
+              flat
+              dense
+              :title="this.$t('auth.users.profile.remark')"
+              :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
+              @click="expanded = !expanded"
+            />
+          </q-card-actions>
+
+          <q-slide-transition>
+            <div v-show="expanded">
+              <q-separator />
+              <q-card-section class="text-subitle2 text-left">
+                <q-item style="padding: 4px 4px;">
+                  <q-item-section>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{{ data.memo | filterChar }}
+                  </q-item-section>
+                </q-item>
+              </q-card-section>
+            </div>
+          </q-slide-transition>
+        </q-card>
+        <q-card class="userprile-work" flat bordered>
+          <q-card-section class="text-subitle2 text-left">
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="double_arrow" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.no') }}：{{ data.no }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="double_arrow" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.title') }}：{{ data.title }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="double_arrow" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.position') }}：{{ data.position }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="double_arrow" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.jobs') }}：{{ data.jobs }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="double_arrow" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.department') }}：{{ department }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="contact_phone" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.phone1') }}：{{ data.phone }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="phone" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.phone2') }}：{{ data.tel }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+            <q-item style="padding: 4px 4px;">
+              <q-item-section avatar style="padding-right: 4px;min-width:35px;">
+                <q-icon color="primary" name="home_work" />
+              </q-item-section>
+              <q-item-section>
+                {{ $t('auth.users.profile.address') }}：{{ data.address }}
+              </q-item-section>
+            </q-item>
+            <q-separator
+              spaced
+              inset="item"
+              style="margin-left:30px;width:calc(100% - 30px);margin-top: 1px;margin-bottom: 1px;"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
@@ -340,6 +339,7 @@ export default {
     return {
       DaddFiles: false,
       Duserprfile: false,
+      expanded: true,
       department: null,
       unitMap: null,
       data: {
@@ -378,10 +378,12 @@ export default {
           return { value: val.id, label: val.title }
         })
         // id==>title
-        this.department = res.data.data.reduce((acc, c) => {
-          if (c.id === this.data.unitid) acc = c.title
-          return acc
-        })
+        if (this.data.unitid) {
+          this.department = res.data.data.reduce((acc, c) => {
+            if (c.id === this.data.unitid) acc = c.title
+            return acc
+          })
+        }
       }
     })
   },
@@ -464,8 +466,8 @@ export default {
   },
   filters: {
     filterChar: function(value) {
-      if (value && value.length > 20) {
-        value = value.substring(0, 20) + '...'
+      if (value && value.length > 70) {
+        value = value.substring(0, 70) + '...'
       }
       return value
     }
@@ -479,7 +481,12 @@ export default {
 .userprile-list {
   margin: 20px auto;
   width: 100%;
-  max-width: 460px;
+  max-width: 260px;
+}
+.userprile-work {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 650px;
 }
 .userprile-header {
   width: 100%;
