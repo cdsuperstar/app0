@@ -5,7 +5,7 @@
     <q-btn color="primary" @click="$auth.logout()">
       {{ $t('auth.logout.logout') }}
     </q-btn>
-    <q-btn color="primary" @click="test()">
+    <q-btn color="primary" @click="test1()">
       测试state
     </q-btn>
   </q-page>
@@ -66,7 +66,10 @@ export default {
         })
     },
     test1() {
-      console.log(this.ZPermissions)
+      class Hello {}
+
+      const x = new Hello()
+      console.log(x)
     }
   }
 }
