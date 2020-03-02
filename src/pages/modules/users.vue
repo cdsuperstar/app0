@@ -85,7 +85,7 @@
         </q-toolbar>
         <q-separator />
         <q-card-section style="max-height: 70vh" class="scroll">
-          <q-list v-for="modeule in PermissData" dense :key="modeule.id">
+          <q-list v-for="modeule in PermissData" :key="modeule.id" dense>
             <q-item-label
               header
               style="text-align:left;border-bottom: 3px solid #027be3;padding: 12px;"
@@ -97,8 +97,8 @@
             >
             <q-item
               v-for="per in modeule.permissions"
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
               :key="per.id"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
             >
               <q-item-section>{{ per.title }}</q-item-section>
               <q-item-section side>
@@ -122,6 +122,50 @@
         </q-card-section>
 
         <q-separator />
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="DunitTree">
+      <q-card class="q-dialog-plugin">
+        <q-toolbar>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold">
+              {{ $t('units.showunittree') }}</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="Editusertounit()"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <q-tree
+            ref="myunittree"
+            node-key="id"
+            label-key="title"
+            tick-strategy="strict"
+            control-color="deep-orange-6"
+            :nodes="Unitdata"
+            :ticked.sync="unitticked"
+            default-expand-all
+          />
+        </q-card-section>
+        <q-separator />
+        <q-inner-loading :showing="loading">
+          <q-spinner-gears size="80px" color="primary" />
+        </q-inner-loading>
       </q-card>
     </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
@@ -154,6 +198,14 @@
         @click="saveItems()"
       />
       <q-btn
+        color="purple-6"
+        text-color="white"
+        class="q-ma-xs"
+        icon="apartment"
+        :label="this.$t('buttons.setuit')"
+        @click="Showunittree()"
+      />
+      <q-btn
         color="green-5"
         text-color="white"
         class="q-ma-xs"
@@ -170,21 +222,6 @@
         @click="SetUserPermisson()"
       />
       <q-space />
-      <q-file
-        v-model="importfile"
-        color="indigo"
-        style="max-width: 150px"
-        accept=".xlsx, *.xls"
-        dense
-        clearable
-        :label="this.$t('buttons.import')"
-        @input="ImportCVStoData()"
-      >
-        <template v-slot:prepend>
-          <q-icon name="attachment" />
-        </template>
-      </q-file>
-
       <q-input
         v-model="quickFilter"
         dense
@@ -252,9 +289,8 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import XLSX from 'xlsx'
 import { email, required, minLength } from 'vuelidate/lib/validators'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Users',
@@ -266,8 +302,11 @@ export default {
       PermissData: null,
       DaddUser: false,
       DaddPermission: false,
+      DunitTree: false,
+      Unitdata: [],
+      unitticked: null,
+      loading: false,
       quickFilter: null,
-      importfile: null,
       gridOptions: null,
       Roledata: null,
       gridApi: null,
@@ -352,42 +391,38 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
+    ...mapActions('zero', ['reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'users',
+          name: 'users.iManageUnit',
+          syscfg: {
+            required: false,
+            type: 'number',
+            default: null
+          },
+          title: '管理单位根节点'
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    // 导入开始
-    ImportCVStoData() {
-      const file = this.importfile
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          /* Parse data */
-          const bstr = e.target.result
-          const wb = XLSX.read(bstr, { type: 'binary' })
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          let j = 0
-          data.map(item => {
-            const ret = {}
-            let i = 0
-            console.log(this)
-            this.columnDefs.forEach(function(val) {
-              ret[val.field] = item[i++]
-            })
-            if (j > 0) this.rowData.push(ret)
-            j++
-          })
-        }
-        reader.readAsBinaryString(file)
-      }
-    },
-    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -642,6 +677,84 @@ export default {
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
           } else {
             this.$zglobal.showMessage('red-5', 'center', this.$t('failed'))
+          }
+        })
+    },
+    Showunittree() {
+      this.DunitTree = true
+      this.loading = true
+      var selectedData = this.gridApi.getSelectedRows()
+      // 先得到登录用户的管理单位节点
+      var node = null
+      if (this.mPermissions['users.iManageUnit']) {
+        node = this.mPermissions['users.iManageUnit']
+      } else {
+        if (this.ZPermissions.units.length > 1)
+          node = this.mPermissions['users.iManageUnit']
+      }
+      this.$router.app.$http
+        .get('/z_unit/getTheUnitTree/' + node)
+        .then(res => {
+          if (res.data.success) {
+            this.loading = false
+            this.Unitdata = res.data.data
+
+            // 得到选定用户的机构值
+            if (selectedData[0].id) {
+              this.$router.app.$http
+                .get('/users/getUserUnit/' + selectedData[0].id)
+                .then(resmy => {
+                  if (resmy.data.success) {
+                    this.unitticked = resmy.data.data.map(({ id }) => id)
+                  }
+                })
+            }
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('operation.getdatasuccess')
+            )
+          } else {
+            this.loading = false
+          }
+        })
+        .catch(error => {
+          this.loading = false
+          if (error.status) {
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
+    },
+    Editusertounit() {
+      var selectedData = this.gridApi.getSelectedRows()
+      var selectarr = selectedData.map(({ name, id }) => id)
+      // console.log(this.unitticked)
+      this.$router.app.$http
+        .post('/users/setUserUnit/', {
+          users: selectarr,
+          units: this.unitticked
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('success') + ':' + res.data.data
+            )
+          }
+        })
+        .catch(error => {
+          if (error.status) {
+            this.loading = false
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
           }
         })
     }

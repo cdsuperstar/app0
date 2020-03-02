@@ -167,7 +167,11 @@
     <q-separator color="lime-2" />
     <div align="center" style="margin: 16px 1px">
       <div class="row q-gutter-md">
-        <q-card class="userprile-list" flat bordered>
+        <q-card
+          class="userprile-list"
+          flat
+          style="border-left: 1px dashed #ffffff;"
+        >
           <q-card-section>
             <q-avatar size="100px" style="cursor: pointer;">
               <img :src="data.avatar" @click="uploadFile()" />
@@ -183,7 +187,7 @@
                   : $t('auth.users.profile.female')
               }}
             </p>
-            <p><q-icon color="orange-7" name="cake" /> : {{ data.birth }}</p>
+            <p><q-icon color="orange-7" name="cake" /> {{ data.birth }}</p>
           </q-card-section>
 
           <q-card-actions>
@@ -204,10 +208,11 @@
               @click="expanded = !expanded"
             />
           </q-card-actions>
-
+          <q-card-actions>
+            <q-separator />
+          </q-card-actions>
           <q-slide-transition>
             <div v-show="expanded">
-              <q-separator />
               <q-card-section class="text-subitle2 text-left">
                 <q-item style="padding: 4px 4px;">
                   <q-item-section>
@@ -218,7 +223,12 @@
             </div>
           </q-slide-transition>
         </q-card>
-        <q-card class="userprile-work" flat bordered>
+        <q-card
+          class="userprile-work"
+          flat
+          square
+          style="border-left: 1px dashed #b5b5b5;"
+        >
           <q-card-section class="text-subitle2 text-left">
             <q-item style="padding: 4px 4px;">
               <q-item-section avatar style="padding-right: 4px;min-width:35px;">
@@ -466,8 +476,8 @@ export default {
   },
   filters: {
     filterChar: function(value) {
-      if (value && value.length > 70) {
-        value = value.substring(0, 70) + '...'
+      if (value && value.length > 120) {
+        value = value.substring(0, 120) + '...'
       }
       return value
     }

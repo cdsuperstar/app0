@@ -23,6 +23,7 @@ export default {
     confirm: '确定',
     setmodule: '设置模块',
     setrole: '设置角色',
+    setuit: '设置单位',
     setpermission: '设置权限',
     cancel: '取消',
     tree: '树形',
@@ -83,7 +84,8 @@ export default {
   },
   units: {
     header: '单位管理',
-    editunittree: '机构树编辑'
+    editunittree: '机构树编辑',
+    showunittree: '机构树'
   },
   users: {
     header: '用户管理',
