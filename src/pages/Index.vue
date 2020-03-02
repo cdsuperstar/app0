@@ -66,10 +66,7 @@ export default {
         })
     },
     test1() {
-      class Hello {}
-
-      const x = new Hello()
-      console.log(x)
+      console.log(this.ZPermissions.units[0].id)
     }
   }
 }
