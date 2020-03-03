@@ -4,11 +4,13 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
-        <q-toolbar-title>
+        <q-toolbar-title class="row">
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
+            <img src="/statics/app-logo.jpg" />
           </q-avatar>
-          Title
+          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
+            &nbsp;&nbsp;物探院综合管理系统
+          </div>
         </q-toolbar-title>
         <q-space />
         <q-btn
