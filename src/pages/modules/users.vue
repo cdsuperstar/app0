@@ -688,8 +688,8 @@ export default {
       if (this.mPermissions['users.iManageUnit']) {
         node = this.mPermissions['users.iManageUnit']
       } else {
-        if (this.ZPermissions.units.length > 1)
-          node = this.mPermissions['users.iManageUnit']
+        if (this.ZPermissions.units.length >= 1)
+          node = this.ZPermissions.units[0].id
       }
       this.$router.app.$http
         .get('/z_unit/getTheUnitTree/' + node)

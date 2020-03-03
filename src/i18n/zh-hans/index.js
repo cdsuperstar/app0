@@ -212,7 +212,7 @@ export default {
         phone1: '主要电话号码',
         phone2: '备用电话号码',
         position: '职务',
-        department: '部门',
+        department: '单位',
         title: '职称',
         jobs: '岗位',
         remark: '备注',

@@ -410,11 +410,14 @@ export default {
             return { value: val.id, label: val.title }
           })
           // id==>title
+          // console.log(this.data.unitid, '=====', res.data.data)
           if (this.data.unitid) {
             this.department = res.data.data.reduce((acc, c) => {
               if (c.id === this.data.unitid) acc = c.title
               return acc
-            })
+            }, '')
+          } else {
+            return null
           }
         }
       })

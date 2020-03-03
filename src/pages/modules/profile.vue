@@ -217,6 +217,7 @@ export default {
         cellEditorParams: {
           values: {}
         },
+        valueFormatter: this.getUnitmap,
         cellRenderer: this.getUnitmap
       },
       {
