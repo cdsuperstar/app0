@@ -503,7 +503,7 @@ export default {
               this.$router.app.$http
                 .delete('/p1/s1/p1s1techfile/' + val.id)
                 .then(res => {
-                  if (res.data.data.success) {
+                  if (res.data.success) {
                     // console.log(res.data.data)
                     this.$zglobal.showMessage(
                       'positive',
@@ -555,8 +555,9 @@ export default {
       this.DaddArticle = true
     },
     aDDNewArticle() {
+      console.log(this.data)
       this.$router.app.$http
-        .post('/p1/s1/p1s1techfile/', this.data)
+        .post('/p1/s1/p1s1techfile', this.data)
         .then(res => {
           console.log(res)
           if (res.data.success) {
@@ -587,7 +588,7 @@ export default {
           this.$router.app.$http
             .post('/p1/s1/p1s1techfile/', val)
             .then(res => {
-              if (res.data.data.success) {
+              if (res.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
                 })
@@ -609,7 +610,7 @@ export default {
           this.$router.app.$http
             .put('/p1/s1/p1s1techfile/' + val.id, val)
             .then(res => {
-              if (res.data.data.success) {
+              if (res.data.success) {
                 this.gridApi.updateRowData({
                   update: [Object.assign(val, res.data.data)]
                 })
