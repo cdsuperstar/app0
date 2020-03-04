@@ -390,7 +390,9 @@ export default {
             // 将性别赋过去
             res.data.data.sexoptions = this.data.sexoptions
             this.data = res.data.data
-            this.getunitname()
+            this.$nextTick(() => {
+              this.getunitname()
+            })
           } else {
             this.$zglobal.showMessage(
               'red-5',

@@ -320,3 +320,8 @@ export default {
   }
 }
 </script>
+<style>
+.q-item__section--avatar {
+  min-width: 42px;
+}
+</style>
