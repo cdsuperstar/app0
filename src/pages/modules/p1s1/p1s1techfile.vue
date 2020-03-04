@@ -555,11 +555,9 @@ export default {
       this.DaddArticle = true
     },
     aDDNewArticle() {
-      console.log(this.data)
       this.$router.app.$http
         .post('/p1/s1/p1s1techfile', this.data)
         .then(res => {
-          console.log(res)
           if (res.data.success) {
             this.gridApi.updateRowData({
               add: [res.data.data]
@@ -638,7 +636,6 @@ export default {
       this.data.files = []
     },
     upfilished(info) {
-      console.log(info)
       this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     }
