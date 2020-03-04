@@ -1,5 +1,5 @@
 <template>
-  <q-page></q-page>
+  <q-page>aaav</q-page>
 </template>
 
 <script>

@@ -1,6 +1,19 @@
 // This is just an example,
 // so you can safely delete all default props below
 export default {
+  p1s1techfile: {
+    header: '技术文件',
+    addfiles: '新增技术文件',
+    filename: '文件名称',
+    filenamenull: '请输入文件名称',
+    fileno: '文件编号',
+    filenonull: '请输入文件编号',
+    filetype: '文件类型',
+    devicename: '设备名称(仅指导书、说明书填写)',
+    devicefac: '设备厂家(仅指导书、说明书填写)',
+    issue: '发布日期',
+    files: '上传附件'
+  },
   failed: '操作失败',
   success: '操作成功',
   operation: {
