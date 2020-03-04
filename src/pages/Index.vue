@@ -66,7 +66,7 @@ export default {
         })
     },
     test1() {
-      console.log(this.ZPermissions.units[0].id)
+      console.log(this.ZPermissions)
     }
   }
 }

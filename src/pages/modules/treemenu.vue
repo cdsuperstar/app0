@@ -36,7 +36,7 @@
       :to="
         children.url === '' || children.url === null
           ? ''
-          : { name: children.url }
+          : { name: children.name }
       "
       style="border-bottom: 1px dashed #ebebeb;"
       :caption="children.tip"
