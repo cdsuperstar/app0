@@ -302,19 +302,8 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
-      memooptions: {
-        values: ['更新', '作废']
-      },
-      filetypeoptions: {
-        values: [
-          '技术规范',
-          '规程规范',
-          '报告范本',
-          '作业指导书',
-          '软件说明书',
-          '仪器说明书'
-        ]
-      },
+      memooptions: this.$t('p1s1techfile.memooptions'),
+      filetypeoptions: this.$t('p1s1techfile.filetypeoptions'),
       data: {
         name: null,
         no: null,

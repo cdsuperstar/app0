@@ -12,7 +12,20 @@ export default {
     devicename: '设备名称(仅指导书、说明书填写)',
     devicefac: '设备厂家(仅指导书、说明书填写)',
     issue: '发布日期',
-    files: '上传附件'
+    files: '上传附件',
+    memooptions: {
+      values: ['更新', '作废']
+    },
+    filetypeoptions: {
+      values: [
+        '技术规范',
+        '规程规范',
+        '报告范本',
+        '作业指导书',
+        '软件说明书',
+        '仪器说明书'
+      ]
+    }
   },
   p1s1bidfile: {
     header: '招投标文件',
@@ -27,7 +40,39 @@ export default {
     ofprice: '我单位报价（万元）',
     ptype: '项目类别',
     biddate: '招投标日期',
-    files: '招投标文件'
+    files: '招投标文件',
+    ptypeoptions: {
+      values: [
+        '技术规范',
+        '规程规范',
+        '报告范本',
+        '作业指导书',
+        '软件说明书',
+        '仪器说明书'
+      ]
+    }
+  },
+  p1s1contrm: {
+    header: '合同管理',
+    addfiles: '新增合同',
+    pname: '合同名称',
+    cno: '合同编号',
+    fno: '财务编号',
+    ofunit: '发包单位',
+    impunit: '实施部门',
+    pown: '项目负责人',
+    presp: '项目责任人',
+    ptype: '项目类别',
+    ctype: '合同类别',
+    cbdate: '合同开始日期',
+    cedate: '合同结束日期',
+    memo: '备注',
+    ctypeoptions: {
+      values: ['处室自营', '成本划拨', '其他类型']
+    },
+    ptypeoptions: {
+      values: ['水利', '水电', '风电', '市政综合', '其他']
+    }
   },
   failed: '操作失败',
   success: '操作成功',

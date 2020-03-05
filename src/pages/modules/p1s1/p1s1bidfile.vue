@@ -313,16 +313,7 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
-      ptypeoptions: {
-        values: [
-          '技术规范',
-          '规程规范',
-          '报告范本',
-          '作业指导书',
-          '软件说明书',
-          '仪器说明书'
-        ]
-      },
+      ptypeoptions: this.$t('p1s1bidfile.ptypeoptions'),
       data: {
         biddate: null,
         name: null,
