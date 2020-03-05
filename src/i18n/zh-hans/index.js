@@ -91,7 +91,8 @@ export default {
     close: '关闭',
     closethiswindow: '关闭此窗口',
     comfirmtitle: '确认操作',
-    comfirmdialog: '<sapn class="text-negative">确认要做当前操作吗？</sapn>',
+    comfirmdialog:
+      '确认要做当前操作吗？（<span class="text-negative">此操作不可逆！</span>）',
     send: '发送',
     confirm: '确定',
     setmodule: '设置模块',

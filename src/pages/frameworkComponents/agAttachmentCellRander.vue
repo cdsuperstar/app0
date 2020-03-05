@@ -27,7 +27,12 @@
             <q-item-label caption>{{ params.data.created_at }}</q-item-label>
           </q-item-section>
           <q-item-section side style="cursor: pointer">
-            <q-icon name="cancel" :title="this.$t('buttons.delete')" />
+            <q-icon
+              name="cancel"
+              color="grey-5"
+              :title="this.$t('buttons.delete')"
+              @click="deletefile"
+            />
           </q-item-section>
         </q-item>
       </q-list>
@@ -59,6 +64,20 @@ export default Vue.extend({
     // end
   },
   mounted() {},
-  methods: {}
+  methods: {
+    deletefile() {
+      this.$q
+        .dialog({
+          title: this.$t('buttons.comfirmtitle'),
+          message: this.$t('buttons.comfirmdialog'),
+          html: true,
+          cancel: true,
+          persistent: true
+        })
+        .onOk(() => {
+          console.log('del ...====')
+        })
+    }
+  }
 })
 </script>
