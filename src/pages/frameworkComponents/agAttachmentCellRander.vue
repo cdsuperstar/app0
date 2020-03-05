@@ -12,18 +12,22 @@
     File
     <q-popup-proxy dense>
       <q-list dense class="bg-white">
-        <q-item clickable v-ripple style="border-bottom: 1px dashed #ebebeb;">
-          <q-item-section avatar top>
+        <q-item style="border-bottom: 1px dashed #ebebeb;">
+          <q-item-section avatar top style="padding-right: 1px;">
             <q-avatar
               icon="insert_drive_file"
-              color="primary"
+              color="blue-8"
               text-color="white"
               size="30px"
+              style="margin-top: 3px;"
             />
           </q-item-section>
-          <q-item-section>
+          <q-item-section style="cursor: pointer">
             <q-item-label lines="1">{{ params.data.id }}</q-item-label>
             <q-item-label caption>{{ params.data.created_at }}</q-item-label>
+          </q-item-section>
+          <q-item-section side style="cursor: pointer">
+            <q-icon name="cancel" :title="this.$t('buttons.delete')" />
           </q-item-section>
         </q-item>
       </q-list>
