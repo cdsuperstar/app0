@@ -99,7 +99,6 @@
             <div class="col-12 col-md-5" style="margin-right: 16px;">
               <q-input
                 v-model.trim="data.name"
-                color="orange"
                 type="text"
                 style="max-width: 500px"
                 autofocus
@@ -112,7 +111,6 @@
             <div class="col-12 col-md-5">
               <q-input
                 v-model.trim="data.no"
-                color="orange"
                 type="text"
                 style="max-width: 500px"
                 autofocus
@@ -149,18 +147,16 @@
             <div class="col-12 col-md-3" style="margin-right: 30px;">
               <q-select
                 v-model.trim="data.type"
-                color="orange"
                 style="max-width: 150px;min-width: 150px;"
-                :options="typeoptions"
+                :options="filetypeoptions.values"
                 :label="this.$t('p1s1techfile.filetype')"
                 emit-value
                 map-options
               />
             </div>
-            <div class="col-12 col-md-3" style="margin-right: 25px;">
+            <div class="col-12 col-md-3" style="margin-right: 10px;">
               <q-input
                 v-model.trim="data.issue"
-                color="orange"
                 style="max-width: 150px"
                 :label="this.$t('p1s1techfile.issue')"
               >
@@ -187,7 +183,6 @@
             <div class="col-12 col-md-3">
               <q-input
                 name="files"
-                color="orange"
                 style="max-width: 150px"
                 readonly
                 :label="this.$t('p1s1techfile.files')"
@@ -287,6 +282,7 @@
 import { required } from 'vuelidate/lib/validators'
 import { AgGridVue } from 'ag-grid-vue'
 import agAttachmentCellRander from '../../frameworkComponents/agAttachmentCellRander'
+import agDateCellRender from '../../frameworkComponents/agDateCellRender'
 
 export default {
   name: 'thep1s1techfile',
@@ -298,22 +294,36 @@ export default {
       DaddArticle: false,
       DaddFiles: false,
       quickFilter: null,
-      typeoptions: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
       columnDefs: null,
       rowData: null,
-      userMap: {},
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
+      memooptions: {
+        values: ['更新', '作废']
+      },
+      filetypeoptions: {
+        values: [
+          '技术规范',
+          '规程规范',
+          '报告范本',
+          '作业指导书',
+          '软件说明书',
+          '仪器说明书'
+        ]
+      },
       data: {
-        title: '',
-        user_id: '',
-        created_date: '',
-        files: [],
-        content: ''
+        name: null,
+        no: null,
+        type: null,
+        issue: null,
+        dname: null,
+        dfact: null,
+        memo: null,
+        files: []
       }
     }
   },
@@ -323,7 +333,8 @@ export default {
       allowShowChangeAfterFilter: true
     }
     this.frameworkComponents = {
-      agAttachmentCellRander: agAttachmentCellRander
+      agAttachmentCellRander: agAttachmentCellRander,
+      agDateCellRender: agDateCellRender
     }
     this.columnDefs = [
       {
@@ -340,8 +351,8 @@ export default {
       {
         headerName: '文件名称',
         field: 'name',
-        width: 120,
-        minWidth: 120,
+        width: 200,
+        minWidth: 200,
         sortable: true,
         filter: true
       },
@@ -393,9 +404,10 @@ export default {
         field: 'memo',
         width: 70,
         minWidth: 70,
-        editable: false,
         sortable: true,
-        filter: true
+        filter: true,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: this.memooptions
       },
       {
         headerName: '发布日期',
@@ -404,8 +416,34 @@ export default {
         minWidth: 90,
         editable: false,
         sortable: true,
-        filter: true,
-        valueFormatter: dateFormatter
+        cellRendererFramework: agDateCellRender,
+        valueFormatter: dateFormatter,
+        filter: 'agDateColumnFilter',
+        filterParams: {
+          comparator: function(filterLocalDateAtMidnight, cellValue) {
+            var dateAsString = cellValue
+            if (dateAsString == null) return -1
+            var dateParts = dateAsString.split('/')
+            var cellDate = new Date(
+              Number(dateParts[2]),
+              Number(dateParts[1]) - 1,
+              Number(dateParts[0])
+            )
+
+            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+              return 0
+            }
+
+            if (cellDate < filterLocalDateAtMidnight) {
+              return -1
+            }
+
+            if (cellDate > filterLocalDateAtMidnight) {
+              return 1
+            }
+          },
+          browserDatePicker: true
+        }
       },
       {
         headerName: '上传日期',
@@ -445,23 +483,6 @@ export default {
         }
       })
       .catch(e => {})
-    // 获得typeoptions
-    this.typeoptions = [
-      { label: '技术规范', value: '技术规范' },
-      { label: '规程规范', value: '规程规范' },
-      { label: '报告范本', value: '报告范本' },
-      { label: '作业指导书', value: '作业指导书' },
-      { label: '软件说明书', value: '软件说明书' },
-      { label: '仪器说明书', value: '仪器说明书' }
-    ]
-    this.filetypeoptions = [
-      '技术规范',
-      '规程规范',
-      '报告范本',
-      '作业指导书',
-      '软件说明书',
-      '仪器说明书'
-    ]
     // end
   },
   mounted() {
@@ -469,9 +490,6 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
-    testup(i) {
-      console.log(i.files)
-    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -480,10 +498,6 @@ export default {
     },
     checkFileSize(files) {
       return files.filter(file => file.size < 20480000)
-    },
-    // 用户列表
-    getUsermap(params) {
-      return this.userMap[params.value]
     },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
@@ -558,6 +572,7 @@ export default {
       this.$router.app.$http
         .post('/p1/s1/p1s1techfile', this.data)
         .then(res => {
+          console.log(res)
           if (res.data.success) {
             this.gridApi.updateRowData({
               add: [res.data.data]

@@ -14,6 +14,21 @@ export default {
     issue: '发布日期',
     files: '上传附件'
   },
+  p1s1bidfile: {
+    header: '招投标文件',
+    addfiles: '新增招投标文件',
+    name: '项目名称',
+    namenull: '请输入项目名称',
+    bfileno: '招标文件编号',
+    filenonull: '请输入招标文件编号',
+    bunit: '招标单位',
+    bdunit: '中标单位',
+    bdprice: '中标价格（万元）',
+    ofprice: '我单位报价（万元）',
+    ptype: '项目类别',
+    biddate: '招投标日期',
+    files: '招投标文件'
+  },
   failed: '操作失败',
   success: '操作成功',
   operation: {
