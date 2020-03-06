@@ -116,7 +116,21 @@ export default {
   },
   menu: {
     menuname: '菜单',
-    types: { A: '系统菜单', B: '个人菜单', C: '功能菜单', D: '扩展菜单' }
+    types: { A: '系统菜单', B: '个人菜单', C: '功能菜单', D: '扩展菜单' },
+    themeoptions: [
+      {
+        label: '蓝色（默认）',
+        value: 'blue'
+      },
+      {
+        label: '柔和、洁净、爽朗',
+        value: 'Bright'
+      },
+      {
+        label: '高尚、自然、安稳',
+        value: 'noble'
+      }
+    ]
   },
   jsoneditor: {
     header: 'JSON编辑器'

@@ -620,7 +620,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Article-agGrid .ag-header {
-  background-color: #ff6600;
+  background-color: var(--q-color-primary);
   color: #ffffff;
 }
 .Article-agGrid .ag-cell {
@@ -634,6 +634,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #ff6600;
+  color: var(--q-color-primary);
 }
 </style>

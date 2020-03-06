@@ -2,10 +2,13 @@
   <q-layout view="lHh lpR fFf">
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
-        <q-toolbar-title>
+        <q-toolbar-title class="row">
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />
+            <img src="/statics/app-logo.jpg" />
           </q-avatar>
+          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
+            &nbsp;&nbsp;物探院综合管理系统
+          </div>
         </q-toolbar-title>
         <q-btn-dropdown
           v-if="$q.screen.gt.xs"

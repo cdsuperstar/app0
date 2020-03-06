@@ -4,7 +4,7 @@
     <q-btn color="primary" @click="$auth.logout()">
       {{ $t('auth.logout.logout') }}
     </q-btn>
-    <q-btn color="mycolor" @click="test1()">
+    <q-btn color="primary" @click="test1()">
       测试state
     </q-btn>
   </q-page>
@@ -65,8 +65,9 @@ export default {
         })
     },
     test1() {
-      console.log(this.ZPermissions)
+      // console.log(this.ZPermissions)
       colors.setBrand('mycolor', '#00ff00')
+      console.log(this.$auth.user().usercfg, '+++')
     }
   }
 }

@@ -22,13 +22,13 @@
           <template v-slot:list="scope">
             <div class="text-right">
               <q-btn
+                v-close-popup
                 flat
                 round
                 color="primary"
                 size="sm"
                 icon="close"
                 title="关闭此窗口"
-                v-close-popup
               />
             </div>
             <q-list separator>
@@ -319,6 +319,7 @@ export default {
   computed: {},
   beforeMount() {
     this.gridOptions = {
+      rowHeight: 35,
       allowShowChangeAfterFilter: true
     }
     this.frameworkComponents = {
@@ -370,7 +371,11 @@ export default {
         minWidth: 80,
         editable: false,
         filter: true,
-        cellRendererFramework: agAttachmentCellRander
+        cellRendererFramework: agAttachmentCellRander,
+        cellRendererParams: {
+          down: this.downloadfile,
+          del: this.deletefile
+        }
       },
       {
         headerName: '设备名称',
@@ -462,17 +467,7 @@ export default {
     this.getRowStyle = this.onchangerowcolor
   },
   created() {
-    this.$router.app.$http
-      .get('/p1/s1/p1s1techfile/')
-      .then(res => {
-        // console.log(res)
-        if (res.data.success) {
-          this.rowData = res.data.data
-        } else {
-        }
-      })
-      .catch(e => {})
-    // end
+    this.getdata()
   },
   mounted() {
     this.gridApi = this.gridOptions.api
@@ -481,6 +476,19 @@ export default {
   methods: {
     onGridReady(params) {
       params.api.sizeColumnsToFit()
+    },
+    getdata() {
+      this.$router.app.$http
+        .get('/p1/s1/p1s1techfile/')
+        .then(res => {
+          // console.log(res)
+          if (res.data.success) {
+            this.rowData = res.data.data
+          } else {
+          }
+        })
+        .catch(e => {})
+      // end
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
@@ -561,7 +569,7 @@ export default {
       this.$router.app.$http
         .post('/p1/s1/p1s1techfile', this.data)
         .then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.data.success) {
             this.gridApi.updateRowData({
               add: [res.data.data]
@@ -642,6 +650,39 @@ export default {
     upfilished(info) {
       this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
+    },
+    downloadfile(rowid, filename) {
+      this.$router.app.$http
+        .post('p1/s1/p1s1techfile/downAttachFile/' + rowid, {
+          filename: filename
+        })
+        .then(res => {
+          // console.log(res, '----------')
+          if (res.data.success) {
+            window.open(res.data.data, '_blank')
+          }
+        })
+        .catch(e => {})
+      // end
+    },
+    deletefile(rowid, filename) {
+      // console.log(rowid, filename, 'del')
+      this.$router.app.$http
+        .post('p1/s1/p1s1techfile/deleteAttachFile/' + rowid, {
+          filename: filename
+        })
+        .then(res => {
+          if (res.data.success) {
+            console.log(res)
+            this.getdata()
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('operation.delsuccess')
+            )
+          }
+        })
+        .catch(e => {})
     }
   },
   validations: {

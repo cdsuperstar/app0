@@ -35,14 +35,14 @@
         </q-inner-loading>
       </q-card>
     </q-dialog>
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('modules.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
-        text-color="white"
+        color="addbtn"
+        text-color="text-white"
         class="q-ma-xs"
         icon="post_add"
         :label="this.$t('buttons.add')"
@@ -50,7 +50,7 @@
       />
       <q-btn
         v-if="this.mPermissions['modules.bDelete']"
-        color="deep-orange-5"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -58,7 +58,7 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -67,7 +67,7 @@
       />
       <q-btn
         v-if="this.mPermissions['modules.bSetTree']"
-        color="purple-5"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
@@ -75,7 +75,7 @@
         @click="Modeltree()"
       />
       <q-btn
-        color="green-6"
+        color="expbtn"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -115,7 +115,7 @@
     <div class="shadow-1">
       <ag-grid-vue
         style="width: 100%; height: 600px;"
-        class="ag-theme-balham Models-agGrid"
+        class="ag-theme-balham Modules-agGrid"
         row-selection="multiple"
         row-multi-select-with-click="true"
         :grid-options="gridOptions"
@@ -519,11 +519,11 @@ export default {
 </script>
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
-.Models-agGrid .ag-header {
-  background-color: #666699;
+.Modules-agGrid .ag-header {
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
-.Models-agGrid .ag-cell {
+.Modules-agGrid .ag-cell {
   padding-left: 1px;
 }
 .ag-theme-balham .ag-icon,
@@ -534,6 +534,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #666699;
+  color: var(--q-color-secondary);
 }
 </style>

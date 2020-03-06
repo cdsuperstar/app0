@@ -156,6 +156,42 @@
           </q-expansion-item>
         </q-list>
       </div>
+      <!-- 颜色选择--->
+      <div class="q-mt-sm">
+        <q-list>
+          <q-expansion-item
+            expand-separator
+            icon="language"
+            class="text-primary text-weight-bold"
+            label="主题颜色列表"
+          >
+            <q-item>
+              <q-item-section
+                ><q-toggle v-model="usercfg.dark" label="护眼模式"></q-toggle
+              ></q-item-section>
+            </q-item>
+            <q-item
+              v-for="n in themeoptions"
+              v-close-popup
+              v-ripple
+              clickable
+              style="border-bottom: 1px dashed #b5b5b5;"
+              :key="n.value"
+              :class="
+                usercfg.theme === n.value ? 'text-primary' : 'text-grey-7'
+              "
+              @click="setthemecolor(n.value)"
+            >
+              <q-item-section avatar>
+                <q-icon size="30px" name="directions" />
+              </q-item-section>
+              <q-item-section class="column text-weight-medium text-left">
+                <q-item-label>{{ n.label }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+        </q-list>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -222,6 +258,7 @@
 import { mapActions, mapState } from 'vuex'
 import treemenu from '../pages/modules/treemenu'
 import NestedTest from '../pages/modules/nested-tree'
+import { colors } from 'quasar'
 
 export default {
   components: { treemenu, NestedTest },
@@ -229,6 +266,8 @@ export default {
     return {
       routearr: [],
       MyRoleList: null,
+      usercfg: { theme: 'blue', dark: false },
+      themeoptions: this.$t('menu.themeoptions'),
       left: false,
       right: false,
       leftdrawer: 210,
@@ -267,6 +306,9 @@ export default {
     }
   },
   watch: {
+    'usercfg.dark'(val) {
+      this.applydarkmode()
+    },
     lang(lang) {
       this.$i18n.locale = lang.value
       // set quasar's language too!!
@@ -277,6 +319,11 @@ export default {
   },
   mounted() {
     this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
+    if (this.$auth.user().usercfg) {
+      this.usercfg = JSON.parse(this.$auth.user().usercfg)
+    }
+    this.applytheme(this.usercfg.theme)
+    this.applydarkmode()
     this.getMyPermissions({
       role: ''
     })
@@ -308,6 +355,25 @@ export default {
     ...mapActions('zero', ['getMyPermissions']),
     setlanguage(lang) {
       this.lang = lang
+    },
+    setthemecolor(color) {
+      console.log('-----------')
+      this.usercfg.theme = color
+      this.applytheme(color)
+      this.$router.app.$http
+        .post('/zero/setMyUsercfg/', {
+          usercfg: JSON.stringify(this.usercfg)
+        })
+        .then(res => {})
+    },
+    applytheme(color) {
+      this.$zglobal.colors[color].forEach(item => {
+        colors.setBrand(item.name, item.value)
+      })
+    },
+    applydarkmode() {
+      this.$q.dark.set(this.usercfg.dark)
+      this.$q.dark.toggle()
     },
     setRole(val) {
       if (val.name !== this.currectRole.name) {

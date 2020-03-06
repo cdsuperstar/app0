@@ -9,10 +9,13 @@
       size="18px"
       style="padding-bottom: 7px"
     />
-    File
     <q-popup-proxy dense>
       <q-list dense class="bg-white">
-        <q-item style="border-bottom: 1px dashed #ebebeb;">
+        <q-item
+          v-for="f in JSON.parse(params.data.files)"
+          style="border-bottom: 1px dashed #ebebeb;"
+          :key="f.id"
+        >
           <q-item-section avatar top style="padding-right: 1px;">
             <q-avatar
               icon="insert_drive_file"
@@ -22,21 +25,25 @@
               style="margin-top: 3px;"
             />
           </q-item-section>
-          <q-item-section style="cursor: pointer">
-            <q-item-label lines="1">{{ params.data.id }}</q-item-label>
-            <q-item-label caption>{{ params.data.created_at }}</q-item-label>
+          <q-item-section
+            style="cursor: pointer"
+            @click="downfile(params.data.id, f)"
+          >
+            <q-item-label lines="1">{{ f }}</q-item-label>
+            <q-item-label caption>{{ params.data.issue }}</q-item-label>
           </q-item-section>
           <q-item-section side style="cursor: pointer">
             <q-icon
               name="cancel"
               color="grey-5"
-              :title="this.$t('buttons.delete')"
-              @click="deletefile"
+              title="del"
+              @click="deletefile(params.data.id, f)"
             />
           </q-item-section>
         </q-item>
       </q-list>
     </q-popup-proxy>
+    File
   </div>
 </template>
 
@@ -45,38 +52,17 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'agAttachmentCellRander',
-  data() {
-    return {
-      AttachmentData: null
-    }
-  },
+  data() {},
   created() {
-    this.$router.app.$http
-      .put('/p1/s1/p1s1techfile/' + this.params.data.id)
-      .then(res => {
-        // console.log(res)
-        if (res.data.success) {
-          this.AttachmentData = res.data.data.files
-        } else {
-        }
-      })
-      .catch(e => {})
     // end
   },
   mounted() {},
   methods: {
-    deletefile() {
-      this.$q
-        .dialog({
-          title: this.$t('buttons.comfirmtitle'),
-          message: this.$t('buttons.comfirmdialog'),
-          html: true,
-          cancel: true,
-          persistent: true
-        })
-        .onOk(() => {
-          console.log('del ...====')
-        })
+    downfile(id, name) {
+      this.params.colDef.cellRendererParams.down(id, name)
+    },
+    deletefile(id, name) {
+      this.params.colDef.cellRendererParams.del(id, name)
     }
   }
 })
