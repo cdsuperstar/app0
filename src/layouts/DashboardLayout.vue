@@ -372,7 +372,6 @@ export default {
     },
     applydarkmode() {
       this.$q.dark.set(this.usercfg.dark)
-      this.$q.dark.toggle()
     },
     setRole(val) {
       if (val.name !== this.currectRole.name) {
