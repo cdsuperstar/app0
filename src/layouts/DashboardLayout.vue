@@ -357,7 +357,6 @@ export default {
       this.lang = lang
     },
     setthemecolor(color) {
-      console.log('-----------')
       this.usercfg.theme = color
       this.applytheme(color)
       this.$router.app.$http

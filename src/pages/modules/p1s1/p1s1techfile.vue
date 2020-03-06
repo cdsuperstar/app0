@@ -673,7 +673,7 @@ export default {
         })
         .then(res => {
           if (res.data.success) {
-            console.log(res)
+            // console.log(res)
             this.getdata()
             this.$zglobal.showMessage(
               'positive',
