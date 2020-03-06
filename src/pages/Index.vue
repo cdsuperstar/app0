@@ -20,7 +20,7 @@ export default {
     ...mapState('zero', ['ZPermissions'])
   },
   created() {
-    this.$zglobal.showMessage('positive', 'top', '这是个消息的测试  !!')
+    this.$zglobal.showMessage('positive', 'top', '消息功能测试 :) ')
   },
   methods: {
     ...mapActions('zero', [
