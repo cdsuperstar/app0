@@ -4,7 +4,7 @@
     <q-btn color="primary" @click="$auth.logout()">
       {{ $t('auth.logout.logout') }}
     </q-btn>
-    <q-btn color="primary" @click="test1()">
+    <q-btn color="mycolor" @click="test1()">
       测试state
     </q-btn>
   </q-page>
@@ -12,7 +12,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-
+import { colors } from 'quasar'
 export default {
   name: 'PageIndex',
   components: {},
@@ -66,6 +66,7 @@ export default {
     },
     test1() {
       console.log(this.ZPermissions)
+      colors.setBrand('mycolor', '#00ff00')
     }
   }
 }
