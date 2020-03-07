@@ -17,6 +17,7 @@
             },
             { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
           ]"
+          @uploading="upfileing"
           @uploaded="upfilished"
         >
           <template v-slot:list="scope">
@@ -29,6 +30,7 @@
                 size="sm"
                 icon="close"
                 title="关闭此窗口"
+                :disable="fileupdone"
               />
             </div>
             <q-list separator>
@@ -96,6 +98,44 @@
         <q-separator />
         <q-card-section style="max-height: 80vh" class="scroll">
           <div class="row">
+            <div class="col-12 col-md-4" style="margin-right: 30px;">
+              <q-select
+                v-model.trim="data.type"
+                style="max-width: 150px;min-width: 150px;"
+                :options="filetypeoptions.values"
+                :label="this.$t('p1s1techfile.filetype')"
+                emit-value
+                map-options
+              />
+            </div>
+            <div class="col-12 col-md-4" style="margin-right: 10px;">
+              <q-input
+                v-model.trim="data.issue"
+                style="max-width: 150px"
+                :label="this.$t('p1s1techfile.issue')"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy
+                      ref="qDateProxy"
+                      transition-show="scale"
+                      transition-hide="scale"
+                    >
+                      <q-date
+                        v-model.trim="data.issue"
+                        color="orange"
+                        mask="YYYY-MM-DD"
+                        text-color="black"
+                        first-day-of-week="1"
+                        @input="() => $refs.qDateProxy.hide()"
+                      />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
+          <div class="row">
             <div class="col-12 col-md-5" style="margin-right: 16px;">
               <q-input
                 v-model.trim="data.name"
@@ -144,50 +184,14 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-12 col-md-3" style="margin-right: 30px;">
-              <q-select
-                v-model.trim="data.type"
-                style="max-width: 150px;min-width: 150px;"
-                :options="filetypeoptions.values"
-                :label="this.$t('p1s1techfile.filetype')"
-                emit-value
-                map-options
-              />
-            </div>
-            <div class="col-12 col-md-3" style="margin-right: 10px;">
+            <div class="col-12 col-md-10">
               <q-input
-                v-model.trim="data.issue"
-                style="max-width: 150px"
-                :label="this.$t('p1s1techfile.issue')"
-              >
-                <template v-slot:append>
-                  <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      ref="qDateProxy"
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
-                      <q-date
-                        v-model.trim="data.issue"
-                        color="orange"
-                        mask="YYYY-MM-DD"
-                        text-color="black"
-                        first-day-of-week="1"
-                        @input="() => $refs.qDateProxy.hide()"
-                      />
-                    </q-popup-proxy>
-                  </q-icon>
-                </template>
-              </q-input>
-            </div>
-            <div class="col-12 col-md-3">
-              <q-input
-                name="files"
-                style="max-width: 150px"
+                v-model.trim="data.files"
+                type="textarea"
                 readonly
                 :label="this.$t('p1s1techfile.files')"
               >
-                <template v-slot:append>
+                <template v-slot:prepend>
                   <q-icon
                     name="cloud_upload"
                     class="cursor-pointer"
@@ -293,6 +297,7 @@ export default {
     return {
       DaddArticle: false,
       DaddFiles: false,
+      fileupdone: false,
       quickFilter: null,
       gridOptions: null,
       gridApi: null,
@@ -369,12 +374,13 @@ export default {
         field: 'files',
         width: 80,
         minWidth: 80,
-        editable: false,
+        editable: true,
         filter: true,
         cellRendererFramework: agAttachmentCellRander,
         cellRendererParams: {
           down: this.downloadfile,
-          del: this.deletefile
+          del: this.deletefile,
+          add: this.addfile
         }
       },
       {
@@ -564,6 +570,7 @@ export default {
     // Dialog start
     addItems() {
       this.DaddArticle = true
+      this.data.files = []
     },
     aDDNewArticle() {
       this.$router.app.$http
@@ -617,6 +624,9 @@ export default {
             })
             .catch(e => {})
         } else {
+          if (this.data.files.length) {
+            val.files = this.data.files
+          }
           this.$router.app.$http
             .put('/p1/s1/p1s1techfile/' + val.id, val)
             .then(res => {
@@ -647,9 +657,12 @@ export default {
       this.DaddFiles = true
       this.data.files = []
     },
+    upfileing() {
+      this.fileupdone = true
+    },
     upfilished(info) {
       this.data.files.push(info.files[0].name)
-      // this.DaddFiles = false
+      this.fileupdone = false
     },
     downloadfile(rowid, filename) {
       this.$router.app.$http
@@ -665,8 +678,8 @@ export default {
         .catch(e => {})
       // end
     },
-    deletefile(rowid, filename) {
-      // console.log(rowid, filename, 'del')
+    deletefile(rowid, rowdata, filename) {
+      console.log(rowid, filename, 'del')
       this.$router.app.$http
         .post('p1/s1/p1s1techfile/deleteAttachFile/' + rowid, {
           filename: filename
@@ -674,7 +687,9 @@ export default {
         .then(res => {
           if (res.data.success) {
             // console.log(res)
-            this.getdata()
+            this.gridApi.updateRowData({
+              update: [Object.assign(rowdata, res.data.data)]
+            })
             this.$zglobal.showMessage(
               'positive',
               'center',
@@ -683,6 +698,9 @@ export default {
           }
         })
         .catch(e => {})
+    },
+    addfile(rowdata) {
+      this.uploadFile()
     }
   },
   validations: {

@@ -401,7 +401,7 @@ export default {
       return { backgroundColor: this.changerowcolor }
     },
     oncellValueChanged(params) {
-      // console.log(params.oldValue, params.newValue)
+      // console.log(params.oldValue,updateRowData params.newValue)
       if (params.oldValue === null) params.oldValue = ''
       if (params.newValue !== params.oldValue) {
         this.changerowcolor = '#ffa195'
