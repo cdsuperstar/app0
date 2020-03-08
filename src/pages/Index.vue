@@ -1,74 +1,78 @@
 <template>
-  <q-page class="flex flex-center">
-    {{ $auth.user().email }}
-    <q-btn color="primary" @click="$auth.logout()">
-      {{ $t('auth.logout.logout') }}
-    </q-btn>
-    <q-btn color="primary" @click="test1()">
-      测试state
-    </q-btn>
+  <q-page class="q-pa-lg row items-start q-gutter-md">
+    <q-card flat bordered class="chart-list">
+      <q-card-section>
+        <ve-histogram
+          :data="chartData"
+          :settings="chartSettings"
+        ></ve-histogram>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered class="chart-list">
+      <q-card-section>
+        <ve-histogram
+          :data="chartData"
+          :settings="chartSettings"
+        ></ve-histogram>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered class="chart-list">
+      <q-card-section>
+        <ve-histogram
+          :data="chartData"
+          :settings="chartSettings"
+        ></ve-histogram>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered class="chart-list">
+      <q-card-section>
+        <ve-histogram
+          :data="chartData"
+          :settings="chartSettings"
+        ></ve-histogram>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
-import { colors } from 'quasar'
+import VeHistogram from 'v-charts/lib/histogram.common.js'
+
 export default {
   name: 'PageIndex',
-  components: {},
-  computed: {
-    ...mapState('zero', ['ZPermissions'])
-  },
-  created() {
-    this.$zglobal.showMessage('positive', 'top', '消息功能测试 :) ')
-  },
-  methods: {
-    ...mapActions('zero', [
-      'getZModules',
-      'reqThePermission',
-      'getMyPermissions'
-    ]),
-    test() {
-      var preq = [
-        {
-          module: 'modules',
-          name: 'modules.bSetTree',
-          syscfg: {
-            bSetTree: { required: false, type: 'Boolean', default: null }
-          },
-          title: '是否可调整树'
-        },
-        {
-          module: 'modules',
-          name: 'modules.bSetTree1',
-          syscfg: {
-            bSetTree: { required: false, type: 'Boolean', default: null }
-          },
-          title: '是否可调整树'
-        },
-        {
-          module: 'modules',
-          name: 'modules.bSetTree2',
-          syscfg: {
-            bSetTree: { required: false, type: 'Boolean', default: null }
-          },
-          title: '是否可调整树'
-        }
-      ]
-
-      this.reqThePermission(preq)
-        .then(res => {
-          console.log('mPerms:', res)
-        })
-        .catch(e => {
-          console.log(e)
-        })
-    },
-    test1() {
-      // console.log(this.ZPermissions)
-      colors.setBrand('mycolor', '#00ff00')
-      console.log(this.$auth.user().usercfg, '+++')
+  components: { VeHistogram },
+  data() {
+    return {
+      chartSettings: null,
+      chartData: null
     }
-  }
+  },
+  computed: {},
+  created() {
+    this.chartSettings = {
+      axisSite: { right: ['下单率'] },
+      yAxisType: ['KMB', 'percent'],
+      yAxisName: ['数值', '比率']
+    }
+    this.chartData = {
+      columns: ['日期', '访问用户', '下单用户', '下单率'],
+      rows: [
+        { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+        { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+        { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+        { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+        { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+        { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
+      ]
+    }
+  },
+  methods: {}
 }
 </script>
+<style scoped>
+.chart-list {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 450px;
+}
+</style>

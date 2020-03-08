@@ -227,7 +227,9 @@
           class="userprile-work"
           flat
           square
-          style="border-left: 1px dashed #b5b5b5;"
+          v-if="
+            $q.screen.lt.sm ? (style = 'border-left: 1px dashed #b5b5b5;') : ''
+          "
         >
           <q-card-section class="text-subitle2 text-left">
             <q-item style="padding: 4px 4px;">

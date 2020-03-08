@@ -208,6 +208,18 @@
     </q-dialog>
     <div class="text-h5 q-ma-md text-teal-6">
       {{ $t('p1s1techfile.header') }}
+
+      <q-banner
+        v-if="currentrowdataid"
+        dense
+        rounded
+        class="text-h6 bg-textinfo"
+      >
+        <q-icon name="warning" color="negative" siae="10px" />
+        ID【<font class="text-warning">{{ currentrowdataid }}</font>
+        】 待保存文件：
+        <font class="text-warning">{{ data.files }}</font>
+      </q-banner>
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -298,6 +310,7 @@ export default {
       DaddArticle: false,
       DaddFiles: false,
       fileupdone: false,
+      currentrowdataid: false,
       quickFilter: null,
       gridOptions: null,
       gridApi: null,
@@ -651,6 +664,7 @@ export default {
             .catch(e => {})
         }
       })
+      this.currentrowdataid = false
     },
     // 文件上传
     uploadFile() {
@@ -700,6 +714,7 @@ export default {
         .catch(e => {})
     },
     addfile(rowdata) {
+      this.currentrowdataid = rowdata.data.id
       this.uploadFile()
     }
   },
