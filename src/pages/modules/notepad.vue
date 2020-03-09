@@ -1,5 +1,5 @@
 <template>
-  <button @click="send('TOGGLE')">
+  <button @click="send('mye')">
     {{ current.matches('inactive') ? 'Off' : 'On' }}
   </button>
 </template>
@@ -13,10 +13,13 @@ const toggleMachine = Machine({
   initial: 'inactive',
   states: {
     inactive: {
-      on: { TOGGLE: 'active' }
+      on: { mye: 'active' }
     },
     active: {
-      on: { TOGGLE: 'inactive' }
+      on: { mye: 'pending' }
+    },
+    pending: {
+      on: { mye: 'inactive' }
     }
   }
 })
@@ -26,7 +29,7 @@ export default {
   data() {
     return {
       // Interpret machine and store it in data
-      toggleService: interpret(toggleMachine),
+      toggleService: interpret(toggleMachine, { devTools: true }),
 
       // Start with machine's initial state
       current: toggleMachine.initialState
