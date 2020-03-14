@@ -8,7 +8,7 @@
           >
         </q-toolbar-title>
         <q-btn
-          outline
+          flat
           color="secondary"
           icon="save"
           :label="this.$t('buttons.confirm')"
@@ -128,7 +128,7 @@ export default {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
 
-    // 返回菜单
+    // 返回A的菜单
     const tmpd = JSON.parse(
       JSON.stringify(this.ZPermissions.moduletree[0].children)
     )
@@ -163,13 +163,17 @@ export default {
       var parr = this.selectdata.map(({ id }) => id)
       parr.reverse()
       this.usercfg.quickapplication = parr
-      console.log(this.usercfg, '+++')
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
           usercfg: JSON.stringify(this.usercfg)
         })
-        .then(res => {})
-      console.log('save...', this.usercfg)
+        .then(res => {
+          this.$zglobal.showMessage(
+            'positive',
+            'center',
+            this.$t('comapplication.addmodulesuccess')
+          )
+        })
     },
     addCommonapplication(n) {
       if (n && this.selectdata.indexOf(n) === -1) {

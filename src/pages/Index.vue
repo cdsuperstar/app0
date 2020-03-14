@@ -1,6 +1,61 @@
 <template>
   <q-page class="q-pa-lg row items-start q-gutter-md">
     <q-card flat bordered class="chart-list">
+      <q-card-section
+        class="row items-start q-gutter-lg"
+        style="min-height: 60px;padding: 8px;"
+      >
+        <q-card
+          v-for="m in comapplicationdata"
+          :key="m.id"
+          flat
+          style="cursor: pointer"
+          @click="linktoURL(m.url)"
+        >
+          <q-card-section horizontal align="center">
+            <q-list padding>
+              <q-item-section
+                class="rounded-borders bg-primary"
+                style="width: 3rem;height: 3rem;"
+              >
+                <q-icon
+                  :name="m.icon"
+                  color="white"
+                  style="font-size: 2rem;padding: 5px;"
+                ></q-icon>
+              </q-item-section>
+              <q-item-section style="margin-left: 1px;">
+                {{ m.title }}
+              </q-item-section>
+            </q-list>
+          </q-card-section>
+        </q-card>
+        <q-card
+          flat
+          style="cursor: pointer"
+          @click="linktoURL('comapplication')"
+        >
+          <q-card-section horizontal align="center">
+            <q-list padding>
+              <q-item-section
+                class="rounded-borders bg-primary"
+                style="width: 3rem;height: 3rem;"
+              >
+                <q-icon
+                  name="add"
+                  color="white"
+                  style="font-size: 2rem;padding: 5px;"
+                ></q-icon>
+              </q-item-section>
+              <q-item-section style="margin-left: 1px;">
+                {{ $t('comapplication.addmodule') }}
+              </q-item-section>
+            </q-list>
+          </q-card-section>
+        </q-card>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered class="chart-list">
       <q-card-section>
         <ve-map :data="MapchartData" :settings="MapchartSettings"></ve-map>
       </q-card-section>
@@ -27,6 +82,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import VeHistogram from 'v-charts/lib/histogram.common.js'
 import VePie from 'v-charts/lib/pie.common.js'
 import VeMap from 'v-charts/lib/map.common.js'
@@ -37,6 +94,8 @@ export default {
   components: { VeHistogram, VePie, VeMap, VeLine },
   data() {
     return {
+      usercfg: { quickapplication: [1] },
+      comapplicationdata: null,
       HistogramchartSettings: null,
       HistogramchartData: null,
       PiechartSettings: null,
@@ -47,8 +106,15 @@ export default {
       LinechartData: null
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
+  },
   created() {
+    // 导入usercfg常用应用列表
+    if (this.$auth.user().usercfg) {
+      this.usercfg = JSON.parse(this.$auth.user().usercfg)
+    }
+
     this.HistogramchartSettings = {
       axisSite: { right: ['下单率'] },
       yAxisType: ['KMB', 'percent'],
@@ -117,13 +183,37 @@ export default {
       ]
     }
   },
-  methods: {}
+  mounted() {
+    // 返回菜单
+    const tmpa = JSON.parse(
+      JSON.stringify(this.ZPermissions.moduletree[0].children)
+    )
+    const tmpd = this.$zglobal.flatten(tmpa)
+    const resdata = []
+    Object.values(tmpd).forEach(val => {
+      if (
+        val.ismenu === 'A' &&
+        this.usercfg.quickapplication.indexOf(val.id) !== -1 &&
+        val.url
+      ) {
+        resdata.push(val)
+      }
+    })
+    console.log(resdata, '++++++')
+    this.comapplicationdata = resdata
+    // 导入结束
+  },
+  methods: {
+    linktoURL(url) {
+      location.href = '#/user/' + url
+    }
+  }
 }
 </script>
 <style scoped>
 .chart-list {
   margin: 20px auto;
-  width: 100%;
-  max-width: 450px;
+  width: 450px;
+  height: 400px;
 }
 </style>

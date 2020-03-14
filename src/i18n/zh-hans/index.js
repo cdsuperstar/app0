@@ -142,6 +142,11 @@ export default {
   history: {
     title: '历史记录'
   },
+  comapplication: {
+    header: '常用应用',
+    addmodule: '添加应用',
+    addmodulesuccess: '设置常用应用成功！（下次登陆生效）'
+  },
   modules: {
     header: '模块管理',
     editmodeltree: '模块树编辑',

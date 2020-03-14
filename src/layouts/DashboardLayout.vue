@@ -26,24 +26,24 @@
           stretch
           flat
           :label="
-            this.currectRole === undefined
+            currectRole === undefined
               ? this.$t('roles.rolelist')
-              : this.currectRole.title
+              : currectRole.title
           "
           :title="this.$t('roles.rolelistheader')"
         >
           <q-list dense>
             <q-item
               v-for="ro in MyRoleList"
+              :key="ro.id"
+              v-close-popup
+              clickable
               style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
               :class="
                 ro.name == ZPermissions.currectrole.name
                   ? 'text-primary'
                   : 'text-grey-7'
               "
-              v-close-popup
-              clickable
-              :key="ro.id"
               @click="setRole(ro)"
             >
               <q-item-section avatar style="min-width:30px;">
@@ -61,9 +61,7 @@
           stretch
           flat
           :label="
-            this.lang.label === undefined
-              ? this.$t('langs.header')
-              : this.lang.label
+            lang.label === undefined ? this.$t('langs.header') : lang.label
           "
         >
           <q-list dense>
@@ -74,11 +72,11 @@
             </q-item-label>
             <q-item
               v-for="n in langs"
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
-              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
+              :key="n.value"
               v-close-popup
               clickable
-              :key="n.value"
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               @click="setlanguage(n)"
             >
               <q-item-section avatar style="min-width:30px;">
@@ -138,11 +136,11 @@
           >
             <q-item
               v-for="n in langs"
+              :key="n.value"
               v-close-popup
               v-ripple
               clickable
               style="border-bottom: 1px dashed #b5b5b5;"
-              :key="n.value"
               :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               @click="setlanguage(n)"
             >
@@ -172,11 +170,11 @@
             </q-item>
             <q-item
               v-for="n in themeoptions"
+              :key="n.value"
               v-close-popup
               v-ripple
               clickable
               style="border-bottom: 1px dashed #b5b5b5;"
-              :key="n.value"
               :class="
                 usercfg.theme === n.value ? 'text-primary' : 'text-grey-7'
               "
