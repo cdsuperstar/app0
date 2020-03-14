@@ -38,11 +38,11 @@
           <q-card-section horizontal align="center">
             <q-list padding>
               <q-item-section
-                class="rounded-borders bg-primary"
+                class="rounded-borders bg-secondary"
                 style="width: 3rem;height: 3rem;"
               >
                 <q-icon
-                  name="add"
+                  name="post_add"
                   color="white"
                   style="font-size: 2rem;padding: 5px;"
                 ></q-icon>
@@ -67,6 +67,14 @@
     </q-card>
     <q-card flat bordered class="chart-list">
       <q-card-section>
+        <ve-radar
+          :data="VeRadarcharData"
+          :settings="VeRadarchartSettings"
+        ></ve-radar>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered class="chart-list">
+      <q-card-section>
         <ve-line :data="LinechartData" :settings="LinechartSettings"></ve-line>
       </q-card-section>
     </q-card>
@@ -84,14 +92,15 @@
 <script>
 import { mapState } from 'vuex'
 
-import VeHistogram from 'v-charts/lib/histogram.common.js'
+import VeRadar from 'v-charts/lib/radar.common.js'
 import VePie from 'v-charts/lib/pie.common.js'
 import VeMap from 'v-charts/lib/map.common.js'
+import VeHeatmap from 'v-charts/lib/heatmap.common.js'
 import VeLine from 'v-charts/lib/line.common.js'
 
 export default {
   name: 'PageIndex',
-  components: { VeHistogram, VePie, VeMap, VeLine },
+  components: { VeHistogram, VePie, VeMap, VeLine, VeRadar },
   data() {
     return {
       usercfg: { quickapplication: [1] },
@@ -103,7 +112,9 @@ export default {
       MapchartSettings: null,
       MapchartData: null,
       LinechartSettings: null,
-      LinechartData: null
+      LinechartData: null,
+      VeRadarcharData: null,
+      VeRadarchartSettings: null
     }
   },
   computed: {
@@ -182,6 +193,25 @@ export default {
         { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
       ]
     }
+    this.VeRadarchartSettings = {
+      labelMap: {
+        日期: 'date',
+        访问用户: 'PV',
+        下单用户: 'Order',
+        下单率: 'orderRate'
+      }
+    }
+    this.VeRadarcharData = {
+      columns: ['日期', '访问用户', '下单用户', '下单率'],
+      rows: [
+        { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+        { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+        { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
+        { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
+        { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
+        { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
+      ]
+    }
   },
   mounted() {
     // 返回菜单
@@ -199,7 +229,6 @@ export default {
         resdata.push(val)
       }
     })
-    console.log(resdata, '++++++')
     this.comapplicationdata = resdata
     // 导入结束
   },
