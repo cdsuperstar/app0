@@ -124,7 +124,7 @@ export default {
   },
   created() {
     // 得到初始数据
-    if (this.$auth.user().usercfg) {
+    if (this.$auth.user().usercfg?.quickapplication !== undefined) {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
 

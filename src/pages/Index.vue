@@ -216,7 +216,7 @@ export default {
   mounted() {
     // 返回菜单
     const tmpa = JSON.parse(
-      JSON.stringify(this.ZPermissions.moduletree[0].children)
+      JSON.stringify(this.ZPermissions.moduletree[0]?.children)
     )
     const tmpd = this.$zglobal.flatten(tmpa)
     const resdata = []

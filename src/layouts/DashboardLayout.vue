@@ -317,7 +317,7 @@ export default {
   },
   mounted() {
     this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
-    if (this.$auth.user().usercfg) {
+    if (this.$auth.user().usercfg?.theme !== undefined) {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
     this.applytheme(this.usercfg.theme)
