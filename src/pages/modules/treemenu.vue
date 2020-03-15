@@ -30,29 +30,38 @@
         :depth="depth + 1"
       ></treemenu>
     </q-expansion-item>
-
-    <q-item
-      v-if="children.children.length == 0"
-      :to="
-        children.url === '' || children.url === null
-          ? ''
-          : { name: children.name }
-      "
-      style="border-bottom: 1px dashed #ebebeb;"
-      :caption="children.tip"
-      :title="children.tip"
+    <draggable
+      class="dragArea list-group"
+      :list="[children]"
+      :group="{ name: 'dragmod', pull: 'clone', put: false }"
     >
-      <q-item-section avatar>
-        <q-icon :name="children.icon" />
-      </q-item-section>
-      <q-item-section>{{ children.title }}</q-item-section>
-    </q-item>
+      <div class="list-group-item" :key="children.id">
+        <q-item
+          v-if="children.children.length == 0"
+          :to="
+            children.url === '' || children.url === null
+              ? ''
+              : { name: children.name }
+          "
+          style="border-bottom: 1px dashed #ebebeb;"
+          :caption="children.tip"
+          :title="children.tip"
+        >
+          <q-item-section avatar>
+            <q-icon :name="children.icon" />
+          </q-item-section>
+          <q-item-section>{{ children.title }}</q-item-section>
+        </q-item>
+      </div>
+    </draggable>
   </div>
 </template>
 <script>
+import draggable from 'vuedraggable'
 export default {
   name: 'Treemenu',
   props: ['children', 'depth'],
+  components: { draggable },
   data() {
     return {
       epandstate: false
