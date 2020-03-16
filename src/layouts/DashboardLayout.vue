@@ -107,7 +107,13 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="left" side="left" bordered :width="leftdrawer">
+    <q-drawer
+      v-model="left"
+      side="left"
+      bordered
+      behavior="desktop"
+      :width="leftdrawer"
+    >
       <!-- drawer content -->
       <q-list bordered link class="rounded-borders">
         <div v-for="menus in menutree" :key="menus.id">

@@ -1,58 +1,76 @@
 <template>
   <q-page class="q-pa-lg row items-start q-gutter-md">
     <q-card flat bordered class="chart-list">
+      <q-toolbar style="border-bottom: 1px dashed #ebebeb;">
+        <q-toolbar-title>
+          <span class="text-subtitle1 text-weight-bold">
+            {{ $t('comapplication.header') }}</span
+          >
+        </q-toolbar-title>
+        <q-space />
+        <draggable
+          style="width: 2rem;height: 2rem;"
+          filter="ignore-elements"
+          :list="droplist"
+          group="dragmod"
+        >
+          <q-card flat>
+            <q-card-section horizontal align="center">
+              <q-list padding>
+                <q-item-section
+                  class="rounded-borders"
+                  style="width: 2rem;height: 2rem;border:1px dashed #ebebeb;"
+                >
+                  <q-icon
+                    name="delete_sweep"
+                    color="blue-grey-3"
+                    style="font-size: 2rem;padding: 5px;"
+                  ></q-icon>
+                </q-item-section>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </draggable>
+      </q-toolbar>
       <q-card-section
-        class="row items-start q-gutter-lg"
-        style="min-height: 60px;padding: 8px;"
+        class="row items-start"
+        style="min-height: 60px;max-height:335px;padding: 8px;overflow-y:auto"
       >
-        <q-card
-          v-for="m in comapplicationdata"
-          :key="m.id"
-          flat
-          style="cursor: pointer"
-          @click="linktoURL(m.url)"
+        <draggable
+          class="row"
+          style="width:350px;min-height:83px;margin-top:5px;"
+          :list="modulelist"
+          group="dragmod"
+          @add="dataunique"
+          @remove="delmodu"
         >
-          <q-card-section horizontal align="center">
-            <q-list padding>
-              <q-item-section
-                class="rounded-borders bg-primary"
-                style="width: 3rem;height: 3rem;"
-              >
-                <q-icon
-                  :name="m.icon"
-                  color="white"
-                  style="font-size: 2rem;padding: 5px;"
-                ></q-icon>
-              </q-item-section>
-              <q-item-section style="margin-left: 1px;">
-                {{ m.title }}
-              </q-item-section>
-            </q-list>
-          </q-card-section>
-        </q-card>
-        <q-card
-          flat
-          style="cursor: pointer"
-          @click="linktoURL('comapplication')"
-        >
-          <q-card-section horizontal align="center">
-            <q-list padding>
-              <q-item-section
-                class="rounded-borders bg-secondary"
-                style="width: 3rem;height: 3rem;"
-              >
-                <q-icon
-                  name="post_add"
-                  color="white"
-                  style="font-size: 2rem;padding: 5px;"
-                ></q-icon>
-              </q-item-section>
-              <q-item-section style="margin-left: 1px;">
-                {{ $t('comapplication.addmodule') }}
-              </q-item-section>
-            </q-list>
-          </q-card-section>
-        </q-card>
+          <q-card
+            v-for="element in modulelist"
+            :key="element.id"
+            flat
+            class="col-3"
+            style="cursor: pointer;"
+            @click="linktoURL(element.url)"
+          >
+            <q-card-section horizontal align="center">
+              <q-list padding>
+                <q-item-section
+                  class="rounded-borders bg-primary"
+                  style="width: 3rem;height: 3rem;"
+                >
+                  <q-icon
+                    :name="element.icon"
+                    color="white"
+                    style="font-size: 2rem;padding: 5px;"
+                  ></q-icon>
+                </q-item-section>
+                <q-item-section style="margin-left: 1px;font-size: xx-small">
+                  {{ element.title }}
+                </q-item-section>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </draggable>
       </q-card-section>
     </q-card>
     <q-card flat bordered class="chart-list">
@@ -91,6 +109,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import draggable from 'vuedraggable'
 
 import VeRadar from 'v-charts/lib/radar.common.js'
 import VePie from 'v-charts/lib/pie.common.js'
@@ -100,11 +119,12 @@ import VeLine from 'v-charts/lib/line.common.js'
 
 export default {
   name: 'PageIndex',
-  components: { VeHistogram, VePie, VeMap, VeLine, VeRadar },
+  components: { VeHistogram, VePie, VeMap, VeLine, VeRadar, draggable },
   data() {
     return {
-      usercfg: { quickapplication: [1] },
-      comapplicationdata: null,
+      usercfg: { quickapplication: [] },
+      modulelist: [],
+      droplist: [],
       HistogramchartSettings: null,
       HistogramchartData: null,
       PiechartSettings: null,
@@ -122,10 +142,11 @@ export default {
   },
   created() {
     // 导入usercfg常用应用列表
-    if (this.$auth.user().usercfg) {
+    if (this.$auth.user().usercfg?.quickapplication !== undefined) {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
-
+    this.modulelist = this.usercfg.quickapplication
+    console.log(this.modulelist, '==========')
     this.HistogramchartSettings = {
       axisSite: { right: ['下单率'] },
       yAxisType: ['KMB', 'percent'],
@@ -215,26 +236,31 @@ export default {
   },
   mounted() {
     // 返回菜单
-    const tmpa = JSON.parse(
-      JSON.stringify(this.ZPermissions.moduletree[0]?.children)
-    )
-    const tmpd = this.$zglobal.flatten(tmpa)
-    const resdata = []
-    Object.values(tmpd).forEach(val => {
-      if (
-        val.ismenu === 'A' &&
-        this.usercfg.quickapplication.indexOf(val.id) !== -1 &&
-        val.url
-      ) {
-        resdata.push(val)
-      }
-    })
-    this.comapplicationdata = resdata
-    // 导入结束
   },
   methods: {
     linktoURL(url) {
       location.href = '#/user/' + url
+    },
+    dataunique() {
+      const temp = []
+      this.modulelist = this.modulelist.reduce((prev, curv) => {
+        if (temp[curv.id]) {
+        } else {
+          temp[curv.id] = true
+          prev.push(curv)
+        }
+        return prev
+      }, [])
+      // 写入数据库
+      this.usercfg.quickapplication = this.modulelist
+      this.$router.app.$http
+        .post('/zero/setMyUsercfg/', {
+          usercfg: JSON.stringify(this.usercfg)
+        })
+        .then(res => {})
+    },
+    delmodu(evt) {
+      console.log(this.droplist, '++++++++++del')
     }
   }
 }
@@ -242,7 +268,7 @@ export default {
 <style scoped>
 .chart-list {
   margin: 20px auto;
-  width: 450px;
+  width: 350px;
   height: 400px;
 }
 </style>

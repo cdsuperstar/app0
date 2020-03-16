@@ -163,6 +163,7 @@ export default {
       var parr = this.selectdata.map(({ id }) => id)
       parr.reverse()
       this.usercfg.quickapplication = parr
+      this.$auth.user().usercfg.quickapplication = parr
       console.log(this.usercfg, '+++')
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
