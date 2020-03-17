@@ -41,7 +41,7 @@
           style="width:350px;min-height:83px;margin-top:5px;"
           :list="modulelist"
           group="dragmod"
-          @add="dataunique"
+          @change="dataunique"
           @remove="delmodu"
         >
           <q-card
@@ -123,7 +123,6 @@ export default {
   data() {
     return {
       usercfg: { quickapplication: [] },
-      modulelist: [],
       droplist: [],
       HistogramchartSettings: null,
       HistogramchartData: null,
@@ -136,9 +135,6 @@ export default {
       VeRadarcharData: null,
       VeRadarchartSettings: null
     }
-  },
-  computed: {
-    ...mapState('zero', ['ZPermissions'])
   },
   created() {
     this.HistogramchartSettings = {
@@ -232,18 +228,16 @@ export default {
     // 返回菜单
     if (this.$auth.user().usercfg) {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
-      if (this.usercfg.quickapplication) {
-        this.modulelist = this.usercfg.quickapplication
-      }
     }
   },
   beforeDestroy() {
     // 写入数据库
     if (this.$auth.check()) {
-      this.usercfg.quickapplication = this.modulelist
+      const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+      tmpUsercfg.quickapplication = this.usercfg.quickapplication
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
-          usercfg: JSON.stringify(this.usercfg)
+          usercfg: JSON.stringify(tmpUsercfg)
         })
         .then(res => {
           if (res.data.success) {
@@ -252,20 +246,26 @@ export default {
         })
     }
   },
+  computed: {
+    ...mapState('zero', ['ZPermissions']),
+    modulelist: {
+      get: function() {
+        return this.usercfg.quickapplication
+      },
+      set: function(value) {}
+    }
+  },
   methods: {
     linktoURL(url) {
       location.href = '#/user/' + url
     },
-    dataunique() {
-      const temp = []
-      this.modulelist = this.modulelist.reduce((prev, curv) => {
-        if (temp[curv.id]) {
-        } else {
-          temp[curv.id] = true
-          prev.push(curv)
+    dataunique(e) {
+      if (e.added) {
+        const obj = this.modulelist.filter(obj => obj.id === e.added.element.id)
+        if (obj.length > 1) {
+          this.modulelist.splice(e.added.newIndex, 1)
         }
-        return prev
-      }, [])
+      }
     },
     delmodu(evt) {
       // console.log(this.droplist, '++++++++++del')
