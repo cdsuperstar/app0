@@ -239,16 +239,18 @@ export default {
   },
   beforeDestroy() {
     // 写入数据库
-    this.usercfg.quickapplication = this.modulelist
-    this.$router.app.$http
-      .post('/zero/setMyUsercfg/', {
-        usercfg: JSON.stringify(this.usercfg)
-      })
-      .then(res => {
-        if (res.data.success) {
-          this.$auth.user().usercfg = res.data.data.usercfg
-        }
-      })
+    if (this.$auth.check()) {
+      this.usercfg.quickapplication = this.modulelist
+      this.$router.app.$http
+        .post('/zero/setMyUsercfg/', {
+          usercfg: JSON.stringify(this.usercfg)
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.$auth.user().usercfg = res.data.data.usercfg
+          }
+        })
+    }
   },
   methods: {
     linktoURL(url) {
