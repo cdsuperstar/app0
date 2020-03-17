@@ -142,8 +142,10 @@ export default {
   },
   created() {
     // 导入usercfg常用应用列表
-    if (this.$auth.user().usercfg?.quickapplication !== undefined) {
-      this.usercfg = JSON.parse(this.$auth.user().usercfg)
+    if (this.$auth.user().usercfg) {
+      if ('quickapplication' in JSON.parse(this.$auth.user().usercfg)) {
+        this.usercfg = JSON.parse(this.$auth.user().usercfg)
+      }
     }
     this.modulelist = this.usercfg.quickapplication
     console.log(this.modulelist, '==========')
@@ -251,6 +253,7 @@ export default {
         }
         return prev
       }, [])
+      this.$auth.user().usercfg.quickapplication = this.modulelist
       // 写入数据库
       this.usercfg.quickapplication = this.modulelist
       this.$router.app.$http

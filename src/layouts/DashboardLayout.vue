@@ -323,9 +323,12 @@ export default {
   },
   mounted() {
     this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
-    if (this.$auth.user().usercfg?.theme !== undefined) {
-      this.usercfg = JSON.parse(this.$auth.user().usercfg)
+    if (this.$auth.user().usercfg) {
+      if ('theme' in JSON.parse(this.$auth.user().usercfg)) {
+        this.usercfg = JSON.parse(this.$auth.user().usercfg)
+      }
     }
+
     this.applytheme(this.usercfg.theme)
     this.applydarkmode()
     this.getMyPermissions({
@@ -361,6 +364,7 @@ export default {
       this.lang = lang
     },
     setthemecolor(color) {
+      this.$auth.user().usercfg.theme = color
       this.usercfg.theme = color
       this.applytheme(color)
       this.$router.app.$http
