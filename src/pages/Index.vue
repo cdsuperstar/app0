@@ -141,14 +141,6 @@ export default {
     ...mapState('zero', ['ZPermissions'])
   },
   created() {
-    // 导入usercfg常用应用列表
-    if (this.$auth.user().usercfg) {
-      if ('quickapplication' in JSON.parse(this.$auth.user().usercfg)) {
-        this.usercfg = JSON.parse(this.$auth.user().usercfg)
-      }
-    }
-    this.modulelist = this.usercfg.quickapplication
-    console.log(this.modulelist, '==========')
     this.HistogramchartSettings = {
       axisSite: { right: ['下单率'] },
       yAxisType: ['KMB', 'percent'],
@@ -238,6 +230,25 @@ export default {
   },
   mounted() {
     // 返回菜单
+    if (this.$auth.user().usercfg) {
+      this.usercfg = JSON.parse(this.$auth.user().usercfg)
+      if (this.usercfg.quickapplication) {
+        this.modulelist = this.usercfg.quickapplication
+      }
+    }
+  },
+  beforeDestroy() {
+    // 写入数据库
+    this.usercfg.quickapplication = this.modulelist
+    this.$router.app.$http
+      .post('/zero/setMyUsercfg/', {
+        usercfg: JSON.stringify(this.usercfg)
+      })
+      .then(res => {
+        if (res.data.success) {
+          this.$auth.user().usercfg = res.data.data.usercfg
+        }
+      })
   },
   methods: {
     linktoURL(url) {
@@ -253,17 +264,9 @@ export default {
         }
         return prev
       }, [])
-      this.$auth.user().usercfg.quickapplication = this.modulelist
-      // 写入数据库
-      this.usercfg.quickapplication = this.modulelist
-      this.$router.app.$http
-        .post('/zero/setMyUsercfg/', {
-          usercfg: JSON.stringify(this.usercfg)
-        })
-        .then(res => {})
     },
     delmodu(evt) {
-      console.log(this.droplist, '++++++++++del')
+      // console.log(this.droplist, '++++++++++del')
     }
   }
 }
