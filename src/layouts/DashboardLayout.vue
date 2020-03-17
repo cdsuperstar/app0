@@ -367,7 +367,11 @@ export default {
         .post('/zero/setMyUsercfg/', {
           usercfg: JSON.stringify(this.usercfg)
         })
-        .then(res => {})
+        .then(res => {
+          if (res.data.success) {
+            this.$auth.user().usercfg = res.data.data.usercfg
+          }
+        })
     },
     applytheme(color) {
       this.$zglobal.colors[color].forEach(item => {
