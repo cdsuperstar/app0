@@ -234,7 +234,7 @@ export default {
     // 写入数据库
     if (this.$auth.check()) {
       const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      tmpUsercfg.quickapplication = this.usercfg.quickapplication
+      tmpUsercfg.quickapplication = this.usercfg?.quickapplication
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
           usercfg: JSON.stringify(tmpUsercfg)
@@ -250,7 +250,7 @@ export default {
     ...mapState('zero', ['ZPermissions']),
     modulelist: {
       get: function() {
-        return this.usercfg.quickapplication
+        return this.usercfg?.quickapplication
       },
       set: function(value) {}
     }
