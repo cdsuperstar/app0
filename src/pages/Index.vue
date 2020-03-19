@@ -250,7 +250,15 @@ export default {
     ...mapState('zero', ['ZPermissions']),
     modulelist: {
       get: function() {
-        return this.usercfg?.quickapplication
+        let tmpList = []
+        if (this.usercfg?.quickapplication) {
+          tmpList = this.usercfg?.quickapplication.filter(
+            obj =>
+              this.ZPermissions.modules.filter(ob => ob.id === obj.id)
+                .length === 1
+          )
+        }
+        return tmpList
       },
       set: function(value) {}
     }
