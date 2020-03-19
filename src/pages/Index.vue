@@ -123,6 +123,7 @@ export default {
   data() {
     return {
       usercfg: { quickapplication: [] },
+      modlist: [],
       droplist: [],
       HistogramchartSettings: null,
       HistogramchartData: null,
@@ -230,6 +231,22 @@ export default {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
   },
+  computed: {
+    ...mapState('zero', ['ZPermissions']),
+    modulelist: {
+      get: function() {
+        // return this.usercfg?.quickapplication.filter(
+        //   obj =>
+        //     this.ZPermissions.modules.filter(ob => ob.id === obj.id).length ===
+        //     1
+        // )
+        return this.usercfg?.quickapplication
+      },
+      set: function(value) {
+        console.log(value)
+      }
+    }
+  },
   beforeDestroy() {
     // 写入数据库
     if (this.$auth.check()) {
@@ -244,23 +261,6 @@ export default {
             this.$auth.user().usercfg = res.data.data.usercfg
           }
         })
-    }
-  },
-  computed: {
-    ...mapState('zero', ['ZPermissions']),
-    modulelist: {
-      get: function() {
-        let tmpList = []
-        if (this.usercfg?.quickapplication) {
-          tmpList = this.usercfg?.quickapplication.filter(
-            obj =>
-              this.ZPermissions.modules.filter(ob => ob.id === obj.id)
-                .length === 1
-          )
-        }
-        return tmpList
-      },
-      set: function(value) {}
     }
   },
   methods: {
