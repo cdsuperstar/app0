@@ -137,6 +137,22 @@ export default {
       VeRadarchartSettings: null
     }
   },
+  computed: {
+    ...mapState('zero', ['ZPermissions']),
+    modulelist: {
+      get: function() {
+        return this.usercfg?.quickapplication.filter(
+          obj =>
+            this.ZPermissions.modules.filter(ob => ob.id === obj.id).length ===
+            1
+        )
+        // return this.usercfg?.quickapplication
+      },
+      set: function(value) {
+        console.log(value)
+      }
+    }
+  },
   created() {
     this.HistogramchartSettings = {
       axisSite: { right: ['下单率'] },
@@ -231,27 +247,11 @@ export default {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
   },
-  computed: {
-    ...mapState('zero', ['ZPermissions']),
-    modulelist: {
-      get: function() {
-        // return this.usercfg?.quickapplication.filter(
-        //   obj =>
-        //     this.ZPermissions.modules.filter(ob => ob.id === obj.id).length ===
-        //     1
-        // )
-        return this.usercfg?.quickapplication
-      },
-      set: function(value) {
-        console.log(value)
-      }
-    }
-  },
   beforeDestroy() {
     // 写入数据库
     if (this.$auth.check()) {
       const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      tmpUsercfg.quickapplication = this.usercfg?.quickapplication
+      tmpUsercfg.quickapplication = this.modulelist
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
           usercfg: JSON.stringify(tmpUsercfg)
@@ -272,6 +272,8 @@ export default {
         const obj = this.modulelist.filter(obj => obj.id === e.added.element.id)
         if (obj.length > 1) {
           this.modulelist.splice(e.added.newIndex, 1)
+        } else {
+          this.usercfg.quickapplication.push(e.added.element)
         }
       }
     },
