@@ -24,11 +24,11 @@
               <q-btn
                 flat
                 round
+                v-close-popup
                 color="primary"
                 size="sm"
                 icon="close"
                 title="关闭此窗口"
-                v-close-popup
               />
             </div>
             <q-list separator>

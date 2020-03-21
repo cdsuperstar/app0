@@ -127,8 +127,12 @@ export default {
         value: 'Bright'
       },
       {
-        label: '高尚、自然、安稳',
-        value: 'noble'
+        label: '简单、洁净、进步',
+        value: 'simple'
+      },
+      {
+        label: '华丽、花哨、女性化',
+        value: 'fancy'
       }
     ]
   },
@@ -150,7 +154,20 @@ export default {
   modules: {
     header: '模块管理',
     editmodeltree: '模块树编辑',
-    searchall: '全局搜索值'
+    searchall: '全局搜索值',
+    name: '模块名',
+    title: '标题',
+    icon: '图标',
+    ismenu: '类型',
+    url: '路径名',
+    created_at: '创建时间',
+    updated_at: '更新时间',
+    badd: '是否有添加功能',
+    bDelete: '是否有删除功能',
+    bmodify: '是否有修改功能',
+    bexport: '是否有导出功能',
+    bimport: '是否有导入功能',
+    bSetTree: '是否有调整树功能'
   },
   roles: {
     header: '角色管理',

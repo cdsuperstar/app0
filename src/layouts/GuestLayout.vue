@@ -15,9 +15,7 @@
           stretch
           flat
           :label="
-            this.lang.label === undefined
-              ? this.$t('langs.header')
-              : this.lang.label
+            lang.label === undefined ? this.$t('langs.header') : lang.label
           "
         >
           <q-list dense>
@@ -28,11 +26,11 @@
             </q-item-label>
             <q-item
               v-for="n in langs"
+              :key="n.value"
               style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
               :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               v-close-popup
               clickable
-              :key="n.value"
               @click="setlanguage(n)"
             >
               <q-item-section avatar style="min-width:30px;">

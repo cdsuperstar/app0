@@ -361,12 +361,10 @@ export default {
       this.lang = lang
     },
     setthemecolor(color) {
-      const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      tmpUsercfg.theme = color
-      tmpUsercfg.dark = this.usercfg.dark
+      this.usercfg.theme = color
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
-          usercfg: JSON.stringify(tmpUsercfg)
+          usercfg: JSON.stringify(this.usercfg)
         })
         .then(res => {
           if (res.data.success) {

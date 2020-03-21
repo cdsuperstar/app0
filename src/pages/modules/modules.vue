@@ -41,15 +41,16 @@
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
+        v-if="mPermissions['modules.badd']"
         color="addbtn"
-        text-color="text-white"
+        text-color="white"
         class="q-ma-xs"
         icon="post_add"
         :label="this.$t('buttons.add')"
         @click="addItems()"
       />
       <q-btn
-        v-if="this.mPermissions['modules.bDelete']"
+        v-if="mPermissions['modules.bDelete']"
         color="deldbtn"
         text-color="white"
         class="q-ma-xs"
@@ -58,6 +59,7 @@
         @click="delItems()"
       />
       <q-btn
+        v-if="mPermissions['modules.bmodify']"
         color="savebtn"
         text-color="white"
         class="q-ma-xs"
@@ -66,7 +68,7 @@
         @click="saveItems()"
       />
       <q-btn
-        v-if="this.mPermissions['modules.bSetTree']"
+        v-if="mPermissions['modules.bSetTree']"
         color="treebtn"
         text-color="white"
         class="q-ma-xs"
@@ -75,6 +77,7 @@
         @click="Modeltree()"
       />
       <q-btn
+        v-if="mPermissions['modules.bexport']"
         color="expbtn"
         text-color="white"
         class="q-ma-xs"
@@ -84,6 +87,7 @@
       />
       <q-space />
       <q-file
+        v-if="mPermissions['modules.bimport']"
         v-model="importfile"
         color="indigo"
         style="max-width: 150px"
@@ -142,12 +146,12 @@ import XLSX from 'xlsx'
 import NestedTest from './nested-tree'
 export default {
   name: 'Modules',
-  computed: {
-    ...mapState('zero', ['ZModules', 'ZPermissions'])
-  },
   components: {
     AgGridVue,
     NestedTest
+  },
+  computed: {
+    ...mapState('zero', ['ZModules', 'ZPermissions'])
   },
   data() {
     return {
@@ -195,13 +199,13 @@ export default {
       const preq = [
         {
           module: 'modules',
-          name: 'modules.bSetTree',
+          name: 'modules.badd',
           syscfg: {
             required: false,
             type: 'Boolean',
             default: null
           },
-          title: '是否可调整树'
+          title: this.$t('modules.badd')
         },
         {
           module: 'modules',
@@ -211,7 +215,47 @@ export default {
             type: 'Boolean',
             default: null
           },
-          title: '是否可删除'
+          title: this.$t('modules.bDelete')
+        },
+        {
+          module: 'modules',
+          name: 'modules.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('modules.bmodify')
+        },
+        {
+          module: 'modules',
+          name: 'modules.bexport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('modules.bexport')
+        },
+        {
+          module: 'modules',
+          name: 'modules.bimport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('modules.bimport')
+        },
+        {
+          module: 'modules',
+          name: 'modules.bSetTree',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('modules.bSetTree')
         }
       ]
 
@@ -222,13 +266,6 @@ export default {
         .catch(e => {
           console.log(e)
         })
-    },
-    getSelector(params) {
-      const mapMenu = this.$t('menu.types')
-      return mapMenu[params.value]
-    },
-    onGridReady(params) {
-      params.api.sizeColumnsToFit()
     },
     initGrid() {
       this.gridOptions = {
@@ -247,7 +284,7 @@ export default {
           checkboxSelection: true
         },
         {
-          headerName: '模块名',
+          headerName: this.$t('modules.name'),
           field: 'name',
           width: 100,
           sortable: true,
@@ -255,7 +292,7 @@ export default {
           minWidth: 100
         },
         {
-          headerName: '标题',
+          headerName: this.$t('modules.title'),
           field: 'title',
           width: 100,
           sortable: true,
@@ -263,7 +300,7 @@ export default {
           minWidth: 100
         },
         {
-          headerName: 'ICON',
+          headerName: this.$t('modules.icon'),
           field: 'icon',
           width: 80,
           sortable: true,
@@ -271,7 +308,7 @@ export default {
           minWidth: 80
         },
         {
-          headerName: '类型',
+          headerName: this.$t('modules.ismenu'),
           field: 'ismenu',
           width: 80,
           sortable: true,
@@ -282,7 +319,7 @@ export default {
           valueFormatter: this.getSelector
         },
         {
-          headerName: '路径名',
+          headerName: this.$t('modules.url'),
           field: 'url',
           width: 100,
           sortable: true,
@@ -290,7 +327,7 @@ export default {
           minWidth: 100
         },
         {
-          headerName: '创建时间',
+          headerName: this.$t('modules.created_at'),
           field: 'created_at',
           width: 130,
           editable: false,
@@ -299,7 +336,7 @@ export default {
           minWidth: 130
         },
         {
-          headerName: '更新时间',
+          headerName: this.$t('modules.updated_at'),
           field: 'updated_at',
           width: 130,
           editable: true,
@@ -313,6 +350,9 @@ export default {
         resizable: true
       }
       this.getRowStyle = this.onchangerowcolor
+    },
+    onGridReady(params) {
+      params.api.sizeColumnsToFit()
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
@@ -345,6 +385,10 @@ export default {
       }
     },
     // 导入结束
+    getSelector(params) {
+      const mapMenu = this.$t('menu.types')
+      return mapMenu[params.value]
+    },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
