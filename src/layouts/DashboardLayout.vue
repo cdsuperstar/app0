@@ -360,6 +360,7 @@ export default {
     setlanguage(lang) {
       this.lang = lang
     },
+    // 设置主题
     setthemecolor(color) {
       this.usercfg.theme = color
       this.$router.app.$http
