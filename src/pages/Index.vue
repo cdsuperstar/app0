@@ -141,7 +141,7 @@ export default {
     ...mapState('zero', ['ZPermissions']),
     modulelist: {
       get: function() {
-        return this.usercfg?.quickapplication.filter(
+        return this.usercfg?.quickapplication?.filter(
           obj =>
             this.ZPermissions.modules.filter(ob => ob.id === obj.id).length ===
             1
@@ -252,15 +252,17 @@ export default {
     if (this.$auth.check()) {
       const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
       tmpUsercfg.quickapplication = this.modulelist
-      this.$router.app.$http
-        .post('/zero/setMyUsercfg/', {
-          usercfg: JSON.stringify(tmpUsercfg)
-        })
-        .then(res => {
-          if (res.data.success) {
-            this.$auth.user().usercfg = res.data.data.usercfg
-          }
-        })
+      if (tmpUsercfg.quickapplication !== null) {
+        this.$router.app.$http
+          .post('/zero/setMyUsercfg/', {
+            usercfg: JSON.stringify(tmpUsercfg)
+          })
+          .then(res => {
+            if (res.data.success) {
+              this.$auth.user().usercfg = res.data.data.usercfg
+            }
+          })
+      }
     }
   },
   methods: {
