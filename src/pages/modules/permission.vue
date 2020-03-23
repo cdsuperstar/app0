@@ -44,13 +44,14 @@
         </q-inner-loading>
       </q-card>
     </q-dialog>
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('permission.header') }}
     </div>
     <q-separator color="lime-2" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
+        v-if="mPermissions['permission.badd']"
+        color="addbtn"
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
@@ -58,7 +59,8 @@
         @click="addItems()"
       />
       <q-btn
-        color="deep-orange-5"
+        v-if="mPermissions['permission.bDelete']"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -66,7 +68,8 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        v-if="mPermissions['permission.bmodify']"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -74,7 +77,8 @@
         @click="saveItems()"
       />
       <q-btn
-        color="purple-5"
+        v-if="mPermissions['permission.bJsonedit']"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
@@ -82,7 +86,8 @@
         @click="DJsonedit()"
       />
       <q-btn
-        color="green-6"
+        v-if="mPermissions['permission.bexport']"
+        color="expbtn"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -90,26 +95,10 @@
         @click="ExportDataAsCVS()"
       />
       <q-space />
-      <q-file
-        v-model="importfile"
-        color="indigo"
-        style="max-width: 150px"
-        accept=".xlsx, *.xls"
-        dense
-        clearable
-        :label="this.$t('buttons.import')"
-        @input="ImportCVStoData()"
-      >
-        <template v-slot:prepend>
-          <q-icon name="attachment" />
-        </template>
-      </q-file>
-
       <q-input
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -143,7 +132,7 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import XLSX from 'xlsx'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Permission',
@@ -156,7 +145,6 @@ export default {
       DJsonEditor: null,
       jsonData: null,
       quickFilter: null,
-      importfile: null,
       gridOptions: null,
       gridApi: null,
       columnApi: null,
@@ -164,68 +152,13 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      mPermissions: []
     }
   },
   computed: {},
   beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.columnDefs = [
-      {
-        headerName: 'ID',
-        field: 'id',
-        width: 55,
-        sortable: true,
-        editable: false,
-        minWidth: 55,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: '标题',
-        field: 'title',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: '权限名',
-        field: 'name',
-        width: 130,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: '配置',
-        field: 'syscfg',
-        width: 130,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: this.$t('dataAGgrid.created_at'),
-        field: 'created_at',
-        width: 130,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
+    this.initGrid()
   },
   created() {
     this.$router.app.$http
@@ -241,42 +174,142 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'permission',
+          name: 'permission.badd',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('permission.badd')
+        },
+        {
+          module: 'permission',
+          name: 'permission.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('permission.bDelete')
+        },
+        {
+          module: 'permission',
+          name: 'permission.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('permission.bmodify')
+        },
+        {
+          module: 'permission',
+          name: 'permission.bexport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('permission.bexport')
+        },
+        {
+          module: 'permission',
+          name: 'permission.bJsonedit',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('permission.bJsonedit')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.columnDefs = [
+        {
+          headerName: 'ID',
+          field: 'id',
+          width: 80,
+          minWidth: 80,
+          maxWidth: 80,
+          sortable: true,
+          editable: false,
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('permission.title'),
+          field: 'title',
+          width: 200,
+          minWidth: 200,
+          maxWidth: 300,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('permission.name'),
+          field: 'name',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('permission.syscfg'),
+          field: 'syscfg',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 260,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('dataAGgrid.created_at'),
+          field: 'created_at',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 150,
+          editable: false,
+          sortable: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    // 导入开始
-    ImportCVStoData() {
-      const file = this.importfile
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          /*  Parse data */
-          const bstr = e.target.result
-          const wb = XLSX.read(bstr, { type: 'binary' })
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          let j = 0
-          data.map(item => {
-            const ret = {}
-            let i = 0
-            console.log(this)
-            this.columnDefs.forEach(function(val) {
-              ret[val.field] = item[i++]
-            })
-            if (j > 0) this.rowData.push(ret)
-            j++
-          })
-        }
-        reader.readAsBinaryString(file)
-      }
-    },
-    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {

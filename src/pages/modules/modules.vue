@@ -38,7 +38,7 @@
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('modules.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
         v-if="mPermissions['modules.badd']"
@@ -326,7 +326,7 @@ export default {
           field: 'url',
           width: 120,
           minWidth: 120,
-          maxWidth: 200,
+          maxWidth: 260,
           sortable: true,
           filter: true
         }
@@ -565,5 +565,6 @@ export default {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: var(--q-color-secondary);
+  color: #cccccc;
 }
 </style>

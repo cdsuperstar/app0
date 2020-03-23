@@ -1,12 +1,13 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('roles.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
+        v-if="mPermissions['role.badd']"
+        color="addbtn"
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
@@ -14,7 +15,8 @@
         @click="addItems()"
       />
       <q-btn
-        color="deep-orange-5"
+        v-if="mPermissions['role.bDelete']"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -22,7 +24,8 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        v-if="mPermissions['role.bmodify']"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -30,7 +33,8 @@
         @click="saveItems()"
       />
       <q-btn
-        color="green-5"
+        v-if="mPermissions['role.bSetTree']"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
         icon="account_tree"
@@ -41,7 +45,6 @@
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -81,7 +84,7 @@
             </q-toolbar-title>
             <q-btn
               flat
-              color="orange-10"
+              color="primary"
               icon="save_alt"
               :label="this.$t('buttons.confirm')"
               @click="EditUnittree()"
@@ -97,7 +100,7 @@
               ref="myroletree"
               label-key="title"
               tick-strategy="strict"
-              control-color="deep-orange-6"
+              control-color="warning"
               :nodes="Roledata"
               :ticked.sync="roleticked"
             />
@@ -113,12 +116,15 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Roles',
   components: {
     AgGridVue
+  },
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
   },
   data() {
     return {
@@ -133,50 +139,12 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      mPermissions: []
     }
-  },
-  computed: {
-    ...mapState('zero', ['ZPermissions'])
   },
   beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.columnDefs = [
-      {
-        headerName: 'ID',
-        field: 'id',
-        width: 50,
-        sortable: true,
-        editable: false,
-        minWidth: 50,
-        checkboxSelection: true
-      },
-      {
-        headerName: '标识',
-        field: 'name',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: '名称',
-        field: 'title',
-        width: 120,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 120
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
+    this.initGrid()
   },
   created() {
     this.$router.app.$http
@@ -192,8 +160,104 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'role',
+          name: 'role.badd',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('roles.badd')
+        },
+        {
+          module: 'role',
+          name: 'role.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('roles.bDelete')
+        },
+        {
+          module: 'role',
+          name: 'role.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('roles.bmodify')
+        },
+        {
+          module: 'role',
+          name: 'role.bSetTree',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('roles.bSetTree')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.columnDefs = [
+        {
+          headerName: 'ID',
+          field: 'id',
+          width: 60,
+          minWidth: 60,
+          maxWidth: 60,
+          sortable: true,
+          editable: false,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('roles.name'),
+          field: 'name',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 130,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('roles.title'),
+          field: 'title',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 260,
+          editable: true,
+          sortable: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -386,7 +450,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Role-agGrid .ag-header {
-  background-color: #339999;
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .Role-agGrid .ag-cell {
@@ -400,6 +464,7 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #339999;
+  background-color: var(--q-color-secondary);
+  color: #cccccc;
 }
 </style>

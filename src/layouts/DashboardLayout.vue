@@ -165,13 +165,16 @@
         <q-list>
           <q-expansion-item
             expand-separator
-            icon="language"
+            icon="palette"
             class="text-primary text-weight-bold"
-            label="主题颜色列表"
+            :label="this.$t('theme.title')"
           >
             <q-item>
               <q-item-section
-                ><q-toggle v-model="usercfg.dark" label="护眼模式"></q-toggle
+                ><q-toggle
+                  v-model="usercfg.dark"
+                  :label="this.$t('theme.shieldeye')"
+                ></q-toggle
               ></q-item-section>
             </q-item>
             <q-item

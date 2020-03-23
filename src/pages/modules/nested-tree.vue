@@ -11,19 +11,28 @@
 }
 .item:hover {
   border-radius: 15px 15px 5px 5px;
-  background: -webkit-linear-gradient(#ffffff, #e8e8e8); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(#ffffff, #e8e8e8); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(#ffffff, #e8e8e8); /* Firefox 3.6 - 15 */
+  background: -webkit-linear-gradient(
+    #ffffff,
+    var(--q-color-info)
+  ); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(
+    #ffffff,
+    var(--q-color-info)
+  ); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(
+    #ffffff,
+    var(--q-color-info)
+  ); /* Firefox 3.6 - 15 */
   background: linear-gradient(
     #ffffff,
-    #e8e8e8
+    var(--q-color-info)
   ); /* 标准的语法（必须放在最后） */
 }
 .item-sub {
   margin: 0 0 0 2rem;
 }
 .material-icons {
-  color: #3834c8;
+  color: var(--q-color-primary);
 }
 </style>
 

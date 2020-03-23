@@ -146,6 +146,10 @@ export default {
   history: {
     title: '历史记录'
   },
+  theme: {
+    title: '主题颜色列表',
+    shieldeye: '护眼模式'
+  },
   comapplication: {
     header: '常用应用',
     addmodule: '添加应用',
@@ -160,7 +164,7 @@ export default {
     editmodeltree: '模块树编辑',
     searchall: '全局搜索值',
     name: '模块名',
-    title: '标题',
+    title: '模块标题',
     icon: '图标',
     ismenu: '类型',
     url: '路径名',
@@ -176,7 +180,13 @@ export default {
     editroleltree: '角色树编辑',
     getrowssuccess: '角色数据加载成功！',
     rolelist: '角色',
-    rolelistheader: '切换角色'
+    rolelistheader: '切换角色',
+    name: '标识',
+    title: '角色名称',
+    badd: '[角色管理]是否有添加功能',
+    bDelete: '[角色管理]是否有删除功能',
+    bmodify: '[角色管理]是否有修改功能',
+    bSetTree: '[角色管理]是否有模块设置功能'
   },
   article: {
     header: '文章列表',
@@ -192,7 +202,15 @@ export default {
   },
   permission: {
     header: '权限管理',
-    editpermissionltree: '权限树编辑'
+    editpermissionltree: '权限树编辑',
+    title: '标题',
+    name: '权限名',
+    syscfg: '配置',
+    badd: '[权限管理]是否有添加功能',
+    bDelete: '[权限管理]是否有删除功能',
+    bmodify: '[权限管理]是否有修改功能',
+    bexport: '[权限管理]是否有导出功能',
+    bJsonedit: '[权限管理]是否有设置权限JSON树功能'
   },
   units: {
     header: '单位管理',
