@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="row text-h6 no-wrap text-bold" style="color: #027be3">
+        <div class="row text-h6 text-primary no-wrap text-bold">
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>

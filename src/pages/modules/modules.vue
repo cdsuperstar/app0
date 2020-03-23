@@ -89,7 +89,6 @@
       <q-file
         v-if="mPermissions['modules.bimport']"
         v-model="importfile"
-        color="indigo"
         style="max-width: 150px"
         accept=".xlsx, *.xls"
         dense
@@ -106,7 +105,6 @@
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -118,7 +116,7 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 600px;"
+        style="width: 100%; height: 500px;"
         class="ag-theme-balham Modules-agGrid"
         row-selection="multiple"
         row-multi-select-with-click="true"
@@ -276,9 +274,10 @@ export default {
           editable: false,
           headerName: 'ID',
           field: 'id',
-          width: 55,
+          width: 60,
+          minWidth: 60,
+          maxWidth: 60,
           sortable: true,
-          minWidth: 55,
           headerCheckboxSelection: true,
           headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true
@@ -286,34 +285,38 @@ export default {
         {
           headerName: this.$t('modules.name'),
           field: 'name',
-          width: 100,
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
           sortable: true,
-          filter: true,
-          minWidth: 100
+          filter: true
         },
         {
           headerName: this.$t('modules.title'),
           field: 'title',
-          width: 100,
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
           sortable: true,
-          filter: true,
-          minWidth: 100
+          filter: true
         },
         {
           headerName: this.$t('modules.icon'),
           field: 'icon',
-          width: 80,
+          width: 100,
+          minWidth: 100,
+          maxWidth: 180,
           sortable: true,
-          filter: true,
-          minWidth: 80
+          filter: true
         },
         {
           headerName: this.$t('modules.ismenu'),
           field: 'ismenu',
-          width: 80,
+          width: 100,
+          minWidth: 100,
+          maxWidth: 130,
           sortable: true,
           filter: true,
-          minWidth: 80,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: { values: Object.keys(this.$t('menu.types')) },
           valueFormatter: this.getSelector
@@ -321,28 +324,11 @@ export default {
         {
           headerName: this.$t('modules.url'),
           field: 'url',
-          width: 100,
+          width: 120,
+          minWidth: 120,
+          maxWidth: 200,
           sortable: true,
-          filter: true,
-          minWidth: 100
-        },
-        {
-          headerName: this.$t('modules.created_at'),
-          field: 'created_at',
-          width: 130,
-          editable: false,
-          sortable: true,
-          filter: true,
-          minWidth: 130
-        },
-        {
-          headerName: this.$t('modules.updated_at'),
-          field: 'updated_at',
-          width: 130,
-          editable: true,
-          sortable: true,
-          filter: true,
-          minWidth: 130
+          filter: true
         }
       ]
       this.defaultColDef = {

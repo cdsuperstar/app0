@@ -151,6 +151,10 @@ export default {
     addmodule: '添加应用',
     addmodulesuccess: '设置常用应用成功！（下次登陆生效）'
   },
+  dataAGgrid: {
+    created_at: '创建时间',
+    updated_at: '更新时间'
+  },
   modules: {
     header: '模块管理',
     editmodeltree: '模块树编辑',
@@ -160,14 +164,12 @@ export default {
     icon: '图标',
     ismenu: '类型',
     url: '路径名',
-    created_at: '创建时间',
-    updated_at: '更新时间',
-    badd: '是否有添加功能',
-    bDelete: '是否有删除功能',
-    bmodify: '是否有修改功能',
-    bexport: '是否有导出功能',
-    bimport: '是否有导入功能',
-    bSetTree: '是否有调整树功能'
+    badd: '[模块管理]是否有添加功能',
+    bDelete: '[模块管理]是否有删除功能',
+    bmodify: '[模块管理]是否有修改功能',
+    bexport: '[模块管理]是否有导出功能',
+    bimport: '[模块管理]是否有导入功能',
+    bSetTree: '[模块管理]是否有调整树功能'
   },
   roles: {
     header: '角色管理',

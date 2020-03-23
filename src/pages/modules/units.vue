@@ -202,7 +202,7 @@ export default {
         }
       },
       {
-        headerName: '创建时间',
+        headerName: this.$t('dataAGgrid.created_at'),
         field: 'created_at',
         width: 130,
         editable: false,

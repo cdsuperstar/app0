@@ -206,7 +206,7 @@
       <!--      </transition>-->
     </q-page-container>
 
-    <q-footer reveal bordered class="bg-white text-black">
+    <q-footer reveal bordered class="bg-white text-primary">
       <q-toolbar>
         <q-toolbar-title> </q-toolbar-title>
         <q-btn-dropdown
@@ -227,7 +227,7 @@
               >
                 <q-item-section avatar>
                   <q-avatar
-                    color="indigo"
+                    color="secondary"
                     text-color="white"
                     :icon="item.icon"
                     size="30px"
@@ -241,7 +241,7 @@
             <q-item v-ripple clickable tag="a" @click="$auth.logout()">
               <q-item-section avatar>
                 <q-avatar
-                  color="indigo"
+                  color="secondary"
                   text-color="white"
                   icon="exit_to_app"
                   size="30px"
@@ -397,5 +397,25 @@ export default {
 <style>
 .q-item__section--avatar {
   min-width: 42px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: #f5f5f5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  background-color: #f1f1f1;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  background-color: #c1c1c1;
 }
 </style>
