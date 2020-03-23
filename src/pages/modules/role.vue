@@ -143,9 +143,6 @@ export default {
       mPermissions: []
     }
   },
-  beforeMount() {
-    this.initGrid()
-  },
   created() {
     this.$router.app.$http
       .get('/z_role/getSelfOrLowRoles/' + this.ZPermissions.currectrole.id)
@@ -156,6 +153,9 @@ export default {
         }
       })
       .catch(e => {})
+  },
+  beforeMount() {
+    this.initGrid()
   },
   mounted() {
     this.gridApi = this.gridOptions.api
@@ -464,7 +464,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  background-color: var(--q-color-secondary);
-  color: #cccccc;
+  color: var(--q-color-secondary);
 }
 </style>

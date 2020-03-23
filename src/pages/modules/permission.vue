@@ -25,7 +25,7 @@
             @click="EditJSON()"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
           <JsonEditor
             v-model="jsonData"
@@ -38,7 +38,7 @@
           >
           </JsonEditor>
         </q-card-section>
-        <q-separator />
+        <q-separator color="accent" />
         <q-inner-loading :showing="loading">
           <q-spinner-gears size="80px" color="primary" />
         </q-inner-loading>
@@ -47,7 +47,7 @@
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('permission.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
         v-if="mPermissions['permission.badd']"
@@ -156,10 +156,6 @@ export default {
       mPermissions: []
     }
   },
-  computed: {},
-  beforeMount() {
-    this.initGrid()
-  },
   created() {
     this.$router.app.$http
       .get('/z_permission/')
@@ -170,6 +166,9 @@ export default {
         }
       })
       .catch(e => {})
+  },
+  beforeMount() {
+    this.initGrid()
   },
   mounted() {
     this.gridApi = this.gridOptions.api
@@ -433,22 +432,18 @@ export default {
     DJsonedit() {
       this.loading = true
       this.DJsonEditor = true
-      this.$router.app.$http
-        .get('/z_module/getMyMenu')
-        .then(res => {
-          if (res.data.success) {
-            // this.jsonData = JSON.parse(JSON.stringify(res.data.data))
-            this.jsonData = res.data.data
-            console.log(this.jsonData)
-            this.loading = false
-          } else {
-          }
-        })
-        .catch(e => {
-          this.$zglobal.showMessage('red-5', 'center', e.message)
-          this.loading = false
-          this.DJsonEditor = false
-        })
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1 && selectedData[0].id !== undefined) {
+        this.loading = true
+        this.jsonData = JSON.parse(selectedData[0].syscfg)
+      } else {
+        this.$zglobal.showMessage(
+          'red-5',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
+      this.loading = false
     },
     EditJSON() {}
     // JSON format print
@@ -458,7 +453,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Permission-agGrid .ag-header {
-  background-color: #006699;
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .Permission-agGrid .ag-cell {
@@ -472,9 +467,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #006699;
-}
-.block_content .block .clearfix {
-  border-bottom: 1px dotted #b5b5b5;
+  color: var(--q-color-secondary);
 }
 </style>

@@ -25,11 +25,11 @@
             @click="EditModeltree()"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
           <nested-test v-if="true" v-model="Modeldata" class="col-8" />
         </q-card-section>
-        <q-separator />
+        <q-separator color="accent" />
         <q-inner-loading :showing="loading">
           <q-spinner-gears size="80px" color="primary" />
         </q-inner-loading>
@@ -170,9 +170,6 @@ export default {
       mPermissions: []
     }
   },
-  beforeMount() {
-    this.initGrid()
-  },
   created() {
     this.$router.app.$http
       .get('/z_module/getSelfLowModules/' + this.ZPermissions.currectrole.id)
@@ -184,6 +181,9 @@ export default {
         }
       })
       .catch(e => {})
+  },
+  beforeMount() {
+    this.initGrid()
   },
   mounted() {
     // console.log(this.ZModules)
@@ -565,6 +565,5 @@ export default {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: var(--q-color-secondary);
-  color: #cccccc;
 }
 </style>
