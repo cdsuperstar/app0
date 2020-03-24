@@ -7,6 +7,7 @@
           :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
           method="POST"
           auto-expand
+          color="primary"
           :filter="checkFileSize"
           :label="this.$t('article.attachment')"
           :headers="[
@@ -24,7 +25,7 @@
                 flat
                 round
                 v-close-popup
-                color="primary"
+                color="negative"
                 size="sm"
                 icon="close"
                 title="关闭此窗口"
@@ -69,14 +70,13 @@
     </q-dialog>
     <q-dialog v-model="Duserprfile">
       <q-card class="q-dialog-plugin">
-        <q-toolbar>
+        <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
             flat
             round
             dense
             icon="close"
-            color="negative"
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
@@ -86,7 +86,6 @@
           </q-toolbar-title>
           <q-btn
             flat
-            color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="changeprofile()"
@@ -164,19 +163,15 @@
     <div class="text-h5 q-ma-md text-primary">
       {{ $t('auth.users.profile.pheader') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div align="center" style="margin: 16px 1px">
       <div class="row q-gutter-md">
-        <q-card
-          class="userprile-list"
-          flat
-          style="border-left: 1px dashed #ffffff;"
-        >
+        <q-card class="userprile-list" flat>
           <q-card-section>
             <q-avatar size="100px" style="cursor: pointer;">
               <img :src="data.avatar" @click="uploadFile()" />
             </q-avatar>
-            <p class="text-weight-bold text-overline text-orange-9">
+            <p class="text-weight-bold text-overline text-warning">
               {{ data.name }}
             </p>
             <p class="text-caption text-grey">
@@ -187,7 +182,7 @@
                   : $t('auth.users.profile.female')
               }}
             </p>
-            <p><q-icon color="orange-7" name="cake" /> {{ data.birth }}</p>
+            <p><q-icon color="warning" name="cake" /> {{ data.birth }}</p>
           </q-card-section>
 
           <q-card-actions>
@@ -227,7 +222,7 @@
           class="userprile-work"
           flat
           square
-          style="border-left: 1px dashed #b5b5b5;"
+          style="border-left: 1px dashed var(--q-color-secondary);"
         >
           <q-card-section class="text-subitle2 text-left">
             <q-item style="padding: 4px 4px;">

@@ -3,11 +3,11 @@
     <!-- content -->
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="row text-h6 no-wrap text-bold" style="color: #9c27b0">
+        <div class="row text-h6 no-wrap text-weight-bold text-secondary">
           {{ $t('auth.password.change.header') }}
           <q-space />
           <q-icon
-            color="teal"
+            color="accent"
             :name="isPwd ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
             :title="this.$t('auth.password.change.showpwd')"
@@ -19,7 +19,6 @@
       <q-card-section>
         <q-input
           v-model.trim="data.oldpwd"
-          color="purple"
           :label="this.$t('auth.password.change.currentpwd')"
           :type="isPwd ? 'password' : 'text'"
           :error="$v.data.oldpwd.$error"
@@ -28,7 +27,6 @@
         />
         <q-input
           v-model.trim="data.newpwd"
-          color="purple"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.password.change.newpwd')"
           :error="$v.data.newpwd.$error"
@@ -38,7 +36,6 @@
 
         <q-input
           v-model.trim="data.password_confirmation"
-          color="purple"
           :type="isPwd ? 'password' : 'text'"
           :label="this.$t('auth.register.repeat_password')"
           :error="$v.data.password_confirmation.$error"

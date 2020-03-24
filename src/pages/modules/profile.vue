@@ -1,12 +1,12 @@
 <template>
   <q-page padding class="q-pa-lg">
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('auth.users.profile.pheader') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="indigo-5"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -14,7 +14,7 @@
         @click="saveItems()"
       />
       <q-btn
-        color="green-6"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -26,7 +26,6 @@
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -82,196 +81,6 @@ export default {
       unitMap: {}
     }
   },
-  computed: {},
-  beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.frameworkComponents = {
-      agDateCellRender: agDateCellRender
-    }
-    this.columnDefs = [
-      {
-        headerName: 'ID',
-        field: 'id',
-        width: 55,
-        sortable: true,
-        editable: false,
-        minWidth: 55,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: this.$t('auth.users.profile.avatar'),
-        field: 'avatar',
-        width: 130,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: this.$t('auth.users.profile.no'),
-        field: 'no',
-        width: 130,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: this.$t('auth.users.profile.nickname'),
-        field: 'name',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: this.$t('auth.users.profile.sex'),
-        field: 'sex',
-        width: 80,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 80,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-          values: Object.keys(this.$t('auth.users.profile.sexoptions'))
-        },
-        valueFormatter: this.getSelector
-      },
-      {
-        headerName: this.$t('auth.users.profile.birthday'),
-        field: 'birth',
-        width: 100,
-        editable: true,
-        sortable: true,
-        minWidth: 100,
-        cellRendererFramework: agDateCellRender,
-        filter: 'agDateColumnFilter',
-        filterParams: {
-          comparator: function(filterLocalDateAtMidnight, cellValue) {
-            var dateAsString = cellValue
-            if (dateAsString == null) return -1
-            var dateParts = dateAsString.split('/')
-            var cellDate = new Date(
-              Number(dateParts[2]),
-              Number(dateParts[1]) - 1,
-              Number(dateParts[0])
-            )
-
-            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-              return 0
-            }
-
-            if (cellDate < filterLocalDateAtMidnight) {
-              return -1
-            }
-
-            if (cellDate > filterLocalDateAtMidnight) {
-              return 1
-            }
-          },
-          browserDatePicker: true
-        }
-      },
-      {
-        headerName: this.$t('auth.users.profile.position'),
-        field: 'position',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: this.$t('auth.users.profile.title'),
-        field: 'title',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: this.$t('auth.users.profile.jobs'),
-        field: 'jobs',
-        width: 100,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 100
-      },
-      {
-        headerName: this.$t('auth.users.profile.department'),
-        field: 'unitid',
-        width: 150,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 150,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-          values: {}
-        },
-        valueFormatter: this.getUnitmap,
-        cellRenderer: this.getUnitmap
-      },
-      {
-        headerName: this.$t('auth.users.profile.phone1'),
-        field: 'phone',
-        width: 115,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 115
-      },
-      {
-        headerName: this.$t('auth.users.profile.phone2'),
-        field: 'tel',
-        width: 150,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 150
-      },
-      {
-        headerName: this.$t('auth.users.profile.address'),
-        field: 'address',
-        width: 150,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 150
-      },
-      {
-        headerName: this.$t('auth.users.profile.remark'),
-        field: 'memo',
-        width: 150,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 150
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 130,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
-  },
   created() {
     this.$router.app.$http
       .get('/profile/')
@@ -298,11 +107,218 @@ export default {
       }
     })
   },
+  beforeMount() {
+    this.initGrid()
+  },
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.frameworkComponents = {
+        agDateCellRender: agDateCellRender
+      }
+      this.columnDefs = [
+        {
+          headerName: 'ID',
+          field: 'id',
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
+          sortable: true,
+          editable: false,
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.avatar'),
+          field: 'avatar',
+          width: 130,
+          minWidth: 130,
+          maxWidth: 180,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.no'),
+          field: 'no',
+          width: 130,
+          minWidth: 130,
+          maxWidth: 180,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.nickname'),
+          field: 'name',
+          width: 130,
+          minWidth: 130,
+          maxWidth: 180,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.sex'),
+          field: 'sex',
+          width: 80,
+          minWidth: 80,
+          maxWidth: 80,
+          editable: true,
+          sortable: true,
+          filter: true,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: Object.keys(this.$t('auth.users.profile.sexoptions'))
+          },
+          valueFormatter: this.getSelector
+        },
+        {
+          headerName: this.$t('auth.users.profile.birthday'),
+          field: 'birth',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 120,
+          editable: true,
+          sortable: true,
+          cellRendererFramework: agDateCellRender,
+          filter: 'agDateColumnFilter',
+          filterParams: {
+            comparator: function(filterLocalDateAtMidnight, cellValue) {
+              var dateAsString = cellValue
+              if (dateAsString == null) return -1
+              var dateParts = dateAsString.split('/')
+              var cellDate = new Date(
+                Number(dateParts[2]),
+                Number(dateParts[1]) - 1,
+                Number(dateParts[0])
+              )
+
+              if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+                return 0
+              }
+
+              if (cellDate < filterLocalDateAtMidnight) {
+                return -1
+              }
+
+              if (cellDate > filterLocalDateAtMidnight) {
+                return 1
+              }
+            },
+            browserDatePicker: true
+          }
+        },
+        {
+          headerName: this.$t('auth.users.profile.position'),
+          field: 'position',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 120,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.title'),
+          field: 'title',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 120,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.jobs'),
+          field: 'jobs',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 120,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.department'),
+          field: 'unitid',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
+          editable: true,
+          sortable: true,
+          filter: true,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: {}
+          },
+          valueFormatter: this.getUnitmap,
+          cellRenderer: this.getUnitmap
+        },
+        {
+          headerName: this.$t('auth.users.profile.phone1'),
+          field: 'phone',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.phone2'),
+          field: 'tel',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.address'),
+          field: 'address',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.remark'),
+          field: 'memo',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('dataAGgrid.created_at'),
+          field: 'created_at',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 150,
+          editable: false,
+          sortable: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -394,7 +410,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Profile-agGrid .ag-header {
-  background-color: #339999;
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .Profile-agGrid .ag-cell {
@@ -408,6 +424,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #339999;
+  color: var(--q-color-secondary);
 }
 </style>

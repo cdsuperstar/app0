@@ -2,14 +2,14 @@
   <q-page padding class="q-pa-lg">
     <q-dialog v-model="DModelTree">
       <q-card class="q-dialog-plugin">
-        <q-toolbar>
+        <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
             flat
             round
             dense
             icon="close"
-            color="negative"
+            color="white"
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
@@ -19,7 +19,7 @@
           </q-toolbar-title>
           <q-btn
             flat
-            color="secondary"
+            color="white"
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="EditModeltree()"
@@ -31,7 +31,7 @@
         </q-card-section>
         <q-separator color="accent" />
         <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
+          <q-spinner-gears size="80px" color="secondary" />
         </q-inner-loading>
       </q-card>
     </q-dialog>
@@ -262,7 +262,7 @@ export default {
           this.mPermissions = res
         })
         .catch(e => {
-          console.log(e)
+          // console.log(e)
         })
     },
     initGrid() {
@@ -274,9 +274,9 @@ export default {
           editable: false,
           headerName: 'ID',
           field: 'id',
-          width: 60,
-          minWidth: 60,
-          maxWidth: 60,
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
           sortable: true,
           headerCheckboxSelection: true,
           headerCheckboxSelectionFilteredOnly: true,

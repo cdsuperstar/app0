@@ -8,6 +8,7 @@
           method="POST"
           multiple
           auto-expand
+          color="primary"
           :filter="checkFileSize"
           :label="this.$t('article.attachment')"
           :headers="[
@@ -25,7 +26,7 @@
                 flat
                 round
                 v-close-popup
-                color="primary"
+                color="negative"
                 size="sm"
                 icon="close"
                 title="关闭此窗口"
@@ -70,14 +71,13 @@
     </q-dialog>
     <q-dialog v-model="DaddArticle">
       <q-card style="width: 1000px; max-width: 80vw;">
-        <q-toolbar>
+        <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
             flat
             round
             dense
             icon="close"
-            color="negative"
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
@@ -87,7 +87,6 @@
           </q-toolbar-title>
           <q-btn
             flat
-            color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="aDDNewArticle()"
@@ -97,7 +96,6 @@
         <q-card-section style="max-height: 80vh" class="scroll">
           <q-input
             v-model.trim="data.title"
-            color="orange"
             type="text"
             style="max-width: 500px"
             autofocus
@@ -110,7 +108,6 @@
             <div class="col-5 ">
               <q-select
                 v-model.trim="data.user_id"
-                color="orange"
                 style="max-width: 150px"
                 :options="useroptions"
                 :label="this.$t('article.user')"
@@ -121,7 +118,6 @@
             <div class="col-5 q-ml-lg">
               <q-input
                 v-model.trim="data.created_date"
-                color="orange"
                 style="max-width: 150px"
                 :label="this.$t('article.createddate')"
               >
@@ -170,13 +166,14 @@
         <q-separator />
       </q-card>
     </q-dialog>
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('article.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
+        v-if="mPermissions['articlelist.badd']"
+        color="addbtn"
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
@@ -184,7 +181,8 @@
         @click="addItems()"
       />
       <q-btn
-        color="deep-orange-5"
+        v-if="mPermissions['articlelist.bDelete']"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -192,7 +190,8 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        v-if="mPermissions['articlelist.bmodify']"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -200,7 +199,8 @@
         @click="saveItems()"
       />
       <q-btn
-        color="green-6"
+        v-if="mPermissions['articlelist.bexport']"
+        color="expbtn"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -213,7 +213,6 @@
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -249,10 +248,11 @@
 <script>
 import { required } from 'vuelidate/lib/validators'
 import { AgGridVue } from 'ag-grid-vue'
+import { mapActions } from 'vuex'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'thearticle',
+  name: 'articlevue',
   components: {
     AgGridVue
   },
@@ -271,6 +271,7 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
+      mPermissions: [],
       data: {
         title: '',
         user_id: '',
@@ -281,113 +282,6 @@ export default {
     }
   },
   computed: {},
-  beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.frameworkComponents = {
-      agDateCellRender: agDateCellRender
-    }
-    this.columnDefs = [
-      {
-        editable: false,
-        headerName: 'ID',
-        field: 'id',
-        width: 55,
-        minWidth: 55,
-        sortable: true,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: '标题',
-        field: 'title',
-        width: 120,
-        minWidth: 120,
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '发布人',
-        field: 'user_id',
-        width: 100,
-        minWidth: 100,
-        sortable: true,
-        filter: true,
-        cellEditor: 'agSelectCellEditor',
-        cellEditorParams: {
-          values: {}
-        },
-        valueFormatter: this.getUsermap
-      },
-      {
-        headerName: '发布日期',
-        field: 'created_date',
-        width: 100,
-        minWidth: 100,
-        sortable: true,
-        cellRendererFramework: agDateCellRender,
-        filter: 'agDateColumnFilter',
-        filterParams: {
-          comparator: function(filterLocalDateAtMidnight, cellValue) {
-            var dateAsString = cellValue
-            if (dateAsString == null) return -1
-            var dateParts = dateAsString.split('/')
-            var cellDate = new Date(
-              Number(dateParts[2]),
-              Number(dateParts[1]) - 1,
-              Number(dateParts[0])
-            )
-
-            if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
-              return 0
-            }
-
-            if (cellDate < filterLocalDateAtMidnight) {
-              return -1
-            }
-
-            if (cellDate > filterLocalDateAtMidnight) {
-              return 1
-            }
-          },
-          browserDatePicker: true
-        }
-      },
-      {
-        headerName: '内容',
-        field: 'content',
-        sortable: true,
-        width: 200,
-        minWidth: 200,
-        filter: true
-      },
-      {
-        headerName: '创建时间',
-        field: 'created_at',
-        width: 130,
-        minWidth: 130,
-        editable: false,
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '更新时间',
-        field: 'updated_at',
-        width: 130,
-        minWidth: 130,
-        editable: false,
-        sortable: true,
-        filter: true
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
-  },
   created() {
     this.$router.app.$http
       .get('/article/')
@@ -420,13 +314,181 @@ export default {
     })
     // end
   },
+  beforeMount() {
+    this.initGrid()
+  },
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
-    testup(i) {
-      console.log(i.files)
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'articlelist',
+          name: 'articlelist.badd',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('article.badd')
+        },
+        {
+          module: 'articlelist',
+          name: 'articlelist.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('article.bDelete')
+        },
+        {
+          module: 'articlelist',
+          name: 'articlelist.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('article.bmodify')
+        },
+        {
+          module: 'articlelist',
+          name: 'articlelist.bexport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('article.bexport')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          // console.log(e)
+        })
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.frameworkComponents = {
+        agDateCellRender: agDateCellRender
+      }
+      this.columnDefs = [
+        {
+          editable: false,
+          headerName: 'ID',
+          field: 'id',
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
+          sortable: true,
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('article.title'),
+          field: 'title',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 200,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('article.user'),
+          field: 'user_id',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 150,
+          sortable: true,
+          filter: true,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: {}
+          },
+          valueFormatter: this.getUsermap
+        },
+        {
+          headerName: this.$t('article.createddate'),
+          field: 'created_date',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 120,
+          sortable: true,
+          cellRendererFramework: agDateCellRender,
+          filter: 'agDateColumnFilter',
+          filterParams: {
+            comparator: function(filterLocalDateAtMidnight, cellValue) {
+              var dateAsString = cellValue
+              if (dateAsString == null) return -1
+              var dateParts = dateAsString.split('/')
+              var cellDate = new Date(
+                Number(dateParts[2]),
+                Number(dateParts[1]) - 1,
+                Number(dateParts[0])
+              )
+
+              if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+                return 0
+              }
+
+              if (cellDate < filterLocalDateAtMidnight) {
+                return -1
+              }
+
+              if (cellDate > filterLocalDateAtMidnight) {
+                return 1
+              }
+            },
+            browserDatePicker: true
+          }
+        },
+        {
+          headerName: this.$t('article.content'),
+          field: 'content',
+          sortable: true,
+          width: 200,
+          minWidth: 200,
+          maxWidth: 350,
+          filter: true
+        },
+        {
+          headerName: this.$t('dataAGgrid.created_at'),
+          field: 'created_at',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 150,
+          editable: false,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('dataAGgrid.updated_at'),
+          field: 'updated_at',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 150,
+          editable: false,
+          sortable: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
     },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
@@ -620,7 +682,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Article-agGrid .ag-header {
-  background-color: var(--q-color-primary);
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .Article-agGrid .ag-cell {
@@ -634,6 +696,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: var(--q-color-primary);
+  color: var(--q-color-secondary);
 }
 </style>

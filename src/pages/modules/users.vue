@@ -17,12 +17,12 @@
             :title="this.$t('buttons.close')"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
 
         <q-card-section style="max-height: 50vh" class="scroll">
           <q-input
             v-model.trim="data.data.name"
-            color="brown"
+            color="secondary"
             type="text"
             autofocus
             :label="this.$t('auth.register.name')"
@@ -32,7 +32,7 @@
           />
           <q-input
             v-model.trim="data.data.email"
-            color="brown"
+            color="secondary"
             type="email"
             :label="this.$t('auth.register.email')"
             :error="$v.data.data.email.$error"
@@ -41,7 +41,7 @@
           />
           <q-input
             v-model.trim="data.data.password"
-            color="brown"
+            color="secondary"
             type="text"
             :label="this.$t('auth.register.password')"
             :error="$v.data.data.password.$error"
@@ -50,7 +50,7 @@
           />
         </q-card-section>
 
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-actions align="right" class="bg-white text-teal">
           <q-btn
             flat
@@ -74,7 +74,9 @@
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
-            <span class="text-weight-bold"> 设置权限 </span>
+            <span class="text-weight-bold">
+              {{ $t('users.setpermission') }}
+            </span>
           </q-toolbar-title>
           <q-btn
             flat
@@ -83,16 +85,16 @@
             @click="EditUserPermission()"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-section style="max-height: 70vh" class="scroll">
           <q-list v-for="modeule in PermissData" :key="modeule.id" dense>
             <q-item-label
               header
-              style="text-align:left;border-bottom: 3px solid #027be3;padding: 12px;"
+              style="text-align:left;border-bottom: 3px solid var(--q-color-secondary);padding: 12px;"
               ><q-icon
-                name="perm_data_setting"
+                name="widgets"
                 size="25px"
-                color="orange-5"
+                color="warning"
               />&nbsp;&nbsp;{{ modeule.title }}</q-item-label
             >
             <q-item
@@ -107,13 +109,13 @@
                   v-model="per.usrcfg"
                   true-value="1"
                   false-value="0"
-                  color="orange"
+                  color="warning"
                 />
                 <q-input
                   v-if="JSON.parse(per.syscfg).type !== 'Boolean'"
                   v-model="per.usrcfg"
                   type="text"
-                  color="orange"
+                  color="warning"
                   style="max-height: 40px;"
                 />
               </q-item-section>
@@ -121,19 +123,18 @@
           </q-list>
         </q-card-section>
 
-        <q-separator />
+        <q-separator color="accent" />
       </q-card>
     </q-dialog>
     <q-dialog v-model="DunitTree">
       <q-card class="q-dialog-plugin">
-        <q-toolbar>
+        <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
             flat
             round
             dense
             icon="close"
-            color="negative"
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
@@ -144,12 +145,13 @@
           <q-btn
             flat
             color="secondary"
+            text-color="white"
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="Editusertounit()"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
           <q-tree
             ref="myunittree"
@@ -161,19 +163,20 @@
             default-expand-all
           />
         </q-card-section>
-        <q-separator />
+        <q-separator color="accent" />
         <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
+          <q-spinner-gears size="80px" color="secondary" />
         </q-inner-loading>
       </q-card>
     </q-dialog>
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('users.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
+        v-if="mPermissions['users.badd']"
+        color="addbtn"
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
@@ -181,7 +184,8 @@
         @click="addItems()"
       />
       <q-btn
-        color="deep-orange-5"
+        v-if="mPermissions['users.bDelete']"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -189,7 +193,8 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        v-if="mPermissions['users.bmodify']"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -197,7 +202,8 @@
         @click="saveItems()"
       />
       <q-btn
-        color="purple-6"
+        v-if="mPermissions['users.bsetunit']"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
         icon="apartment"
@@ -205,7 +211,8 @@
         @click="Showunittree()"
       />
       <q-btn
-        color="green-5"
+        v-if="mPermissions['users.bsetrole']"
+        color="warning"
         text-color="white"
         class="q-ma-xs"
         icon="person"
@@ -213,10 +220,11 @@
         @click="ShowRoletree()"
       />
       <q-btn
-        color="pink-5"
+        v-if="mPermissions['users.bsetpermission']"
+        color="expbtn"
         text-color="white"
         class="q-ma-xs"
-        icon="settings_applications"
+        icon="settings"
         :label="this.$t('buttons.setpermission')"
         @click="SetUserPermisson()"
       />
@@ -225,7 +233,6 @@
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -255,27 +262,37 @@
         >
         </ag-grid-vue>
       </div>
-      <div class="col-md-3 shadow-1" style="margin-left: 15px;">
+      <div
+        v-if="mPermissions['users.bsetrole'] && Roleshow"
+        class="col-md-3 shadow-1"
+        style="margin-left: 15px;"
+      >
         <q-item-label class="row" style="min-height:20px;">
-          <div class="text-weight-bold" style="padding:15px 15px">
+          <div class="text-h7 text-weight-bold" style="padding:15px 15px">
+            <q-icon name="perm_identity" />
             {{ $t('users.rolelist') }}
           </div>
           <q-space />
           <q-btn
             flat
-            color="orange-10"
+            color="secondary"
             icon="save_alt"
             :label="this.$t('buttons.confirm')"
             @click="EditRolelist()"
           />
         </q-item-label>
-        <q-separator />
+        <q-separator color="accent" />
         <q-list>
-          <q-item v-for="re in Roledata" :key="re.title" v-ripple>
+          <q-item
+            v-for="re in Roledata"
+            :key="re.title"
+            v-ripple
+            dense
+            style="text-align:left;border-bottom: 1px dashed #d6d6d6;"
+          >
             <q-item-section side top>
               <q-checkbox v-model="rolechecks" :val="re.id" />
             </q-item-section>
-
             <q-item-section>
               <q-item-label>{{ re.title }}</q-item-label>
             </q-item-section>
@@ -315,7 +332,9 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       rolechecks: [],
+      mPermissions: [],
       defaultColDef: null,
+      Roleshow: false,
       data: {
         data: {
           name: '22',
@@ -327,53 +346,6 @@ export default {
   },
   computed: {
     ...mapState('zero', ['ZPermissions'])
-  },
-  beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.columnDefs = [
-      {
-        editable: false,
-        headerName: 'ID',
-        field: 'id',
-        width: 40,
-        minWidth: 40,
-        sortable: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: '用户名',
-        field: 'name',
-        width: 80,
-        minWidth: 80,
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '邮箱',
-        field: 'email',
-        width: 120,
-        minWidth: 120,
-        sortable: true,
-        filter: true
-      },
-      {
-        headerName: '密码',
-        field: 'password',
-        sortable: true,
-        width: 110,
-        minWidth: 110,
-        valueFormatter: pwdMask,
-        suppressSizeToFit: true,
-        filter: true
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
   },
   created() {
     this.$router.app.$http
@@ -387,6 +359,9 @@ export default {
       })
       .catch(e => {})
   },
+  beforeMount() {
+    this.initGrid()
+  },
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
@@ -398,13 +373,73 @@ export default {
       const preq = [
         {
           module: 'users',
+          name: 'users.badd',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.badd')
+        },
+        {
+          module: 'users',
+          name: 'users.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.bDelete')
+        },
+        {
+          module: 'users',
+          name: 'users.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.bmodify')
+        },
+        {
+          module: 'users',
           name: 'users.iManageUnit',
           syscfg: {
             required: false,
             type: 'number',
             default: null
           },
-          title: '管理单位根节点'
+          title: this.$t('users.bsetunitroot')
+        },
+        {
+          module: 'users',
+          name: 'users.bsetunit',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.bsetunit')
+        },
+        {
+          module: 'users',
+          name: 'users.bsetrole',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.bsetrole')
+        },
+        {
+          module: 'users',
+          name: 'users.bsetpermission',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('users.bsetpermission')
         }
       ]
 
@@ -413,8 +448,59 @@ export default {
           this.mPermissions = res
         })
         .catch(e => {
-          console.log(e)
+          // console.log(e)
         })
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.columnDefs = [
+        {
+          editable: false,
+          headerName: 'ID',
+          field: 'id',
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
+          sortable: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('users.name'),
+          field: 'name',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 130,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('users.email'),
+          field: 'email',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('users.password'),
+          field: 'password',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          sortable: true,
+          valueFormatter: pwdMask,
+          suppressSizeToFit: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
     },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
@@ -583,6 +669,7 @@ export default {
           .then(res => {
             if (res.data.success) {
               this.Roledata = res.data.data
+              this.Roleshow = true
             }
           })
         // end
@@ -619,6 +706,7 @@ export default {
         .then(res => {
           if (res.data.success) {
             this.$zglobal.showMessage('positive', 'center', this.$t('success'))
+            this.Roleshow = false
           }
         })
         .catch(error => {
@@ -632,26 +720,38 @@ export default {
         })
     },
     SetUserPermisson() {
-      this.DaddPermission = true
-      // 获得已有权限
       var selectedData = this.gridApi.getSelectedRows()
-      var selectarr = selectedData.map(({ name, id }) => id)
-      this.$router.app.$http
-        .post('/users/getUsersPermisstionCfgs/', {
-          users: selectarr
-        })
-        .then(res => {
-          if (res.data.success) {
-            this.PermissData = res.data.data
+      if (
+        (selectedData.length === 1 && selectedData[0].id !== undefined) ||
+        selectedData.length > 1
+      ) {
+        // 开始处理
+        this.DaddPermission = true
+        // 获得已有权限
+        var selectarr = selectedData.map(({ name, id }) => id)
+        this.$router.app.$http
+          .post('/users/getUsersPermisstionCfgs/', {
+            users: selectarr
+          })
+          .then(res => {
             if (res.data.success) {
-              this.$zglobal.showMessage(
-                'positive',
-                'center',
-                this.$t('operation.getdatasuccess')
-              )
+              this.PermissData = res.data.data
+              if (res.data.success) {
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.getdatasuccess')
+                )
+              }
             }
-          }
-        })
+          })
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
     },
     EditUserPermission() {
       // console.log(this.PermissData)
@@ -680,53 +780,65 @@ export default {
         })
     },
     Showunittree() {
-      this.DunitTree = true
-      this.loading = true
       var selectedData = this.gridApi.getSelectedRows()
-      // 先得到登录用户的管理单位节点
-      var node = null
-      if (this.mPermissions['users.iManageUnit']) {
-        node = this.mPermissions['users.iManageUnit']
-      } else {
-        if (this.ZPermissions.units.length >= 1)
-          node = this.ZPermissions.units[0].id
-      }
-      this.$router.app.$http
-        .get('/z_unit/getTheUnitTree/' + node)
-        .then(res => {
-          if (res.data.success) {
-            this.loading = false
-            this.Unitdata = res.data.data
+      if (
+        (selectedData.length === 1 && selectedData[0].id !== undefined) ||
+        selectedData.length > 1
+      ) {
+        // 开始处理
+        this.DunitTree = true
+        this.loading = true
+        // 先得到登录用户的管理单位节点
+        var node = null
+        if (this.mPermissions['users.iManageUnit']) {
+          node = this.mPermissions['users.iManageUnit']
+        } else {
+          if (this.ZPermissions.units.length >= 1)
+            node = this.ZPermissions.units[0].id
+        }
+        this.$router.app.$http
+          .get('/z_unit/getTheUnitTree/' + node)
+          .then(res => {
+            if (res.data.success) {
+              this.loading = false
+              this.Unitdata = res.data.data
 
-            // 得到选定用户的机构值
-            if (selectedData[0].id) {
-              this.$router.app.$http
-                .get('/users/getUserUnit/' + selectedData[0].id)
-                .then(resmy => {
-                  if (resmy.data.success) {
-                    this.unitticked = resmy.data.data.map(({ id }) => id)
-                  }
-                })
+              // 得到选定用户的机构值
+              if (selectedData[0].id) {
+                this.$router.app.$http
+                  .get('/users/getUserUnit/' + selectedData[0].id)
+                  .then(resmy => {
+                    if (resmy.data.success) {
+                      this.unitticked = resmy.data.data.map(({ id }) => id)
+                    }
+                  })
+              }
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.getdatasuccess')
+              )
+            } else {
+              this.loading = false
             }
-            this.$zglobal.showMessage(
-              'positive',
-              'center',
-              this.$t('operation.getdatasuccess')
-            )
-          } else {
+          })
+          .catch(error => {
             this.loading = false
-          }
-        })
-        .catch(error => {
-          this.loading = false
-          if (error.status) {
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
+            if (error.status) {
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
+            }
+          })
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
     },
     Editusertounit() {
       var selectedData = this.gridApi.getSelectedRows()
@@ -783,7 +895,7 @@ function pwdMask(params) {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .User-agGrid .ag-header {
-  background-color: #339999;
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .User-agGrid .ag-cell {
@@ -797,6 +909,6 @@ function pwdMask(params) {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #339999;
+  color: var(--q-color-secondary);
 }
 </style>

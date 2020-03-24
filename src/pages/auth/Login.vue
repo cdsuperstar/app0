@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <q-card square style="width: 400px; padding:50px">
       <q-card-section>
-        <div class="row text-h6 text-primary no-wrap text-bold">
+        <div class="row text-h6 text-primary text-weight-bold no-wrap">
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>
@@ -31,8 +31,9 @@
         >
           <template v-slot:append>
             <q-icon
-              :name="isPwd ? 'visibility_off' : 'visibility'"
+              color="accent"
               class="cursor-pointer"
+              :name="isPwd ? 'visibility_off' : 'visibility'"
               @click="isPwd = !isPwd"
             />
           </template>
@@ -55,7 +56,7 @@
         </q-btn>
       </q-card-actions>
       <q-inner-loading :showing="loading">
-        <q-spinner-gears size="50px" color="purple" />
+        <q-spinner-gears size="50px" color="secondary" />
       </q-inner-loading>
       <div align="right">
         <br />

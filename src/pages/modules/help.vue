@@ -3,7 +3,7 @@
     <div class="content search">
       <p
         class="row text-h6 no-wrap text-bold"
-        style="margin-bottom:.5em;color: #3da50a"
+        style="margin-bottom:.5em;color: var(--q-color-positive)"
       >
         {{ $t('help.header') }}
       </p>
@@ -12,7 +12,7 @@
           <q-input
             v-model.trim="data.data.keyword"
             type="text"
-            color="orange-14"
+            color="warning"
             required
             autofocus
             :label="this.$t('help.keylabel')"
@@ -23,12 +23,12 @@
         </div>
         <div class="col-md-4 q-gutter-md" style="margin-top: 6px">
           &nbsp;
-          <q-btn color="lime-9" icon-right="search" @click="search">
+          <q-btn color="savebtn" icon-right="search" @click="search">
             {{ $t('help.search') }}&nbsp;&nbsp;
           </q-btn>
         </div>
       </div>
-      <hr />
+      <q-separator color="accent" />
       <q-list>
         <q-item>
           <q-item-section>

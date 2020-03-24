@@ -40,7 +40,7 @@
         </q-card-section>
         <q-separator color="accent" />
         <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
+          <q-spinner-gears size="80px" color="secondary" />
         </q-inner-loading>
       </q-card>
     </q-dialog>
@@ -236,7 +236,7 @@ export default {
           this.mPermissions = res
         })
         .catch(e => {
-          console.log(e)
+          // console.log(e)
         })
     },
     initGrid() {
@@ -247,9 +247,9 @@ export default {
         {
           headerName: 'ID',
           field: 'id',
-          width: 80,
-          minWidth: 80,
-          maxWidth: 80,
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
           sortable: true,
           editable: false,
           headerCheckboxSelection: true,

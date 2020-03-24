@@ -198,7 +198,11 @@ export default {
     titlenull: '请输入标题！',
     createddate: '发布日期',
     createddatenull: '请输入发布日期',
-    content: '内容'
+    content: '内容',
+    badd: '[文章列表]是否有添加功能',
+    bDelete: '[文章列表]是否有删除功能',
+    bmodify: '[文章列表]是否有修改功能',
+    bexport: '[文章列表]是否有导出功能'
   },
   permission: {
     header: '权限管理',
@@ -215,12 +219,30 @@ export default {
   units: {
     header: '单位管理',
     editunittree: '机构树编辑',
-    showunittree: '机构树'
+    showunittree: '机构树',
+    title: '单位名称',
+    brief: '单位简介',
+    badd: '[单位管理]是否有添加功能',
+    bDelete: '[单位管理]是否有删除功能',
+    bmodify: '[单位管理]是否有修改功能',
+    bexport: '[单位管理]是否有导出功能',
+    bSetTree: '[单位管理]是否有调整机构树功能'
   },
   users: {
     header: '用户管理',
     adduser: '添加新用户',
-    rolelist: '角色列表'
+    name: '用户名',
+    email: '用户邮箱',
+    password: '用户密码',
+    rolelist: '角色列表',
+    setpermission: '设置权限',
+    badd: '[用户管理]是否有添加功能',
+    bDelete: '[用户管理]是否有删除功能',
+    bmodify: '[用户管理]是否有修改功能',
+    bsetunit: '[用户管理]是否有设置用户单位功能',
+    bsetunitroot: '[用户管理]管理单位根节点',
+    bsetrole: '[用户管理]是否有设置用户角色功能',
+    bsetpermission: '[用户管理]是否有设置用户权限功能'
   },
   auth: {
     network_error: '网络错误，请检查您的网络链接。',

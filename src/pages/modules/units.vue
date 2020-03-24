@@ -2,14 +2,14 @@
   <q-page padding class="q-pa-lg">
     <q-dialog v-model="DUnitTree">
       <q-card class="q-dialog-plugin">
-        <q-toolbar>
+        <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
             flat
             round
             dense
             icon="close"
-            color="negative"
+            color="white"
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
@@ -19,29 +19,30 @@
           </q-toolbar-title>
           <q-btn
             flat
-            color="secondary"
+            color="white"
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="EditUnittree()"
           />
         </q-toolbar>
-        <q-separator />
+        <q-separator color="accent" />
         <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
           <nested-test v-if="true" v-model="Unitdata" class="col-8" />
         </q-card-section>
-        <q-separator />
+        <q-separator color="accent" />
         <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="primary" />
+          <q-spinner-gears size="80px" color="secondary" />
         </q-inner-loading>
       </q-card>
     </q-dialog>
-    <div class="text-h5 q-ma-md text-teal-6">
+    <div class="text-h5 q-ma-md text-secondary">
       {{ $t('units.header') }}
     </div>
-    <q-separator color="lime-2" />
+    <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
       <q-btn
-        color="lime-7"
+        v-if="mPermissions['units.badd']"
+        color="addbtn"
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
@@ -49,7 +50,8 @@
         @click="addItems()"
       />
       <q-btn
-        color="deep-orange-5"
+        v-if="mPermissions['units.bDelete']"
+        color="deldbtn"
         text-color="white"
         class="q-ma-xs"
         icon="delete_sweep"
@@ -57,7 +59,8 @@
         @click="delItems()"
       />
       <q-btn
-        color="indigo-5"
+        v-if="mPermissions['units.bmodify']"
+        color="savebtn"
         text-color="white"
         class="q-ma-xs"
         icon="save"
@@ -65,15 +68,17 @@
         @click="saveItems()"
       />
       <q-btn
-        color="blue-grey-5"
+        v-if="mPermissions['units.bSetTree']"
+        color="treebtn"
         text-color="white"
         class="q-ma-xs"
-        icon="apartment"
-        :label="this.$t('buttons.tree')"
+        icon="account_tree"
+        :label="this.$t('units.showunittree')"
         @click="Unittree()"
       />
       <q-btn
-        color="green-6"
+        v-if="mPermissions['units.bexport']"
+        color="expbtn"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -81,26 +86,10 @@
         @click="ExportDataAsCVS()"
       />
       <q-space />
-      <q-file
-        v-model="importfile"
-        color="indigo"
-        style="max-width: 150px"
-        accept=".xlsx, *.xls"
-        dense
-        clearable
-        :label="this.$t('buttons.import')"
-        @input="ImportCVStoData()"
-      >
-        <template v-slot:prepend>
-          <q-icon name="attachment" />
-        </template>
-      </q-file>
-
       <q-input
         v-model="quickFilter"
         dense
         style="max-width: 120px"
-        color="indigo"
         class="q-ml-md"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
@@ -134,7 +123,7 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import XLSX from 'xlsx'
+import { mapActions } from 'vuex'
 import NestedTest from './nested-tree'
 
 export default {
@@ -157,65 +146,9 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      mPermissions: []
     }
-  },
-  computed: {},
-  beforeMount() {
-    this.gridOptions = {
-      allowShowChangeAfterFilter: true
-    }
-    this.columnDefs = [
-      {
-        headerName: 'ID',
-        field: 'id',
-        width: 55,
-        sortable: true,
-        editable: false,
-        minWidth: 55,
-        headerCheckboxSelection: true,
-        headerCheckboxSelectionFilteredOnly: true,
-        checkboxSelection: true
-      },
-      {
-        headerName: '机构名',
-        field: 'title',
-        width: 130,
-        editable: true,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      },
-      {
-        headerName: '简介',
-        field: 'brief',
-        colId: 'date',
-        width: 200,
-        editable: true,
-        sortable: true,
-        minWidth: 200,
-        cellEditor: 'agLargeTextCellEditor',
-        cellEditorParams: {
-          maxLength: '30000', // override the editor defaults
-          cols: '60',
-          rows: '6'
-        }
-      },
-      {
-        headerName: this.$t('dataAGgrid.created_at'),
-        field: 'created_at',
-        width: 130,
-        editable: false,
-        sortable: true,
-        filter: true,
-        minWidth: 130
-      }
-    ]
-    this.defaultColDef = {
-      editable: true,
-      resizable: true
-    }
-    this.getRowStyle = this.onchangerowcolor
   },
   created() {
     this.$router.app.$http
@@ -228,45 +161,144 @@ export default {
       })
       .catch(e => {})
   },
+  beforeMount() {
+    this.initGrid()
+  },
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'units',
+          name: 'units.badd',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('units.badd')
+        },
+        {
+          module: 'units',
+          name: 'units.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('units.bDelete')
+        },
+        {
+          module: 'units',
+          name: 'units.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('units.bmodify')
+        },
+        {
+          module: 'units',
+          name: 'units.bexport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('units.bexport')
+        },
+        {
+          module: 'units',
+          name: 'units.bSetTree',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('units.bSetTree')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          // console.log(e)
+        })
+    },
+    initGrid() {
+      this.gridOptions = {
+        allowShowChangeAfterFilter: true
+      }
+      this.columnDefs = [
+        {
+          headerName: 'ID',
+          field: 'id',
+          width: 70,
+          minWidth: 70,
+          maxWidth: 70,
+          sortable: true,
+          editable: false,
+          headerCheckboxSelection: true,
+          headerCheckboxSelectionFilteredOnly: true,
+          checkboxSelection: true
+        },
+        {
+          headerName: this.$t('units.title'),
+          field: 'title',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 260,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('units.brief'),
+          field: 'brief',
+          colId: 'date',
+          width: 200,
+          minWidth: 200,
+          maxWidth: 450,
+          editable: true,
+          sortable: true,
+          cellEditor: 'agLargeTextCellEditor',
+          cellEditorParams: {
+            maxLength: '30000', // override the editor defaults
+            cols: '60',
+            rows: '6'
+          }
+        },
+        {
+          headerName: this.$t('dataAGgrid.created_at'),
+          field: 'created_at',
+          width: 130,
+          minWidth: 130,
+          maxWidth: 180,
+          editable: false,
+          sortable: true,
+          filter: true
+        }
+      ]
+      this.defaultColDef = {
+        editable: true,
+        resizable: true
+      }
+      this.getRowStyle = this.onchangerowcolor
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    // 导入开始
-    ImportCVStoData() {
-      const file = this.importfile
-      if (file) {
-        const reader = new FileReader()
-        reader.onload = e => {
-          /*  Parse data */
-          const bstr = e.target.result
-          const wb = XLSX.read(bstr, { type: 'binary' })
-          const wsname = wb.SheetNames[0]
-          const ws = wb.Sheets[wsname]
-          const data = XLSX.utils.sheet_to_json(ws, { header: 1 })
-          let j = 0
-          data.map(item => {
-            const ret = {}
-            let i = 0
-            console.log(this)
-            this.columnDefs.forEach(function(val) {
-              ret[val.field] = item[i++]
-            })
-            if (j > 0) this.rowData.push(ret)
-            j++
-          })
-        }
-        reader.readAsBinaryString(file)
-      }
-    },
-    // 导入结束
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -439,7 +471,7 @@ export default {
 <style>
 /*蓝色#006699 #339999 #666699  #336699  黄色#CC9933  紫色#996699  #990066 棕色#999966 #333300 红色#CC3333  绿色#009966  橙色#ff6600  其他*/
 .Units-agGrid .ag-header {
-  background-color: #996699;
+  background-color: var(--q-color-secondary);
   color: #ffffff;
 }
 .Units-agGrid .ag-cell {
@@ -453,6 +485,6 @@ export default {
   color: #cccccc;
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
-  color: #996699;
+  color: var(--q-color-secondary);
 }
 </style>
