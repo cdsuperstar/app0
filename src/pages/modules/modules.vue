@@ -285,9 +285,9 @@ export default {
         {
           headerName: this.$t('modules.name'),
           field: 'name',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 180,
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
           sortable: true,
           filter: true
         },
