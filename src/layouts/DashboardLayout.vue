@@ -329,8 +329,8 @@ export default {
     if (this.$auth.user().usercfg) {
       this.usercfg = JSON.parse(this.$auth.user().usercfg)
     }
-    this.applytheme(this.usercfg?.theme)
-    this.applydarkmode()
+    if (this.usercfg?.theme) this.applytheme(this.usercfg?.theme)
+    if (this.usercfg?.dark) this.applydarkmode()
     this.getMyPermissions({
       role: ''
     })
@@ -366,9 +366,15 @@ export default {
     // 设置主题
     setthemecolor(color) {
       this.usercfg.theme = color
+
+      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+      if (tmpUsercfg === null) tmpUsercfg = {}
+      tmpUsercfg.theme = color
+      tmpUsercfg.dark = this.usercfg.dark
+
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
-          usercfg: JSON.stringify(this.usercfg)
+          usercfg: JSON.stringify(tmpUsercfg)
         })
         .then(res => {
           if (res.data.success) {

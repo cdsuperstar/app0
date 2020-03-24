@@ -843,7 +843,6 @@ export default {
     Editusertounit() {
       var selectedData = this.gridApi.getSelectedRows()
       var selectarr = selectedData.map(({ name, id }) => id)
-      console.log(this.unitticked, '----------')
       this.$router.app.$http
         .post('/users/setUserUnit/', {
           users: selectarr,

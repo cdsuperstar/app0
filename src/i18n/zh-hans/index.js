@@ -123,15 +123,15 @@ export default {
         value: 'blue'
       },
       {
-        label: '柔和、洁净、爽朗',
+        label: '柔和爽朗',
         value: 'Bright'
       },
       {
-        label: '简单、洁净、进步',
+        label: '简单洁净',
         value: 'simple'
       },
       {
-        label: '华丽、花哨、女性化',
+        label: '粉红空间',
         value: 'fancy'
       }
     ]

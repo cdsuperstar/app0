@@ -141,15 +141,21 @@ export default {
     ...mapState('zero', ['ZPermissions']),
     modulelist: {
       get: function() {
-        return this.usercfg?.quickapplication?.filter(
-          obj =>
-            this.ZPermissions.modules.filter(ob => ob.id === obj.id).length ===
-            1
-        )
-        // return this.usercfg?.quickapplication
+        let tmpObjs = []
+        if (
+          this.usercfg?.quickapplication !== undefined &&
+          this.ZPermissions?.modules !== undefined
+        ) {
+          tmpObjs = this.usercfg?.quickapplication?.filter(
+            obj =>
+              this.ZPermissions.modules.filter(ob => ob.id === obj.id)
+                .length === 1
+          )
+        }
+        return tmpObjs
       },
       set: function(value) {
-        console.log(value)
+        // console.log(value)
       }
     }
   },
@@ -250,7 +256,8 @@ export default {
   beforeDestroy() {
     // 写入数据库
     if (this.$auth.check()) {
-      const tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+      if (tmpUsercfg === null) tmpUsercfg = {}
       tmpUsercfg.quickapplication = this.modulelist
       if (tmpUsercfg.quickapplication !== null) {
         this.$router.app.$http
