@@ -9,7 +9,7 @@
             <img src="/statics/app-logo.jpg" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
-            &nbsp;&nbsp;物探院综合管理系统
+            &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
         </q-toolbar-title>
         <q-space />

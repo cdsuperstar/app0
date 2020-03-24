@@ -148,9 +148,6 @@ export default {
     AgGridVue,
     NestedTest
   },
-  computed: {
-    ...mapState('zero', ['ZModules', 'ZPermissions'])
-  },
   data() {
     return {
       loading: true,
@@ -169,6 +166,9 @@ export default {
       defaultColDef: null,
       mPermissions: []
     }
+  },
+  computed: {
+    ...mapState('zero', ['ZModules', 'ZPermissions'])
   },
   created() {
     this.$router.app.$http

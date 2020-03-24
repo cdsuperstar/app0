@@ -96,8 +96,8 @@
             class="scroll"
           >
             <q-tree
-              node-key="id"
               ref="myroletree"
+              node-key="id"
               label-key="title"
               tick-strategy="strict"
               control-color="warning"
@@ -123,9 +123,6 @@ export default {
   components: {
     AgGridVue
   },
-  computed: {
-    ...mapState('zero', ['ZPermissions'])
-  },
   data() {
     return {
       loading: false,
@@ -142,6 +139,9 @@ export default {
       defaultColDef: null,
       mPermissions: []
     }
+  },
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
   },
   created() {
     this.$router.app.$http

@@ -23,9 +23,9 @@
           <template v-slot:list="scope">
             <div class="text-right">
               <q-btn
+                v-close-popup
                 flat
                 round
-                v-close-popup
                 color="negative"
                 size="sm"
                 icon="close"
@@ -252,7 +252,7 @@ import { mapActions } from 'vuex'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'articlevue',
+  name: 'thearticlevue',
   components: {
     AgGridVue
   },

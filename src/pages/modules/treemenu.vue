@@ -35,7 +35,7 @@
       :list="[children]"
       :group="{ name: 'dragmod', pull: 'clone', put: false }"
     >
-      <div class="list-group-item" :key="children.id">
+      <div :key="children.id" class="list-group-item">
         <q-item
           v-if="children.children.length == 0"
           :to="
@@ -60,8 +60,8 @@
 import draggable from 'vuedraggable'
 export default {
   name: 'Treemenu',
-  props: ['children', 'depth'],
   components: { draggable },
+  props: ['children', 'depth'],
   data() {
     return {
       epandstate: false

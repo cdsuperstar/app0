@@ -76,6 +76,9 @@ export default {
   },
   failed: '操作失败',
   success: '操作成功',
+  system: {
+    name: '综合智能管理系统'
+  },
   operation: {
     addsuccess: '添加成功！',
     addfailed: '添加失败！',

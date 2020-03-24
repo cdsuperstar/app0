@@ -22,9 +22,9 @@
           <template v-slot:list="scope">
             <div class="text-right">
               <q-btn
+                v-close-popup
                 flat
                 round
-                v-close-popup
                 color="negative"
                 size="sm"
                 icon="close"
@@ -340,6 +340,14 @@
 
 export default {
   name: 'UserprofileVue',
+  filters: {
+    filterChar: function(value) {
+      if (value && value.length > 120) {
+        value = value.substring(0, 120) + '...'
+      }
+      return value
+    }
+  },
   data() {
     return {
       DaddFiles: false,
@@ -475,14 +483,6 @@ export default {
       this.data.files.push(info.files[0].name)
       this.changeprofile()
       this.DaddFiles = false
-    }
-  },
-  filters: {
-    filterChar: function(value) {
-      if (value && value.length > 120) {
-        value = value.substring(0, 120) + '...'
-      }
-      return value
     }
   },
   validations: {

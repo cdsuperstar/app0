@@ -7,7 +7,7 @@
             <img src="/statics/app-logo.jpg" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
-            &nbsp;&nbsp;物探院综合管理系统
+            &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
         </q-toolbar-title>
         <q-btn-dropdown
@@ -27,10 +27,10 @@
             <q-item
               v-for="n in langs"
               :key="n.value"
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
-              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               v-close-popup
               clickable
+              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
+              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
               @click="setlanguage(n)"
             >
               <q-item-section avatar style="min-width:30px;">

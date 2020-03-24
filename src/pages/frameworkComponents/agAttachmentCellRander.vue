@@ -70,7 +70,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'agAttachmentCellRander',
+  name: 'agAttachmentCellRandervue',
   data() {},
   created() {
     // end
