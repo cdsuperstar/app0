@@ -268,6 +268,7 @@ import NestedTest from '../pages/modules/nested-tree'
 import { colors } from 'quasar'
 
 export default {
+  name: 'Dashboardlayout',
   components: { treemenu, NestedTest },
   data() {
     return {

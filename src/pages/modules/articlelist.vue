@@ -252,7 +252,7 @@ import { mapActions } from 'vuex'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'thearticlevue',
+  name: 'Article',
   components: {
     AgGridVue
   },

@@ -63,7 +63,7 @@ import { AgGridVue } from 'ag-grid-vue'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
 
 export default {
-  name: 'Roles',
+  name: 'Profile',
   components: {
     AgGridVue
   },
