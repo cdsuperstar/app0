@@ -76,6 +76,11 @@
         :label="this.$t('buttons.save')"
         @click="saveItems()"
       />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
       <q-btn
         v-if="mPermissions['permission.bJsonedit']"
         color="treebtn"
@@ -95,6 +100,11 @@
         @click="ExportDataAsCVS()"
       />
       <q-space />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
       <q-input
         v-model="quickFilter"
         dense
@@ -107,6 +117,11 @@
           <q-icon name="search" />
         </template>
       </q-input>
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
     </div>
     <div class="shadow-1">
       <ag-grid-vue

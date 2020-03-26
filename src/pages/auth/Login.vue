@@ -46,8 +46,17 @@
       </q-card-section>
       <q-card-actions align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
-        <q-btn color="secondary" icon-right="input" @click="login">
+        <q-btn
+          type="submit"
+          color="secondary"
+          icon-right="input"
+          :loading="submitting"
+          @click="login"
+        >
           {{ $t('auth.login.login') }}&nbsp;&nbsp;
+          <template v-slot:loading>
+            <q-spinner-facebook />
+          </template>
         </q-btn>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -76,6 +85,7 @@ export default {
   components: {},
   data() {
     return {
+      submitting: false,
       isPwd: true,
       data: {
         data: {
@@ -97,6 +107,7 @@ export default {
   },
   methods: {
     login() {
+      this.submitting = true
       this.$v.data.$touch()
       if (!this.$v.data.$error) {
         this.loading = true
@@ -129,6 +140,7 @@ export default {
             }
           })
           .finally(() => {
+            this.submitting = false
             this.loading = false
           })
       }

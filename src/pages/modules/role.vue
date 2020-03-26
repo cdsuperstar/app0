@@ -32,6 +32,11 @@
         :label="this.$t('buttons.save')"
         @click="saveItems()"
       />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
       <q-btn
         v-if="mPermissions['role.bSetTree']"
         color="treebtn"
@@ -41,6 +46,7 @@
         :label="this.$t('buttons.setmodule')"
         @click="ShowUnittree()"
       />
+      <q-space v-if="!$q.screen.gt.xs" />
       <q-input
         v-model="quickFilter"
         dense
@@ -53,6 +59,11 @@
           <q-icon name="search" />
         </template>
       </q-input>
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
     </div>
     <div class="row q-ma-md">
       <div class="col-md-4">
