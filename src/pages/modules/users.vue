@@ -173,7 +173,7 @@
       {{ $t('users.header') }}
     </div>
     <q-separator color="accent" />
-    <div class="row q-ma-md" style="margin: 16px 1px">
+    <div class="q-ma-md" style="margin: 16px 1px">
       <q-btn
         v-if="mPermissions['users.badd']"
         color="addbtn"
@@ -201,6 +201,7 @@
         :label="this.$t('buttons.save')"
         @click="saveItems()"
       />
+      <q-separator v-if="!$q.screen.gt.xs" class="q-ma-xs" color="info" />
       <q-btn
         v-if="mPermissions['users.bsetunit']"
         color="treebtn"
@@ -219,6 +220,7 @@
         :label="this.$t('buttons.setrole')"
         @click="ShowRoletree()"
       />
+      <q-separator v-if="!$q.screen.gt.xs" class="q-ma-xs" color="info" />
       <q-btn
         v-if="mPermissions['users.bsetpermission']"
         color="expbtn"
@@ -228,7 +230,15 @@
         :label="this.$t('buttons.setpermission')"
         @click="SetUserPermisson()"
       />
-      <q-space />
+      <input
+        v-model="quickFilter"
+        type="search"
+        class="q-ml-md"
+        style="width:120px;height:30px"
+        :placeholder="this.$t('modules.searchall')"
+        @input="onQuickFilterChanged()"
+      />
+
       <q-input
         v-model="quickFilter"
         dense
@@ -241,6 +251,7 @@
           <q-icon name="search" />
         </template>
       </q-input>
+      <q-separator v-if="!$q.screen.gt.xs" class="q-ma-xs" color="info" />
     </div>
     <div class="row q-ma-md" style="margin: 16px 1px">
       <div class="col-md-6 shadow-1">

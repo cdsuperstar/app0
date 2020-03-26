@@ -74,7 +74,7 @@
         >
         </ag-grid-vue>
       </div>
-      <div class="col-md-4" style="margin-left: 15px;">
+      <div v-if="roleeditsign" class="col-md-4" style="margin-left: 15px;">
         <q-card flat>
           <q-toolbar style="min-height:20px;">
             <q-toolbar-title dense>
@@ -126,6 +126,7 @@ export default {
   data() {
     return {
       loading: false,
+      roleeditsign: false,
       Roledata: [],
       roleticked: null,
       quickFilter: null,
@@ -378,6 +379,7 @@ export default {
       })
     },
     ShowUnittree() {
+      this.roleeditsign = true
       this.loading = true
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length === 1 && selectedData[0].id !== undefined) {
@@ -419,6 +421,7 @@ export default {
           })
           .then(res => {
             if (res.data.success) {
+              this.roleeditsign = false
               this.$zglobal.showMessage(
                 'positive',
                 'center',
