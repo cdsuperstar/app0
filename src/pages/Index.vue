@@ -193,7 +193,7 @@ export default {
     }
     this.MapchartSettings = {
       position: 'province/sichuan',
-      mapURLProfix: '/statics/mapjson/',
+      mapURLProfix: '../statics/mapjson/',
       dimension: '位置',
       metrics: ['人口', '面积'],
       dataType: {
