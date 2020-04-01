@@ -6,7 +6,7 @@
 
         <q-toolbar-title class="row">
           <q-avatar>
-            <img src="http://202.115.137.211:8080/statics/app-logo.jpg" />
+            <img src="../statics/app-logo.jpg" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}

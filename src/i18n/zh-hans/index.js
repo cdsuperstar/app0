@@ -311,9 +311,9 @@ export default {
       verification_failed: '验证失败。'
     },
     logout: {
-      logout_confirmation: '您确定要注销吗？',
+      logout_confirmation: '您确定要退出当前账号吗？',
       confirm: '@:buttons.confirm',
-      logout: '注销',
+      logout: '退出账号',
       cancel: '@:buttons.cancel'
     },
     password: {
