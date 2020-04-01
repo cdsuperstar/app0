@@ -465,7 +465,7 @@ export default {
     this.$router.app.$http
       .get('/p1/s1/p1s1bidfile/')
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.success) {
           this.rowData = res.data.data
         } else {

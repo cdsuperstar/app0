@@ -22,6 +22,13 @@ export function storeZOptHist(state, value) {
     value !== 'not-found' &&
     value !== 'dashboard'
   ) {
-    state.ZOptHist.push(value)
+    const index = state.ZOptHist.findIndex(text => text.name === value)
+    if (index !== -1) {
+      state.ZOptHist.splice(index, 1)
+    }
+    const histmodel = state.ZPermissions.modules.filter(
+      obj => value === obj.name
+    )
+    if (histmodel[0] !== undefined) state.ZOptHist.unshift(histmodel[0])
   }
 }

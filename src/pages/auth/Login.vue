@@ -1,6 +1,10 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card square style="width: 400px; padding:50px">
+    <q-card
+      square
+      :flat="!$q.screen.gt.xs ? true : false"
+      style="width: 400px; padding:50px"
+    >
       <q-card-section>
         <div class="row text-h6 text-primary text-weight-bold no-wrap">
           {{ $t('auth.login.login') }}
@@ -89,8 +93,8 @@ export default {
       isPwd: true,
       data: {
         data: {
-          username: '1@1.com',
-          password: '12345678'
+          username: '',
+          password: ''
         },
         rememberMe: false
       },

@@ -1,6 +1,10 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card square style="width: 400px; padding:50px">
+    <q-card
+      square
+      :flat="!$q.screen.gt.xs ? true : false"
+      style="width: 400px; padding:50px"
+    >
       <q-card-section>
         <div class="row text-h6 no-wrap text-bold" style="color: #ff9800">
           {{ $t('auth.password.forgot.header') }}

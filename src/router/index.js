@@ -81,9 +81,12 @@ export default function({ store } /* { store, ssrContext } */) {
     }
   })
   // Vue.axios.defaults.headers.common = {
-  //   // 'X-CSRF-TOKEN': window.Laravel.csrfToken,
+  //   'X-CSRF-TOKEN': window.Laravel.csrfToken,
   //   'X-Requested-With': 'XMLHttpRequest',
   //   'Content-Type': 'application/json'
+  // }
+  // Vue.axios.defaults.headers.common = {
+  //   'Access-Control-Allow-Origin': '*'
   // }
   Router.beforeEach((to, from, next) => {
     if (process.env.DEV) {

@@ -199,15 +199,17 @@
               flat
               dense
               :title="this.$t('auth.users.profile.remark')"
-              :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
-              @click="expanded = !expanded"
+              :icon="
+                profileexpanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+              "
+              @click="profileexpanded = !profileexpanded"
             />
           </q-card-actions>
           <q-card-actions>
             <q-separator />
           </q-card-actions>
           <q-slide-transition>
-            <div v-show="expanded">
+            <div v-show="profileexpanded">
               <q-card-section class="text-subitle2 text-left">
                 <q-item style="padding: 4px 4px;">
                   <q-item-section>
@@ -352,7 +354,7 @@ export default {
     return {
       DaddFiles: false,
       Duserprfile: false,
-      expanded: true,
+      profileexpanded: true,
       department: null,
       unitMap: null,
       data: {

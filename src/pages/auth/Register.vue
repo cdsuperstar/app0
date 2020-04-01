@@ -1,10 +1,21 @@
 <template>
   <q-page class="flex flex-center">
     <!-- content -->
-    <q-card square style="width: 400px; padding:50px">
-      <q-card-section>
+    <q-card
+      square
+      :flat="!$q.screen.gt.xs ? true : false"
+      style="width: 400px; padding:50px"
+    >
+      <q-card-section class="row">
         <div class="row text-h6 text-primary no-wrap text-bold">
           {{ $t('auth.register.registernew') }}
+        </div>
+        <q-space />
+        <div>
+          <q-checkbox
+            v-model="data.autoLogin"
+            :label="this.$t('auth.register.autologin')"
+          />
         </div>
       </q-card-section>
 
@@ -60,18 +71,12 @@
       <q-card-actions class="row no-wrap" align="center">
         <!--        <q-btn color="primary" :loading="loading" @click="login">-->
         <q-btn color="primary" icon="save" @click="register">
-          &nbsp;
           {{ $t('auth.logout.confirm') }}
         </q-btn>
-        &nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
         <q-btn color="warning" icon-right="cancel" to="login">
           {{ $t('auth.register.cencel') }}
-          &nbsp;
         </q-btn>
-        <q-checkbox
-          v-model="data.autoLogin"
-          :label="this.$t('auth.register.autologin')"
-        />
       </q-card-actions>
       <q-inner-loading :showing="loading">
         <q-spinner-gears size="50px" color="primary" />

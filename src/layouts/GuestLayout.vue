@@ -4,14 +4,13 @@
       <q-toolbar>
         <q-toolbar-title class="row">
           <q-avatar>
-            <img src="/statics/app-logo.jpg" />
+            <img src="http://202.115.137.211:8080/statics/app-logo.jpg" />
           </q-avatar>
-          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
+          <div style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
         </q-toolbar-title>
         <q-btn-dropdown
-          v-if="$q.screen.gt.xs"
           stretch
           flat
           :label="

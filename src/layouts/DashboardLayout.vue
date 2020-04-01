@@ -6,7 +6,7 @@
 
         <q-toolbar-title class="row">
           <q-avatar>
-            <img src="/statics/app-logo.jpg" />
+            <img src="http://202.115.137.211:8080/statics/app-logo.jpg" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
@@ -199,6 +199,35 @@
           </q-expansion-item>
         </q-list>
       </div>
+      <!-- 历史记录--->
+      <div class="q-mt-sm">
+        <q-list>
+          <q-expansion-item
+            expand-separator
+            icon="history"
+            class="text-primary text-weight-bold"
+            :label="this.$t('history.title')"
+          >
+            <q-item
+              v-for="n in MyHistoryList"
+              :key="n.id"
+              v-close-popup
+              v-ripple
+              clickable
+              style="border-bottom: 1px dashed #b5b5b5;"
+              class="text-grey-7"
+              :to="n.url"
+            >
+              <q-item-section avatar>
+                <q-icon :name="n.icon" />
+              </q-item-section>
+              <q-item-section class="column text-weight-medium text-left">
+                <q-item-label>{{ n.title }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+        </q-list>
+      </div>
     </q-drawer>
 
     <q-page-container>
@@ -294,10 +323,20 @@ export default {
     }
   },
   computed: {
-    ...mapState('zero', ['ZPermissions']),
+    ...mapState('zero', ['ZPermissions', 'ZOptHist']),
     menutree: {
       get() {
         return this.ZPermissions.moduletree
+      },
+      set(value) {}
+    },
+    MyHistoryList: {
+      get() {
+        let tmphistory = []
+        if (this.ZOptHist.length > 0) {
+          tmphistory = this.ZOptHist
+        }
+        return tmphistory
       },
       set(value) {}
     },
