@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <q-dialog v-model="DUnitTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar class="bg-primary text-white">
