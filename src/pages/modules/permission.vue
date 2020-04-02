@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <q-dialog v-model="DJsonEditor" full-width full-height>
       <q-card class="q-dialog-plugin">
         <q-toolbar>
@@ -477,6 +477,10 @@ export default {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;

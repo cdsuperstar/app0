@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <q-dialog v-model="DaddUser">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
@@ -126,49 +126,6 @@
         <q-separator color="accent" />
       </q-card>
     </q-dialog>
-    <q-dialog v-model="DunitTree">
-      <q-card class="q-dialog-plugin">
-        <q-toolbar class="bg-primary text-white">
-          <q-btn
-            v-close-popup
-            flat
-            round
-            dense
-            icon="close"
-            :title="this.$t('buttons.close')"
-          />
-          <q-toolbar-title>
-            <span class="text-subtitle1 text-weight-bold">
-              {{ $t('units.showunittree') }}</span
-            >
-          </q-toolbar-title>
-          <q-btn
-            flat
-            color="secondary"
-            text-color="white"
-            icon="save"
-            :label="this.$t('buttons.confirm')"
-            @click="Editusertounit()"
-          />
-        </q-toolbar>
-        <q-separator color="accent" />
-        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
-          <q-tree
-            ref="myunittree"
-            node-key="id"
-            label-key="title"
-            selected-color="primary"
-            :nodes="Unitdata"
-            :selected.sync="unitticked"
-            default-expand-all
-          />
-        </q-card-section>
-        <q-separator color="accent" />
-        <q-inner-loading :showing="loading">
-          <q-spinner-gears size="80px" color="secondary" />
-        </q-inner-loading>
-      </q-card>
-    </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('users.header') }}
     </div>
@@ -207,15 +164,6 @@
         color="info"
       />
       <q-btn
-        v-if="mPermissions['users.bsetunit']"
-        color="treebtn"
-        text-color="white"
-        class="q-ma-xs"
-        icon="apartment"
-        :label="this.$t('buttons.setuit')"
-        @click="Showunittree()"
-      />
-      <q-btn
         v-if="mPermissions['users.bsetrole']"
         color="warning"
         text-color="white"
@@ -223,11 +171,6 @@
         icon="person"
         :label="this.$t('buttons.setrole')"
         @click="ShowRoletree()"
-      />
-      <q-separator
-        v-if="!$q.screen.gt.xs"
-        class="col-10 q-ma-xs"
-        color="info"
       />
       <q-btn
         v-if="mPermissions['users.bsetpermission']"
@@ -239,6 +182,11 @@
         @click="SetUserPermisson()"
       />
       <q-space />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
       <q-input
         v-model="quickFilter"
         dense
@@ -333,9 +281,6 @@ export default {
       PermissData: null,
       DaddUser: false,
       DaddPermission: false,
-      DunitTree: false,
-      Unitdata: [],
-      unitticked: null,
       loading: false,
       quickFilter: null,
       gridOptions: null,
@@ -415,26 +360,6 @@ export default {
             default: null
           },
           title: this.$t('users.bmodify')
-        },
-        {
-          module: 'users',
-          name: 'users.iManageUnit',
-          syscfg: {
-            required: false,
-            type: 'number',
-            default: null
-          },
-          title: this.$t('users.bsetunitroot')
-        },
-        {
-          module: 'users',
-          name: 'users.bsetunit',
-          syscfg: {
-            required: false,
-            type: 'Boolean',
-            default: null
-          },
-          title: this.$t('users.bsetunit')
         },
         {
           module: 'users',
@@ -793,95 +718,6 @@ export default {
             this.$zglobal.showMessage('red-5', 'center', this.$t('failed'))
           }
         })
-    },
-    Showunittree() {
-      var selectedData = this.gridApi.getSelectedRows()
-      if (
-        (selectedData.length === 1 && selectedData[0].id !== undefined) ||
-        selectedData.length > 1
-      ) {
-        // 开始处理
-        this.DunitTree = true
-        this.loading = true
-        // 先得到登录用户的管理单位节点
-        var node = null
-        if (this.mPermissions['users.iManageUnit']) {
-          node = this.mPermissions['users.iManageUnit']
-        } else {
-          if (this.ZPermissions.units.length >= 1)
-            node = this.ZPermissions.units[0].id
-        }
-        this.$router.app.$http
-          .get('/z_unit/getTheUnitTree/' + node)
-          .then(res => {
-            if (res.data.success) {
-              this.loading = false
-              this.Unitdata = res.data.data
-
-              // 得到选定用户的机构值
-              if (selectedData[0].id) {
-                this.$router.app.$http
-                  .get('/users/getUserUnit/' + selectedData[0].id)
-                  .then(resmy => {
-                    if (resmy.data.success) {
-                      this.unitticked = resmy.data.data.map(({ id }) => id)
-                    }
-                  })
-              }
-              this.$zglobal.showMessage(
-                'positive',
-                'center',
-                this.$t('operation.getdatasuccess')
-              )
-            } else {
-              this.loading = false
-            }
-          })
-          .catch(error => {
-            this.loading = false
-            if (error.status) {
-              this.$zglobal.showMessage(
-                'red-5',
-                'center',
-                this.$t('auth.register.invalid_data')
-              )
-            }
-          })
-      } else {
-        this.$zglobal.showMessage(
-          'red-7',
-          'center',
-          this.$t('operation.rowserror')
-        )
-      }
-    },
-    Editusertounit() {
-      var selectedData = this.gridApi.getSelectedRows()
-      var selectarr = selectedData.map(({ name, id }) => id)
-      this.$router.app.$http
-        .post('/users/setUserUnit/', {
-          users: selectarr,
-          units: [this.unitticked]
-        })
-        .then(res => {
-          if (res.data.success) {
-            this.$zglobal.showMessage(
-              'positive',
-              'center',
-              this.$t('success') + ':' + res.data.data
-            )
-          }
-        })
-        .catch(error => {
-          if (error.status) {
-            this.loading = false
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
     }
   },
   validations: {
@@ -918,6 +754,10 @@ function pwdMask(params) {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;

@@ -242,8 +242,6 @@ export default {
     badd: '[用户管理]是否有添加功能',
     bDelete: '[用户管理]是否有删除功能',
     bmodify: '[用户管理]是否有修改功能',
-    bsetunit: '[用户管理]是否有设置用户单位功能',
-    bsetunitroot: '[用户管理]管理单位根节点',
     bsetrole: '[用户管理]是否有设置用户角色功能',
     bsetpermission: '[用户管理]是否有设置用户权限功能'
   },
@@ -371,7 +369,9 @@ export default {
         title: '职称',
         jobs: '岗位',
         remark: '备注',
-        success: '用户资料更改成功！'
+        success: '用户资料更改成功！',
+        bsetunit: '[用户信息]是否有设置用户单位功能',
+        bsetunitroot: '[用户信息]管理单位根节点'
       },
       labels: {
         email: '邮箱',

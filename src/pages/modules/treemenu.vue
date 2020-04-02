@@ -33,7 +33,12 @@
     <draggable
       class="dragArea list-group"
       :list="[children]"
-      :group="{ name: 'dragmod', pull: 'clone', put: false }"
+      :group="{
+        name: 'dragmod',
+        pull: 'clone',
+        put: false,
+        touchStartThreshold: 50
+      }"
     >
       <div :key="children.id" class="list-group-item">
         <q-item

@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <q-dialog v-model="DaddFiles" seamless>
       <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
         <q-uploader
@@ -701,6 +701,10 @@ export default {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;

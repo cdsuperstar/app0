@@ -496,6 +496,10 @@ export default {
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
 }
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
+}
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;
 }

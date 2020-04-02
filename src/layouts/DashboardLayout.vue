@@ -106,12 +106,11 @@
         />
       </q-toolbar>
     </q-header>
-
     <q-drawer
       v-model="left"
       side="left"
-      bordered
       behavior="desktop"
+      bordered
       :width="leftdrawer"
     >
       <!-- drawer content -->
@@ -127,7 +126,6 @@
       </q-list>
       <nested-test v-if="false" v-model="menutree" class="col-8" />
     </q-drawer>
-
     <q-drawer v-model="right" bordered side="right" :width="rightdrawer">
       <!-- drawer content -->
       <!-- 语言选择--->
@@ -466,5 +464,20 @@ export default {
   border-radius: 2px;
   -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
   background-color: #c1c1c1;
+}
+/*定义aggrid的css*/
+.ag-theme-balham .ag-icon,
+.ag-header-icon .ag-sort-ascending-icon {
+  color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
+}
+.ag-theme-balham .ag-icon-checkbox-unchecked {
+  color: #cccccc;
+}
+.ag-theme-balham .ag-icon-checkbox-checked {
+  color: var(--q-color-secondary);
 }
 </style>

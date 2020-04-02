@@ -1,5 +1,48 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
+    <q-dialog v-model="DunitTree">
+      <q-card class="q-dialog-plugin">
+        <q-toolbar class="bg-primary text-white">
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            :title="this.$t('buttons.close')"
+          />
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold">
+              {{ $t('units.showunittree') }}</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            flat
+            color="secondary"
+            text-color="white"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="Editusertounit()"
+          />
+        </q-toolbar>
+        <q-separator color="accent" />
+        <q-card-section style="min-height:10vh;max-height: 80vh" class="scroll">
+          <q-tree
+            ref="myunittree"
+            node-key="id"
+            label-key="title"
+            selected-color="warning"
+            :nodes="Unitdata"
+            :selected.sync="unitticked"
+            default-expand-all
+          />
+        </q-card-section>
+        <q-separator color="accent" />
+        <q-inner-loading :showing="loading">
+          <q-spinner-gears size="80px" color="secondary" />
+        </q-inner-loading>
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('auth.users.profile.pheader') }}
     </div>
@@ -21,7 +64,21 @@
         :label="this.$t('buttons.export')"
         @click="ExportDataAsCVS()"
       />
-      <q-space />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
+      <q-btn
+        v-if="mPermissions['profile.bsetunit']"
+        color="deldbtn"
+        text-color="white"
+        class="q-ma-xs"
+        icon="apartment"
+        :label="this.$t('buttons.setuit')"
+        @click="Showunittree()"
+      />
+      <q-space v-if="$q.screen.gt.xs" />
       <q-input
         v-model="quickFilter"
         dense
@@ -66,6 +123,7 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import agDateCellRender from '../frameworkComponents/agDateCellRender'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Profile',
@@ -74,6 +132,10 @@ export default {
   },
   data() {
     return {
+      DunitTree: false,
+      Unitdata: [],
+      unitticked: null,
+      loading: false,
       quickFilter: null,
       gridOptions: null,
       gridApi: null,
@@ -83,20 +145,14 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
-      unitMap: {}
+      unitMap: {},
+      mPermissions: []
     }
   },
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
+  },
   created() {
-    this.$router.app.$http
-      .get('/profile/')
-      .then(res => {
-        if (res.data.success) {
-          this.rowData = res.data.data
-        } else {
-        }
-      })
-      .catch(e => {})
-
     // 得到机构数据
     this.$router.app.$http.get('/z_unit/').then(res => {
       if (res.data.success) {
@@ -107,7 +163,8 @@ export default {
           acc[v.id] = v.title
           return acc
         }, {})
-        // console.log(this.columnDefs[3].refData, '------------')
+        this.getunitdata()
+        // console.log(this.unitMap, '------------')
         // this.UserNames = JSON.stringify(tmpa).replace(/"/g, "'")
       }
     })
@@ -118,8 +175,42 @@ export default {
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
+    ...mapActions('zero', ['reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'profile',
+          name: 'profile.bsetunit',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('auth.users.profile.bsetunit')
+        },
+        {
+          module: 'profile',
+          name: 'profile.iManageUnit',
+          syscfg: {
+            required: false,
+            type: 'number',
+            default: null
+          },
+          title: this.$t('auth.users.profile.bsetunitroot')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          // console.log(e)
+        })
+    },
     initGrid() {
       this.gridOptions = {
         allowShowChangeAfterFilter: true
@@ -324,6 +415,17 @@ export default {
       }
       this.getRowStyle = this.onchangerowcolor
     },
+    getunitdata() {
+      this.$router.app.$http
+        .get('/profile/')
+        .then(res => {
+          if (res.data.success) {
+            this.rowData = res.data.data
+          } else {
+          }
+        })
+        .catch(e => {})
+    },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
     },
@@ -408,6 +510,96 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    Showunittree() {
+      var selectedData = this.gridApi.getSelectedRows()
+      if (
+        (selectedData.length === 1 && selectedData[0].id !== undefined) ||
+        selectedData.length > 1
+      ) {
+        // 开始处理
+        this.DunitTree = true
+        this.loading = true
+        // 先得到登录用户的管理单位节点
+        var node = null
+        if (this.mPermissions['profile.iManageUnit']) {
+          node = this.mPermissions['profile.iManageUnit']
+        } else {
+          if (this.ZPermissions.units.length >= 1)
+            node = this.ZPermissions.units[0].id
+        }
+        this.$router.app.$http
+          .get('/z_unit/getTheUnitTree/' + node)
+          .then(res => {
+            if (res.data.success) {
+              this.loading = false
+              this.Unitdata = res.data.data
+
+              // 得到选定用户的机构值
+              if (selectedData[0].id) {
+                this.$router.app.$http
+                  .get('/users/getUserUnit/' + selectedData[0].id)
+                  .then(resmy => {
+                    if (resmy.data.success) {
+                      this.unitticked = resmy.data.data.map(({ id }) => id)[0]
+                    }
+                  })
+              }
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.getdatasuccess')
+              )
+            } else {
+              this.loading = false
+            }
+          })
+          .catch(error => {
+            this.loading = false
+            if (error.status) {
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
+            }
+          })
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
+    },
+    Editusertounit() {
+      var selectedData = this.gridApi.getSelectedRows()
+      var selectarr = selectedData.map(({ name, id }) => id)
+      this.$router.app.$http
+        .post('/users/setUserUnit/', {
+          users: selectarr,
+          units: [this.unitticked]
+        })
+        .then(res => {
+          if (res.data.success) {
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('success') + ':' + res.data.data
+            )
+            this.getunitdata()
+          }
+        })
+        .catch(error => {
+          if (error.status) {
+            this.loading = false
+            this.$zglobal.showMessage(
+              'red-5',
+              'center',
+              this.$t('auth.register.invalid_data')
+            )
+          }
+        })
     }
   }
 }
@@ -424,6 +616,10 @@ export default {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;

@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <q-dialog v-model="DModelTree">
       <q-card class="q-dialog-plugin">
         <q-toolbar class="bg-primary text-white">
@@ -39,7 +39,7 @@
       {{ $t('modules.header') }}
     </div>
     <q-separator color="accent" />
-    <div class="row q-ma-md" style="margin: 16px 1px">
+    <div class="row q-ma-md" style="margin: 16px 1px;">
       <q-btn
         v-if="mPermissions['modules.badd']"
         color="addbtn"
@@ -91,15 +91,10 @@
         @click="ExportDataAsCVS()"
       />
       <q-space v-if="$q.screen.gt.xs" />
-      <q-separator
-        v-if="!$q.screen.gt.xs"
-        class="col-10 q-ma-xs"
-        color="info"
-      />
       <q-file
-        v-if="mPermissions['modules.bimport']"
+        v-if="mPermissions['modules.bimport'] && $q.screen.gt.xs"
         v-model="importfile"
-        style="max-width: 150px"
+        style="max-width: 100px;"
         accept=".xlsx, *.xls"
         dense
         clearable
@@ -114,8 +109,8 @@
       <q-input
         v-model="quickFilter"
         dense
-        style="max-width: 120px"
-        class="q-ml-md"
+        style="max-width: 100px"
+        class="q-ml-xs"
         :label="this.$t('modules.searchall')"
         @input="onQuickFilterChanged()"
       >
@@ -574,6 +569,10 @@ export default {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;

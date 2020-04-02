@@ -1,5 +1,5 @@
 <template>
-  <q-page padding class="q-pa-lg">
+  <q-page padding class="q-pa-ma">
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('roles.header') }}
     </div>
@@ -46,7 +46,6 @@
         :label="this.$t('buttons.setmodule')"
         @click="ShowUnittree()"
       />
-      <q-space v-if="!$q.screen.gt.xs" />
       <q-input
         v-model="quickFilter"
         dense
@@ -66,7 +65,7 @@
       />
     </div>
     <div class="row q-ma-md">
-      <div class="col-md-4">
+      <div class="col-md-5">
         <ag-grid-vue
           style="width: 100%; height: 500px;"
           class="ag-theme-balham Role-agGrid"
@@ -85,12 +84,12 @@
         >
         </ag-grid-vue>
       </div>
-      <div v-if="roleeditsign" class="col-md-4" style="margin-left: 15px;">
+      <div v-if="roleeditsign" class="col-md-5" style="margin-left: 15px;">
         <q-card flat>
           <q-toolbar style="min-height:20px;">
             <q-toolbar-title dense>
               <span class="text-subtitle1 text-weight-bold">
-                {{ $t('roles.editroleltree') }}</span
+                {{ $t('roles.editroleltree') }} [{{ rolename }}]</span
               >
             </q-toolbar-title>
             <q-btn
@@ -138,6 +137,7 @@ export default {
     return {
       loading: false,
       roleeditsign: false,
+      rolename: null,
       Roledata: [],
       roleticked: null,
       quickFilter: null,
@@ -395,6 +395,7 @@ export default {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length === 1 && selectedData[0].id !== undefined) {
         this.loading = true
+        this.rolename = selectedData[0].name
         this.Roledata = this.ZPermissions.moduletree
         this.$nextTick(() => {
           this.$refs.myroletree.setExpanded(1, true)
@@ -473,6 +474,10 @@ export default {
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
+}
+.ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
+.ag-theme-balham .ag-paging-panel {
+  color: #000000;
 }
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;
