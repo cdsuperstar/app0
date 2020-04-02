@@ -57,7 +57,9 @@ export default {
     },
     // 1-2 查询当前位置信息失败
     getPositionError(error) {
-      this.$zglobal.showMessage('red-7', 'center', this.$t('failed'))
+      if (error) {
+        this.$zglobal.showMessage('red-7', 'center', this.$t('failed'))
+      }
     }
   }
 }
