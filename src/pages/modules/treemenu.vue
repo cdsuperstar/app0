@@ -30,35 +30,36 @@
         :depth="depth + 1"
       ></treemenu>
     </q-expansion-item>
-    <draggable
-      class="dragArea list-group"
-      :list="[children]"
-      :group="{
-        name: 'dragmod',
-        pull: 'clone',
-        put: false,
-        touchStartThreshold: 50
-      }"
+    <q-item
+      v-if="children.children.length == 0"
+      :to="
+        children.url === '' || children.url === null
+          ? ''
+          : { name: children.name }
+      "
+      style="border-bottom: 1px dashed #ebebeb;"
+      :caption="children.tip"
+      :title="children.tip"
     >
-      <div :key="children.id" class="list-group-item">
-        <q-item
-          v-if="children.children.length == 0"
-          :to="
-            children.url === '' || children.url === null
-              ? ''
-              : { name: children.name }
-          "
-          style="border-bottom: 1px dashed #ebebeb;"
-          :caption="children.tip"
-          :title="children.tip"
-        >
+      <draggable
+        class="dragArea list-group"
+        :list="[children]"
+        :group="{
+          name: 'dragmod',
+          pull: 'clone',
+          put: false,
+          touchStartThreshold: 50
+        }"
+      >
+        <div :key="children.id" class="list-group-item">
           <q-item-section avatar>
             <q-icon :name="children.icon" />
           </q-item-section>
-          <q-item-section>{{ children.title }}</q-item-section>
-        </q-item>
-      </div>
-    </draggable>
+        </div>
+      </draggable>
+
+      <q-item-section>{{ children.title }}</q-item-section>
+    </q-item>
   </div>
 </template>
 <script>
