@@ -237,6 +237,7 @@ export default {
     name: '用户名',
     email: '用户邮箱',
     password: '用户密码',
+    usercfg: '用户配置',
     rolelist: '角色列表',
     setpermission: '设置权限',
     badd: '[用户管理]是否有添加功能',

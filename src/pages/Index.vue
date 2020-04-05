@@ -38,7 +38,7 @@
       >
         <draggable
           class="row"
-          style="width:350px;min-height:83px;margin-top:5px;"
+          style="width:300px;min-height:83px;margin-top:5px;"
           :list="modulelist"
           group="dragmod"
           @change="dataunique"

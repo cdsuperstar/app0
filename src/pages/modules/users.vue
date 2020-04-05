@@ -434,6 +434,16 @@ export default {
           valueFormatter: pwdMask,
           suppressSizeToFit: true,
           filter: true
+        },
+        {
+          headerName: this.$t('users.usercfg'),
+          field: 'usercfg',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 120,
+          sortable: true,
+          editable: false,
+          filter: true
         }
       ]
       this.defaultColDef = {
