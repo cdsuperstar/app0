@@ -70,6 +70,22 @@
           label=" - 录像 - "
           @click="getcapture()"
         />
+        <q-btn-group outline>
+          <q-btn
+            outline
+            color="warning"
+            :icon="recordstatus ? 'fiber_smart_record' : 'stop'"
+            :label="recordstatus ? '开始录音' : '停止录音'"
+            @click="getrecord"
+          />
+          <q-btn
+            outline
+            color="primary"
+            :icon="playstatus ? 'play_arrow' : 'stop'"
+            :label="playstatus ? '开始播放' : '停止播放'"
+            @click="playAudio"
+          />
+        </q-btn-group>
         <q-btn
           flat
           color="primary"
@@ -77,6 +93,9 @@
           label=" - 二维码/条码扫描 - "
           @click="barcodescan()"
         />
+      </q-card-section>
+      <q-card-section style="border-top: 1px dashed var(--q-color-secondary);">
+        <div v-if="divstatus">{{ divstatus }}</div>
       </q-card-section>
     </q-card>
   </q-page>
@@ -92,6 +111,11 @@ export default {
       netstate: null,
       batterystatus: null,
       batterystatusisPlugged: null,
+      mediaRec: null,
+      mediaPlay: null,
+      playstatus: true,
+      recordstatus: true,
+      divstatus: null,
       // 纬度
       latitude: null,
       // 经度
@@ -170,19 +194,7 @@ export default {
     // 二维码扫描
     barcodescan() {
       cordova.plugins.barcodeScanner.scan(
-        function(result) {
-          alert(
-            '扫描结果\n' +
-              '类型: ' +
-              result.format +
-              '\n' +
-              '内容: ' +
-              result.text +
-              '\n' +
-              '是否取消: ' +
-              result.cancelled
-          )
-        },
+        this.barcodescanresult,
         function(error) {
           alert('扫描失败: ' + error)
         },
@@ -205,6 +217,18 @@ export default {
         this.barcodetype = tmpa.barcode.format
         this.barcodetext = tmpa.barcode.text
       }
+    },
+    barcodescanresult(result) {
+      this.divstatus =
+        '扫描结果\n' +
+        '类型:[ ' +
+        result.format +
+        ']\n' +
+        '内容: ' +
+        result.text +
+        '\n' +
+        '是否取消: ' +
+        result.cancelled
     },
     // 拍摄
     getcapture() {
@@ -281,6 +305,119 @@ export default {
       function onLoadImageFail(error) {
         // console.log('调用相册失败的消息：' + error)
         alert('拍摄失败：' + error)
+      }
+    },
+    // 录音
+    getrecordsuccess() {
+      navigator.notification.beep(2)
+      navigator.notification.alert(
+        '录音成功！', // message
+        alertDismissed, // callback
+        '提示', // title
+        '确认' // buttonName
+      )
+      function alertDismissed() {
+        // do something
+        this.divstatus = '取消 确认 按钮！……'
+      }
+      this.divstatus = '录音成功……'
+    },
+    getrecord(val) {
+      // 开始录音
+      var path
+      var filename = 'myrecording.mp3'
+      if (device.platform === 'iOS') {
+        path = cordova.file.tempDirectory + 'AmartApp/' + filename
+      } else if (device.platform === 'Android') {
+        path = cordova.file.externalRootDirectory + 'AmartApp/' + filename
+      }
+      if (this.mediaRec === null) {
+        this.mediaRec = new Media(
+          path,
+          // success callback
+          this.getrecordsuccess,
+          // error callback
+          function(err) {
+            // console.log('recordAudio():Audio Error: ' + err.code)
+            this.divstatus = '录音失败：' + err.code + err.message
+          }
+        )
+      }
+      // 开始录音
+      if (this.recordstatus) {
+        // Record audio
+        if (this.mediaRec) {
+          this.mediaRec.startRecord()
+          navigator.notification.beep(1)
+        }
+        this.recordstatus = false
+        this.divstatus = '开始录音……'
+        // Stop recording after 10 seconds,max1 Hour
+        // setTimeout(function() {
+        //   this.mediaRec.stopRecord()
+        // }, 3600000)
+      } else {
+        // 结束录音
+        if (this.mediaRec) {
+          this.mediaRec.stopRecord()
+          this.mediaRec.release()
+          this.divstatus = '停止录音……'
+        }
+        this.mediaRec = null
+        this.recordstatus = true
+      }
+    },
+    playAudio() {
+      var path
+      var filename = 'myrecording.mp3'
+      if (device.platform === 'iOS') {
+        path = cordova.file.tempDirectory + 'AmartApp/' + filename
+      } else if (device.platform === 'Android') {
+        path = cordova.file.externalRootDirectory + 'AmartApp/' + filename
+      }
+      if (this.mediaPlay === null) {
+        this.mediaPlay = new Media(
+          path,
+          // success callback
+          function() {
+            navigator.notification.alert(
+              '播放成功！', // message
+              alertDismissed, // callback
+              '提示', // title
+              '确认' // buttonName
+            )
+            function alertDismissed() {
+              // do something
+              this.divstatus = '取消 确认 按钮！……'
+            }
+            this.divstatus = '播放成功！'
+          },
+          // error callback
+          function(err) {
+            this.divstatus = '播放失败：' + err.code + err.message
+          }
+        )
+      }
+
+      // 开始播放
+      if (this.playstatus) {
+        // Record audio
+        if (this.mediaPlay) this.mediaPlay.play()
+        this.playstatus = false
+        this.divstatus = '开始播放……'
+        // Stop recording after 10 seconds,max1 Hour
+        // setTimeout(function() {
+        //   this.mediaRec.stopRecord()
+        // }, 3600000)
+      } else {
+        // 结束播放
+        if (this.mediaPlay) {
+          this.mediaPlay.stop()
+          this.mediaPlay.release()
+          this.divstatus = '停止播放……'
+        }
+        this.mediaPlay = null
+        this.playstatus = true
       }
     }
   }
