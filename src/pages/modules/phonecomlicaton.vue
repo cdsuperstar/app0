@@ -388,6 +388,8 @@ export default {
     getrecord(val) {
       // 开始录音
       var path
+      let device
+      let Media
       var filename = 'myrecording.mp3'
       if (device.platform === 'iOS') {
         this.soundstatus = '平台为:IOS；设备名称：' + device.model
@@ -446,6 +448,8 @@ export default {
     },
     playAudio(val) {
       var path
+      let device
+      let Media
       var filename = 'myrecording.mp3'
       if (device.platform === 'iOS') {
         path = cordova.file.tempDirectory + 'AmartApp/' + filename

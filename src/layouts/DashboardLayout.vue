@@ -108,6 +108,7 @@
     </q-header>
     <q-drawer
       v-model="left"
+      v-touch-swipe.mouse.left="handleleftSwipe"
       side="left"
       behavior="desktop"
       bordered
@@ -437,6 +438,10 @@ export default {
           this.$router.push('dashboard')
         }
       }
+    },
+    // 左滑关闭菜单列表
+    handleleftSwipe() {
+      this.left = false
     }
   }
 }
