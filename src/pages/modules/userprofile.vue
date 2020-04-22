@@ -69,7 +69,7 @@
       </q-item-section>
     </q-dialog>
     <q-dialog v-model="Duserprfile">
-      <q-card class="q-dialog-plugin">
+      <q-card class="chart-profile">
         <q-toolbar class="bg-primary text-white">
           <q-btn
             v-close-popup
@@ -505,5 +505,9 @@ export default {
 }
 .userprile-header {
   width: 100%;
+}
+.chart-profile {
+  margin: 20px auto;
+  width: 550px;
 }
 </style>
