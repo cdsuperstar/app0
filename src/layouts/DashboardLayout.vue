@@ -108,11 +108,14 @@
     </q-header>
     <q-drawer
       v-model="left"
+      bordered
+      :overlay="!$q.screen.gt.xs ? true : false"
       v-touch-swipe.mouse.left="handleleftSwipe"
       side="left"
       behavior="desktop"
-      bordered
       :width="leftdrawer"
+      :mini="!left || miniState"
+      @click.capture="drawerClick"
     >
       <!-- drawer content -->
       <q-list bordered link class="rounded-borders">
@@ -126,8 +129,26 @@
         </div>
       </q-list>
       <nested-test v-if="false" v-model="menutree" class="col-8" />
+      <div class="q-mini-drawer-hide absolute" style="top: 15px; right: -17px">
+        <q-btn
+          dense
+          round
+          unelevated
+          color="info"
+          icon="chevron_left"
+          @click="miniState = true"
+        />
+      </div>
     </q-drawer>
-    <q-drawer v-model="right" bordered side="right" :width="rightdrawer">
+    <q-drawer
+      v-model="right"
+      v-touch-swipe.mouse.right="handlerightSwipe"
+      behavior="desktop"
+      overlay
+      bordered
+      side="right"
+      :width="rightdrawer"
+    >
       <!-- drawer content -->
       <!-- 语言选择--->
       <div class="q-mt-sm">
@@ -308,6 +329,7 @@ export default {
       right: false,
       leftdrawer: 210,
       rightdrawer: 230,
+      miniState: false,
       langs: [
         {
           label: '中文',
@@ -442,6 +464,15 @@ export default {
     // 左滑关闭菜单列表
     handleleftSwipe() {
       this.left = false
+    },
+    handlerightSwipe() {
+      this.right = false
+    },
+    drawerClick(e) {
+      if (this.miniState) {
+        this.miniState = false
+        e.stopPropagation()
+      }
     }
   }
 }

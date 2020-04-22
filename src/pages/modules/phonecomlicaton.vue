@@ -386,7 +386,8 @@ export default {
       this.soundstatus = '录音成功……'
     },
     getrecord(val) {
-      // 开始录音
+      // 开始录音 禁止用eslint提示
+      /* eslint-disable */
       var path
       var filename = 'myrecording.mp3'
       if (device.platform === 'iOS') {
