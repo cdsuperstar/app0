@@ -85,23 +85,34 @@
         icon="create_new_folder"
         :done="done2"
       >
-        选择：{{ model }}<br />
-        {{ model1 }}
+        选择：{{ vote.province }}-{{ vote.city }}-{{ vote.town }}
         <div class="q-gutter-md row">
           <q-select
-            filled
-            v-model="model"
-            stack-label
+            v-model="vote.province"
+            dense
+            standout="bg-secondary text-white"
             label="省份"
             style="min-width: 10em"
+            emit-value
             :options="provinceoptions"
           />
           <q-select
-            filled
-            v-model="model1"
+            v-model="vote.city"
+            dense
+            standout="bg-secondary text-white"
             label="城市"
             style="min-width: 10em"
-            :options="model.city"
+            emit-value
+            :options="cityArray"
+          />
+          <q-select
+            v-model="vote.town"
+            dense
+            standout="bg-secondary text-white"
+            label="区、县"
+            emit-value
+            style="min-width: 10em"
+            :options="townArray"
           />
         </div>
       </q-step>
@@ -139,87 +150,67 @@ export default {
   components: {},
   data() {
     return {
-      model: [],
-      model1: [],
       saving: false,
       vote: { q4: ['旅游', '上网'] },
       show2: true,
       provinceoptions: [
         {
-          label: 'Google',
-          value: 'Google',
-          description: 'Search engine',
-          category: '1',
+          label: '四川省',
+          value: '四川省',
           city: [
             {
-              label: 'Google1',
-              value: 'Google1',
-              description: 'Search engine',
-              category: '1'
+              label: '成都市',
+              value: '成都市',
+              town: [
+                {
+                  label: '成华区',
+                  value: '成华区'
+                },
+                {
+                  label: '青羊区',
+                  value: '青羊区'
+                }
+              ]
             },
             {
-              label: 'Facebook1',
-              value: 'Facebook1',
-              description: 'Social media',
-              category: '1'
+              label: '广元市',
+              value: '广元市'
             },
             {
-              label: 'Twitter1',
-              value: 'Twitter1',
-              description: 'Quick updates',
-              category: '2'
+              label: '南充市',
+              value: '南充市'
             }
           ]
         },
         {
-          label: 'Facebook',
-          value: 'Facebook',
-          description: 'Social media',
-          category: '2',
+          label: '海南省',
+          value: '海南省',
           city: [
             {
-              label: 'Google2',
-              value: 'Google2',
-              description: 'Search engine',
-              category: '1'
+              label: '三亚市',
+              value: '三亚市'
             },
             {
-              label: 'Facebook2',
-              value: 'Facebook2',
-              description: 'Social media',
-              category: '1'
-            },
-            {
-              label: 'Twitter2',
-              value: 'Twitter2',
-              description: 'Quick updates',
-              category: '2'
+              label: '海口市',
+              value: '海口市'
             }
           ]
         },
         {
-          label: 'Twitter',
-          value: 'Twitter',
-          description: 'Quick updates',
-          category: '3',
+          label: '重庆市',
+          value: '重庆市',
           city: [
             {
-              label: 'Google3',
-              value: 'Google3',
-              description: 'Search engine',
-              category: '1'
+              label: '嘉陵区',
+              value: '嘉陵区'
             },
             {
-              label: 'Facebook3',
-              value: 'Facebook3',
-              description: 'Social media',
-              category: '1'
+              label: '北碚区',
+              value: '北碚区'
             },
             {
-              label: 'Twitter3',
-              value: 'Twitter3',
-              description: 'Quick updates',
-              category: '2'
+              label: '黔江县',
+              value: '黔江县'
             }
           ]
         }
@@ -259,11 +250,32 @@ export default {
       done3: false
     }
   },
-  computed: {},
-  created() {
-    // 得到初始数据
+  computed: {
+    // 获得列表
+    cityArray: function() {
+      for (var i in this.provinceoptions) {
+        if (this.provinceoptions[i].value === this.vote.province) {
+          return this.provinceoptions[i].city
+        }
+      }
+    },
+    townArray: function() {
+      for (var i in this.cityArray) {
+        if (this.cityArray[i].value === this.vote.city) {
+          return this.cityArray[i].town
+        }
+      }
+    }
   },
+  created() {},
   watch: {
+    'vote.province'(val) {
+      if (this.vote.city) this.vote.city = null
+      if (this.vote.town) this.vote.town = null
+    },
+    'vote.city'(val) {
+      if (this.vote.town) this.vote.town = null
+    },
     'vote.sex'(val) {
       if (val === 'female') {
         this.show2 = false
@@ -280,7 +292,7 @@ export default {
       setTimeout(() => {
         // we're done, we reset loading state
         this.saving = false
-        console.log('-=----=---=---=---=---=--')
+        console.log('-=----=---=---=---=---=--' + JSON.stringify(this.vote))
       }, 3000)
     }
   }
