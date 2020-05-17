@@ -40,6 +40,8 @@
           class="row"
           style="width:300px;min-height:83px;margin-top:5px;"
           :list="modulelist"
+          delay="1000"
+          touchStartThreshold="5"
           group="dragmod"
           @change="dataunique"
           @remove="delmodu"
