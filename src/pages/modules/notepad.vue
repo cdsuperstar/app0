@@ -1,16 +1,20 @@
 <template>
-  <q-page class="q-pa-ma">
+  <q-page class="q-pa-xs">
     <q-card flat>
       <q-card-section>
         <p
-          class="row text-h6 text-bold"
+          class="text-bold"
+          align="center"
           style="margin-bottom:.5em;color: var(--q-color-positive)"
         >
-          大学生消费情况调查问卷
+          <font size="4">2019 年贫困县退出专项评估检查</font><br />
+          <font size="3" style="text-indent: 3em;"
+            >（建档立卡脱贫户调查问卷）</font
+          >
         </p>
         <p style="text-indent:2em;">
-          你好！非常感谢你在百忙之中填写这份问卷，我们调查的目的是想了解目前大学生在金钱观、消费观、消费与闲暇方式等方面的现状。大学生是一个庞大的消费群体，对消费市场有着不容小视的影响。大学生的消费理念势必会影响消费市场的发展趋向，
-          本问卷各项答案无所谓好坏对错且问卷所得结果不做个别呈现，对外绝对保密，所以请你依据自己的看法，放心填写。谢谢你的合作！
+          您好！我们是西藏自治区 2019 年贫困县退出专项评估检查的调查员。
+          您家是我们选取的抽样农户，现需要访谈了解您家庭生产、生活及有关情况。希望您如实提供信息，我们将遵守规定对您所提供的信息严格保密。谢谢您的理解与配合！
         </p>
       </q-card-section>
     </q-card>
@@ -28,9 +32,10 @@
     >
       <q-step
         :name="1"
-        title="基础信息"
-        caption="问卷基础信息"
-        icon="person"
+        title="第一部分 基础信息"
+        caption=""
+        icon="settings"
+        style="padding: 12px 12px;"
         :done="done1"
       >
         <div class="q-mb-lg row">
@@ -63,98 +68,426 @@
             v-model="vote.province"
             dense
             standout="bg-secondary text-white"
-            label="省份"
+            label="省"
             style="min-width: 8em"
             emit-value
-            :options="provinceoptions"
+            :options="addressoptions"
           />
           <q-select
             v-model="vote.city"
             dense
             standout="bg-secondary text-white"
-            label="城市"
+            label="市"
             style="min-width: 8em"
             emit-value
             :options="cityArray"
           />
           <q-select
+            v-model="vote.country"
+            dense
+            standout="bg-secondary text-white"
+            label="区（县）"
+            emit-value
+            style="min-width: 8em"
+            :options="countryArray"
+          />
+          <q-select
             v-model="vote.town"
             dense
             standout="bg-secondary text-white"
-            label="区、县"
+            label="镇（乡）"
             emit-value
             style="min-width: 8em"
             :options="townArray"
           />
         </div>
         <div>
-          <q-input v-model="vote.name" type="text" style="max-width: 20em;">
-            <template v-slot:before>
-              <font size="3"
-                >&nbsp;姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名&nbsp;</font
-              >
-            </template>
-          </q-input>
-          <q-input v-model="vote.no" type="text" style="max-width: 20em;">
-            <template v-slot:before>
-              <font size="3">身份证号</font>
-            </template>
-          </q-input>
+          <q-input
+            v-model="vote.village"
+            type="text"
+            label="行政村（社区）"
+            style="max-width: 20em;"
+          />
+          <q-input
+            v-model="vote.group"
+            type="text"
+            label="自然村（组）"
+            style="max-width: 20em;"
+          />
+        </div>
+        <div>
+          <q-select
+            v-model="vote.villagetype"
+            label="行政村属性"
+            style="max-width: 20em;"
+            :options="[
+              { label: '农区', value: '1' },
+              { label: '牧区', value: '2' },
+              { label: '半农半牧区', value: '3' }
+            ]"
+          />
+        </div>
+        <div>
+          <q-input
+            v-model="vote.investigator1"
+            type="text"
+            label="调查员1姓名"
+            style="max-width: 20em;"
+          />
+          <q-input
+            v-model="vote.investigatortel1"
+            type="text"
+            label="调查员1联系方式"
+            style="max-width: 20em;"
+            mask="### - #### ####"
+          />
+        </div>
+        <div>
+          <q-input
+            v-model="vote.investigator2"
+            type="text"
+            label="调查员2姓名"
+            style="max-width: 20em;"
+          />
+          <q-input
+            v-model="vote.investigatortel2"
+            type="text"
+            label="调查员2联系方式"
+            style="max-width: 20em;"
+            mask="### - #### ####"
+          />
         </div>
       </q-step>
 
-      <q-step :name="2" title="基本信息" icon="create_new_folder" :done="done2">
-        <div class="no-wrap">
-          1、你的性别：
-          <q-radio v-model="vote.sex" val="male" label="男" color="cyan" />
-          <q-radio v-model="vote.sex" val="female" label="女" color="red" />
-        </div>
-        <div v-if="show2">
-          2、你的年级：
-          <q-option-group
-            v-model="vote.grade"
-            label="Notifications"
-            type="radio"
-            :options="gradeoptions"
-          />
-        </div>
-        <div class="q-ma">
-          3、 您是否经常与同学聚餐：（<q-icon
-            name="star"
-            color="deep-orange-7"
-            size="20px"
-          />）
-
-          <q-option-group
-            v-model="vote.q3"
-            label="Notifications"
-            type="radio"
-            :options="options3"
-          />
-        </div>
-        <div class="q-ma">
-          4、每个月的生活费有剩余时，你会把它用于*：
-          <q-option-group
-            v-model="vote.q4"
-            label="Notifications"
-            type="checkbox"
-            :options="options4"
-          />
-          <p style="text-indent:1em;" class="q-pl-lg">
-            <input v-model="vote.q4o" type="text" size="20" />
-          </p>
-        </div>
-        <div class="q-ma" style="max-width: 300px">
-          5、你的建议：
-          <q-input v-model="vote.q5" outlined type="textarea" />
-        </div>
+      <q-step
+        :name="2"
+        title="第二部分 农户家庭基本信息"
+        icon="person"
+        style="padding: 12px 12px;"
+        :done="done2"
+      >
+        <q-card flat dense>
+          <q-card-section
+            style="padding:5px;border-bottom: 2px dashed var(--q-color-secondary);max-width: 20em;"
+          >
+            <div class="text-h6 text-primary">
+              受访者信息
+            </div></q-card-section
+          >
+          <q-card-section style="padding:1px;">
+            <q-input
+              v-model="vote.a1name"
+              type="text"
+              label="A1.受访者姓名"
+              style="max-width: 20em;"
+            />
+            <q-select
+              v-model="vote.a1renation"
+              use-input
+              use-chips
+              label="A1.与户主关系"
+              style="max-width: 20em;"
+              new-value-mode="add-unique"
+              :options="[
+                '本人',
+                '配偶',
+                '子女',
+                '父母',
+                '兄弟',
+                '姊妹',
+                '爷孙',
+                '其他'
+              ]"
+            ></q-select>
+            <q-input
+              v-model="vote.a1tel"
+              type="text"
+              label="A1.联系方式"
+              style="max-width: 20em;"
+            />
+            <q-select
+              v-model="vote.a2"
+              label="A2.被访者文化程度"
+              style="max-width: 20em;"
+              :options="[
+                '小学及以下',
+                '初中',
+                '高中',
+                '职校、中专',
+                '大专及以上'
+              ]"
+            ></q-select>
+          </q-card-section>
+          <q-card-section
+            style="padding:5px;border-bottom: 2px dashed var(--q-color-secondary);max-width: 20em;"
+          >
+            <div class="text-h6 text-primary">户主基本情况</div></q-card-section
+          >
+          <q-card-section style="padding:1px;">
+            <q-input
+              v-model="vote.b1"
+              type="text"
+              label="B1.户主姓名"
+              style="max-width: 20em;"
+            />
+            <q-select
+              v-model="vote.b2"
+              label="B2.户主性别"
+              style="max-width: 20em;"
+              :options="['男', '女']"
+            ></q-select>
+            <q-select
+              v-model="vote.b3"
+              label="B3.户主民族"
+              use-input
+              use-chips
+              style="max-width: 20em;"
+              new-value-mode="add-unique"
+              :options="['汉族', '藏族', '土家族']"
+            ></q-select>
+            <q-select
+              v-model="vote.b4"
+              label="B4.户主文化程度"
+              style="max-width: 20em;"
+              :options="[
+                '小学及以下',
+                '初中',
+                '高中',
+                '职校、中专',
+                '大专及以上'
+              ]"
+            ></q-select>
+            <q-input
+              v-model="vote.b5"
+              type="text"
+              label="B5.户主身份证号"
+              style="max-width: 20em;"
+              mask="X##### ######## ###X X"
+            />
+          </q-card-section>
+          <q-card-section
+            style="padding:5px;border-bottom: 2px dashed var(--q-color-secondary);max-width: 20em;"
+          >
+            <div class="text-h6 text-primary">
+              农户家庭基本情况
+            </div></q-card-section
+          >
+          <q-card-section style="padding:1px;">
+            <q-input
+              v-model="vote.c1"
+              type="text"
+              label="C1.建档立卡人口数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c2"
+              type="text"
+              label="C2.60 周岁及以上人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c3"
+              type="text"
+              label="C3.16 周岁到 60 周岁人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c4"
+              type="text"
+              label="C4.劳动力人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              hint="16 到 64 周岁，除学生外 有劳动能力的人数"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c5"
+              type="text"
+              label="C5.其中：常年外出打工人口数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              hint="指累计打工半年以上"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c6"
+              type="text"
+              label="C6.常年在家务农人口数（人） "
+              style="max-width: 20em;"
+              mask="##"
+              hint="指在家务农半年以上"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c7"
+              type="text"
+              label="C7.丧失劳动能力人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              hint="16 到 64 周岁， 因病因残丧失劳动力"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c8"
+              type="text"
+              label="C8.义务教育年龄段人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              hint="一般是 6 周岁到 15 周岁"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c9"
+              type="text"
+              label="C9.正在接受义务教育的学生数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c10"
+              type="text"
+              label="C10.患大病人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c11"
+              type="text"
+              label="C11.残疾（含精神病）人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c12"
+              type="text"
+              label="C12.患慢性病人数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c13"
+              type="text"
+              label="C13.常住人口数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c14"
+              type="text"
+              label="C14.您家哪一年被确定为建档立卡户?"
+              style="max-width: 20em;"
+              mask="####"
+              hint="年（4 位数年份）（取值范围为2014-2019）"
+              :rules="[
+                val =>
+                  (val >= 2014 && val <= 2019) || '该项取值范围为2014-2019 '
+              ]"
+            />
+            <q-select
+              v-model="vote.c15"
+              label="C15.贫困户属性"
+              style="max-width: 20em;"
+              :options="['一般户', '低保户', '五保户']"
+            ></q-select>
+            <q-input
+              v-model="vote.c16"
+              type="text"
+              label="C16.2019 年低保人口数（人）"
+              style="max-width: 20em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
+            <q-input
+              v-model="vote.c17"
+              type="number"
+              label="C17.全家 2019 年领取的低保金是多少？ （元）"
+              style="max-width: 20em;"
+            />
+            <q-input
+              v-model="vote.c18"
+              type="text"
+              label="C18.最近一次的低保是什么时候开始享受的？"
+              style="max-width: 20em;"
+              hint="年月（4 位年份加 2 位月份）"
+              mask="#### ##"
+            />
+            <q-input
+              v-model="vote.c19"
+              type="text"
+              label="C19.是哪一年脱贫的？"
+              style="max-width: 20em;"
+              hint="年（4 位数年份） "
+              mask="####"
+            />
+          </q-card-section>
+        </q-card>
       </q-step>
 
-      <q-step :name="3" title="Create an ad" icon="add_comment" :done="done3">
-        Try out different ad text to see what brings in the most customers, and
-        learn how to enhance your ads using features like ad extensions. If you
-        run into any problems with your ads, find out how to tell if they're
-        running and how to resolve approval issues.
+      <q-step
+        :name="3"
+        title="第三部分 “两不愁、三保障” 情况"
+        icon="home"
+        style="padding: 12px 12px;"
+        :done="done3"
+      >
+        <q-card flat dense>
+          <q-card-section
+            style="padding:5px;border-bottom: 2px dashed var(--q-color-secondary);max-width: 20em;"
+          >
+            <div class="text-h6 text-primary">
+              “ 两不愁”情况
+            </div></q-card-section
+          >
+          <q-card-section style="padding:1px;">
+            <q-select
+              v-model="vote.d1"
+              label="D1.现在家里是否能吃得饱？"
+              style="max-width: 20em;"
+              :options="['是', '否']"
+            ></q-select>
+            <q-select
+              v-model="vote.d2"
+              label="D2.如果吃不饱，表现是什么？"
+              style="max-width: 20em;"
+              :options="['常年吃不饱', '个别月份吃不饱']"
+            ></q-select>
+          </q-card-section>
+        </q-card>
+      </q-step>
+      <q-step
+        :name="4"
+        title="第四部分 政策落实情况"
+        icon="list_alt"
+        style="padding: 12px 12px;"
+        :done="done4"
+      >
+      </q-step>
+      <q-step
+        :name="5"
+        title="第五部分 家庭收入核实情况"
+        icon="account_balance"
+        style="padding: 12px 12px;"
+        :done="done5"
+      >
+      </q-step>
+      <q-step
+        :name="6"
+        title="第六部分 认可度调查"
+        icon="stars"
+        style="padding: 12px 12px;"
+        :done="done6"
+      >
         <div>
           <q-btn
             type="submit"
@@ -171,9 +504,9 @@
         </div>
       </q-step>
     </q-stepper>
-    <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="add" color="accent" />
-    </q-page-sticky>
+    <!--    <q-page-sticky position="bottom-right" :offset="[18, 18]">-->
+    <!--      <q-btn fab icon="add" color="accent" />-->
+    <!--    </q-page-sticky>-->
   </q-page>
 </template>
 
@@ -184,9 +517,9 @@ export default {
   data() {
     return {
       saving: false,
-      vote: { q4: ['旅游', '上网'] },
+      vote: {},
       show2: true,
-      provinceoptions: [
+      addressoptions: [
         {
           label: '四川省',
           value: '四川省',
@@ -194,14 +527,28 @@ export default {
             {
               label: '成都市',
               value: '成都市',
-              town: [
+              country: [
                 {
                   label: '成华区',
-                  value: '成华区'
+                  value: '成华区',
+                  town: [
+                    {
+                      label: '二仙桥',
+                      value: '二仙桥'
+                    },
+                    { label: '八里庄', value: '八里庄' }
+                  ]
                 },
                 {
                   label: '青羊区',
-                  value: '青羊区'
+                  value: '青羊区',
+                  town: [
+                    {
+                      label: '西南交通大学',
+                      value: '西南交通大学'
+                    },
+                    { label: '西南石油大学', value: '西南石油大学' }
+                  ]
                 }
               ]
             },
@@ -248,71 +595,60 @@ export default {
           ]
         }
       ],
-      gradeoptions: [
-        { label: '大一', value: '大一', color: 'primary' },
-        { label: '大二', value: '大二', color: 'primary' },
-        { label: '大三', value: '大三', color: 'primary' },
-        { label: '大四', value: '大四', color: 'primary' }
-      ],
-      options3: [
-        { label: '从来不', value: '从来不', color: 'primary' },
-        {
-          label: '一两个星期左右一次',
-          value: '一两个星期左右一次',
-          color: 'primary'
-        },
-        {
-          label: '一两个月左右一次',
-          value: '一两个月左右一次',
-          color: 'primary'
-        }
-      ],
-      options4: [
-        { label: '吃喝', value: '吃喝' },
-        { label: '旅游', value: '旅游' },
-        { label: '添置衣物', value: '添置衣物' },
-        { label: '上网', value: '上网' },
-        { label: '考证', value: '考证' },
-        { label: '买书', value: '买书' },
-        { label: '存起来', value: '存起来' },
-        { label: '其它 ', value: '其它 ' }
-      ],
-      step: 1,
+      step: 3,
       done1: false,
       done2: false,
-      done3: false
+      done3: false,
+      done4: false,
+      done5: false,
+      done6: false
     }
   },
 
   computed: {
     // 获得列表
     cityArray: function() {
-      let tmpRe = []
-      for (var i in this.provinceoptions) {
-        if (this.provinceoptions[i].value === this.vote.province) {
-          tmpRe = this.provinceoptions[i].city
+      let tmpRe1 = []
+      for (var i in this.addressoptions) {
+        if (this.addressoptions[i].value === this.vote.province) {
+          tmpRe1 = this.addressoptions[i].city
           break
         }
       }
-      return tmpRe
+      return tmpRe1
     },
-    townArray: function() {
-      let tmpRe = []
+    countryArray: function() {
+      let tmpRe2 = []
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
-          tmpRe = this.cityArray[i].town
+          tmpRe2 = this.cityArray[i].country
           break
         }
       }
-      return tmpRe
+      return tmpRe2
+    },
+    townArray: function() {
+      let tmpRe3 = []
+      for (var i in this.countryArray) {
+        if (this.countryArray[i].value === this.vote.country) {
+          tmpRe3 = this.countryArray[i].town
+          break
+        }
+      }
+      return tmpRe3
     }
   },
   watch: {
     'vote.province'(val) {
       if (this.vote.city) this.vote.city = null
+      if (this.vote.country) this.vote.country = null
       if (this.vote.town) this.vote.town = null
     },
     'vote.city'(val) {
+      if (this.vote.country) this.vote.country = null
+      if (this.vote.town) this.vote.town = null
+    },
+    'vote.country'(val) {
       if (this.vote.town) this.vote.town = null
     },
     'vote.sex'(val) {
@@ -363,4 +699,8 @@ export default {
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+.q-stepper--vertical .q-stepper__step-inner {
+  padding: 0 2px 25px 37px;
+}
+</style>
