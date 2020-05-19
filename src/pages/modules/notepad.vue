@@ -15,24 +15,95 @@
       </q-card-section>
     </q-card>
     <q-stepper
+      ref="stepper"
       v-model="step"
       header-nav
       flat
-      :vertical="$q.screen.gt.xs ? false : true"
-      ref="stepper"
       color="primary"
       done-color="deep-orange"
       active-color="purple"
       inactive-color="secondary"
       animated
+      :vertical="$q.screen.gt.xs ? false : true"
     >
       <q-step
         :name="1"
         title="基础信息"
-        caption="个人信息"
+        caption="问卷基础信息"
         icon="person"
         :done="done1"
       >
+        <div class="q-mb-lg row">
+          <q-icon name="location_on" class="text-warning" size="md" />
+          <q-input
+            v-model="vote.longitude"
+            dense
+            disable
+            type="text"
+            style="max-width: 8em;"
+          >
+            <template v-slot:before>
+              <font size="3">经度</font>
+            </template>
+          </q-input>
+          <q-input
+            v-model="vote.latitude"
+            dense
+            disable
+            type="text"
+            style="max-width: 8em;"
+          >
+            <template v-slot:before>
+              <font size="3">纬度</font>
+            </template>
+          </q-input>
+        </div>
+        <div class="q-gutter-md row">
+          <q-select
+            v-model="vote.province"
+            dense
+            standout="bg-secondary text-white"
+            label="省份"
+            style="min-width: 8em"
+            emit-value
+            :options="provinceoptions"
+          />
+          <q-select
+            v-model="vote.city"
+            dense
+            standout="bg-secondary text-white"
+            label="城市"
+            style="min-width: 8em"
+            emit-value
+            :options="cityArray"
+          />
+          <q-select
+            v-model="vote.town"
+            dense
+            standout="bg-secondary text-white"
+            label="区、县"
+            emit-value
+            style="min-width: 8em"
+            :options="townArray"
+          />
+        </div>
+        <div>
+          <q-input v-model="vote.name" type="text" style="max-width: 20em;">
+            <template v-slot:before>
+              <font size="3"
+                >&nbsp;姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名&nbsp;</font
+              >
+            </template>
+          </q-input>
+          <q-input v-model="vote.no" type="text" style="max-width: 20em;">
+            <template v-slot:before>
+              <font size="3">身份证号</font>
+            </template>
+          </q-input>
+        </div>
+      </q-step>
+
+      <q-step :name="2" title="基本信息" icon="create_new_folder" :done="done2">
         <div class="no-wrap">
           1、你的性别：
           <q-radio v-model="vote.sex" val="male" label="男" color="cyan" />
@@ -76,44 +147,6 @@
         <div class="q-ma" style="max-width: 300px">
           5、你的建议：
           <q-input v-model="vote.q5" outlined type="textarea" />
-        </div>
-      </q-step>
-
-      <q-step
-        :name="2"
-        title="选择框联动"
-        icon="create_new_folder"
-        :done="done2"
-      >
-        选择：{{ vote.province }}-{{ vote.city }}-{{ vote.town }}
-        <div class="q-gutter-md row">
-          <q-select
-            v-model="vote.province"
-            dense
-            standout="bg-secondary text-white"
-            label="省份"
-            style="min-width: 10em"
-            emit-value
-            :options="provinceoptions"
-          />
-          <q-select
-            v-model="vote.city"
-            dense
-            standout="bg-secondary text-white"
-            label="城市"
-            style="min-width: 10em"
-            emit-value
-            :options="cityArray"
-          />
-          <q-select
-            v-model="vote.town"
-            dense
-            standout="bg-secondary text-white"
-            label="区、县"
-            emit-value
-            style="min-width: 10em"
-            :options="townArray"
-          />
         </div>
       </q-step>
 
@@ -250,24 +283,30 @@ export default {
       done3: false
     }
   },
+
   computed: {
     // 获得列表
     cityArray: function() {
+      let tmpRe = []
       for (var i in this.provinceoptions) {
         if (this.provinceoptions[i].value === this.vote.province) {
-          return this.provinceoptions[i].city
+          tmpRe = this.provinceoptions[i].city
+          break
         }
       }
+      return tmpRe
     },
     townArray: function() {
+      let tmpRe = []
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
-          return this.cityArray[i].town
+          tmpRe = this.cityArray[i].town
+          break
         }
       }
+      return tmpRe
     }
   },
-  created() {},
   watch: {
     'vote.province'(val) {
       if (this.vote.city) this.vote.city = null
@@ -284,8 +323,34 @@ export default {
       }
     }
   },
-  mounted() {},
+  created() {},
+  mounted() {
+    this.getPosition()
+  },
   methods: {
+    // 1 查询当前位置信息
+    getPosition() {
+      navigator.geolocation.getCurrentPosition(
+        this.getPositionSuccess,
+        this.getPositionError,
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
+      )
+    },
+    // 1-1 查询当前位置信息成功
+    getPositionSuccess(position) {
+      this.vote.latitude = String(position.coords.latitude.toFixed(2))
+      this.vote.longitude = String(position.coords.longitude.toFixed(2))
+    },
+    // 1-2 查询当前位置信息失败
+    getPositionError(error) {
+      if (error) {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('getlocationfailed')
+        )
+      }
+    },
     savedata() {
       this.saving = true
       console.log(this.vote, '提交成功')

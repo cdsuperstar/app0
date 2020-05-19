@@ -77,7 +77,7 @@
                 side="left"
                 avatar="https://cdn.quasar.dev/img/avatar3.jpg"
               >
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                   <q-item-section>
                     关于聘任2020年度教学督导督查组成员的通知-各单位（部门）内部收文处理笺
                     <p>
@@ -102,7 +102,7 @@
                 side="left"
                 avatar="https://cdn.quasar.dev/img/avatar3.jpg"
               >
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                   <q-item-section>
                     关于聘任2020年度教学督导督查组成员的通知-各单位（部门）内部收文处理笺
                     <p>
@@ -127,7 +127,7 @@
                 side="left"
                 avatar="https://cdn.quasar.dev/img/avatar3.jpg"
               >
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                   <q-item-section>
                     关于聘任2020年度教学督导督查组成员的通知-各单位（部门）内部收文处理笺
                     <p>
@@ -152,7 +152,7 @@
                 side="left"
                 avatar="https://cdn.quasar.dev/img/avatar3.jpg"
               >
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                   <q-item-section>
                     关于聘任2020年度教学督导督查组成员的通知-各单位（部门）内部收文处理笺
                     <p>

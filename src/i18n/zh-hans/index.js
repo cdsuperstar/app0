@@ -75,6 +75,7 @@ export default {
     }
   },
   failed: '操作失败',
+  getlocationfailed: '获取定位信息失败',
   success: '操作成功',
   system: {
     name: '综合智能管理系统'
