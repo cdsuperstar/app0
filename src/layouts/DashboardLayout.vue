@@ -18,6 +18,7 @@
           round
           dense
           icon="home"
+          :class="$auth.check() ? 'text-white' : 'text-warning'"
           to="/user/dashboard"
           :title="this.$t('buttons.home')"
         />

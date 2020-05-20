@@ -7,6 +7,11 @@
     >
       <q-card-section>
         <div class="row text-h6 text-primary text-weight-bold no-wrap">
+          <q-icon
+            name="stop"
+            :class="$auth.check() ? 'text-secondary' : 'text-warning'"
+            style="font-size: 32px;"
+          />
           {{ $t('auth.login.login') }}
         </div>
       </q-card-section>
