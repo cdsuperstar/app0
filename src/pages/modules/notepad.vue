@@ -161,13 +161,15 @@
 
       <q-step
         :name="2"
-        title="第二部分 农户家庭基本信息"
+        title="第二部分 问卷主体部分"
         icon="person"
         style="padding: 12px 12px;"
         :done="done2"
       >
         <dl>
-          <dt class="text-h6">A. 受访者信息</dt>
+          <dt class="text-h6 row no-wrap items-center">
+            <div class="doc-card-title">A. 受访者信息</div>
+          </dt>
           <dd
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
             style="margin-inline-start:20px;"
@@ -207,6 +209,7 @@
               v-model="vote.a2"
               dense
               style="min-width: 15em;"
+              behavior="menu"
               :options="[
                 '小学及以下',
                 '初中',
@@ -216,36 +219,88 @@
               ]"
             ></q-select>
           </dd>
-          <dt class="text-h6">D. “ 两不愁”情况</dt>
+          <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
+            <div class="doc-card-title">B. 户主基本情况</div>
+          </dt>
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
             style="margin-inline-start:20px;"
           >
-            <div style="padding-top: 10px;">
-              D3.您家多长时间吃一次（肉类、蛋类、奶制品、豆制品等）？
-            </div>
+            <div style="padding-top: 10px;">B1. 户主姓名：</div>
+            <q-input v-model="vote.b1" type="text" dense />
+            <div style="padding-top: 10px;">B2. 户主性别：</div>
             <q-select
-              v-model="vote.d3"
+              v-model="vote.b2"
               dense
-              style="min-width: 15em;"
+              style="min-width: 12em;"
+              behavior="menu"
+              :options="['男', '女']"
+            ></q-select>
+            <div style="padding-top: 10px;">B3. 户主民族：</div>
+            <q-select
+              v-model="vote.b3"
+              dense
+              use-input
+              use-chips
+              new-value-mode="add-unique"
+              style="min-width: 12em;"
+              behavior="menu"
+              :options="['汉族', '藏族', '土家族']"
+            ></q-select>
+          </dd>
+          <dd
+            class="text-body1"
+            :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
+            style="margin-inline-start:20px;"
+          >
+            <div style="padding-top: 10px;">B4. 户主文化程度：</div>
+            <q-select
+              v-model="vote.b4"
+              dense
+              style="min-width: 12em;"
               behavior="menu"
               :options="[
-                '想吃随时能吃',
-                '隔三差五吃（一周不少于 1 次）',
-                '有时吃（一个月不少于 1 次）',
-                '仅逢年过节吃',
-                '因吃不起从来不吃',
-                '因生活习惯等非经济原因从来不吃'
+                '小学及以下',
+                '初中',
+                '高中',
+                '职校、中专',
+                '大专及以上'
               ]"
             ></q-select>
+            <div style="padding-top: 10px;">B5. 户主身份证号：</div>
+            <q-input
+              v-model="vote.b5"
+              type="text"
+              dense
+              style="min-width: 15em;"
+              mask="X##### ######## ###X X"
+            />
+          </dd>
+          <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
+            <div class="doc-card-title">C. 农户家庭基本情况</div>
+          </dt>
+          <dd
+            class="text-body1"
+            :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
+            style="margin-inline-start:20px;"
+          >
+            <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
+            <q-input
+              v-model="vote.c1"
+              type="text"
+              dense
+              style="min-width: 8em;"
+              mask="##"
+              :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            />
           </dd>
         </dl>
       </q-step>
 
       <q-step
         :name="3"
-        title="第三部分 “两不愁、三保障” 情况"
+        title="第三部分 问卷多媒体信息"
         icon="home"
         style="padding: 12px 12px;"
         :done="done3"
@@ -276,7 +331,7 @@
       </q-step>
       <q-step
         :name="6"
-        title="第六部分 认可度调查"
+        title="第四部分 其他部分"
         icon="stars"
         style="padding: 12px 12px;"
         :done="done6"
@@ -547,6 +602,9 @@
             />
           </q-card-section>
         </q-card>
+        <div>第一部分 基础信息</div>
+        <div>第二部分 农户家庭基本信息</div>
+        <div>第三部分 “两不愁、三保障” 情况</div>
         <div>第四部分 政策落实情况</div>
         <div>第五部分 家庭收入核实情况</div>
         <div>第六部分 认可度调查</div>
@@ -764,5 +822,13 @@ export default {
 <style scoped>
 .q-stepper--vertical .q-stepper__step-inner {
   padding: 0 2px 25px 37px;
+}
+.doc-card-title {
+  margin-left: -40px;
+  padding: 2px 10px 2px 24px;
+  background: var(--q-color-info);
+  color: #000000;
+  position: relative;
+  border-radius: 3px 5px 5px 0;
 }
 </style>
