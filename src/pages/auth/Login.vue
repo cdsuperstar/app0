@@ -127,12 +127,29 @@ export default {
     login() {
       // 离线登录
       if (this.data.offlinelogin) {
+        this.submitting = true
         this.$v.data.$touch()
         if (!this.$v.data.$error) {
-          console.log(this.data.data, '------')
-          var path = cordova.file.externalRootDirectory + 'AsmartApp/Login.json'
-          var reader = new FileReader()
-          reader.readAsText(path)
+          this.loading = true
+          if (
+            this.data.data.username ===
+              this.$q.localStorage.getItem('username') &&
+            this.data.data.password === this.$q.localStorage.getItem('password')
+          ) {
+            this.$auth.user({
+              id: 1,
+              first_name: 'Manual',
+              email: this.data.data.username,
+              type: 'user'
+            })
+            // this.$auth.stasin
+            location.href = '/user/dashboard'
+            this.loading = false
+          } else {
+            this.$q.dialog({
+              message: this.$t('auth.login.invalid_credentials')
+            })
+          }
         }
       } else {
         // 在线登录
@@ -148,16 +165,6 @@ export default {
                 this.$q.localStorage.set('password', this.data.data.password)
               }
               this.$q.localStorage.set('rememberMe', this.data.rememberMe)
-              /* eslint-disable */
-              if (device.platform === 'Android') {
-                var path =
-                  cordova.file.externalRootDirectory + 'AsmartApp/Login.json'
-                let tmplogin = []
-                tmplogin.username = this.data.data.username
-                tmplogin.password = md5(this.data.data.password)
-                writeFile(path, tmplogin)
-              }
-              /* eslint-enable */
             })
             .catch(error => {
               if (error.response) {

@@ -39,7 +39,7 @@
         :done="done1"
       >
         <div class="q-mb-lg row">
-          <q-icon name="location_on" class="text-warning" size="sm" />
+          <q-icon name="where_to_vote" class="text-warning" size="sm" />
           <q-input
             v-model="vote.longitude"
             dense
