@@ -53,12 +53,6 @@
             v-model="data.rememberMe"
             :label="this.$t('auth.login.remember_me')"
           />
-          <q-space />
-          <q-checkbox
-            id="offlinelogin"
-            v-model="data.offlinelogin"
-            :label="this.$t('auth.login.offline_login')"
-          />
         </div>
       </q-card-section>
       <q-card-actions align="center">
@@ -125,71 +119,42 @@ export default {
   },
   methods: {
     login() {
-      // 离线登录
-      if (this.data.offlinelogin) {
-        this.submitting = true
-        this.$v.data.$touch()
-        if (!this.$v.data.$error) {
-          this.loading = true
-          if (
-            this.data.data.username ===
-              this.$q.localStorage.getItem('username') &&
-            this.data.data.password === this.$q.localStorage.getItem('password')
-          ) {
-            this.$auth.user({
-              id: 1,
-              first_name: 'Manual',
-              email: this.data.data.username,
-              type: 'user'
-            })
-            // this.$auth.stasin
-            location.href = '/user/dashboard'
+      this.submitting = true
+      this.$v.data.$touch()
+      if (!this.$v.data.$error) {
+        this.loading = true
+        this.$auth
+          .login(this.data)
+          .then(response => {
+            if (this.data.rememberMe) {
+              this.$q.localStorage.set('username', this.data.data.username)
+              this.$q.localStorage.set('password', this.data.data.password)
+            }
+            this.$q.localStorage.set('rememberMe', this.data.rememberMe)
+          })
+          .catch(error => {
+            if (error.response) {
+              if (error.response.status === 401) {
+                this.$q.dialog({
+                  message: this.$t('auth.login.verification_required')
+                })
+              } else if (error.response.status === 403) {
+                this.$q.dialog({
+                  message: this.$t('auth.login.invalid_credentials')
+                })
+              } else if (error.response.status === 400) {
+                this.$q.dialog({
+                  message: this.$t('auth.login.invalid_credentials')
+                })
+              } else {
+                console.error(error)
+              }
+            }
+          })
+          .finally(() => {
+            this.submitting = false
             this.loading = false
-          } else {
-            this.$q.dialog({
-              message: this.$t('auth.login.invalid_credentials')
-            })
-          }
-        }
-      } else {
-        // 在线登录
-        this.submitting = true
-        this.$v.data.$touch()
-        if (!this.$v.data.$error) {
-          this.loading = true
-          this.$auth
-            .login(this.data)
-            .then(response => {
-              if (this.data.rememberMe) {
-                this.$q.localStorage.set('username', this.data.data.username)
-                this.$q.localStorage.set('password', this.data.data.password)
-              }
-              this.$q.localStorage.set('rememberMe', this.data.rememberMe)
-            })
-            .catch(error => {
-              if (error.response) {
-                if (error.response.status === 401) {
-                  this.$q.dialog({
-                    message: this.$t('auth.login.verification_required')
-                  })
-                } else if (error.response.status === 403) {
-                  this.$q.dialog({
-                    message: this.$t('auth.login.invalid_credentials')
-                  })
-                } else if (error.response.status === 400) {
-                  this.$q.dialog({
-                    message: this.$t('auth.login.invalid_credentials')
-                  })
-                } else {
-                  console.error(error)
-                }
-              }
-            })
-            .finally(() => {
-              this.submitting = false
-              this.loading = false
-            })
-        }
+          })
       }
     }
   },

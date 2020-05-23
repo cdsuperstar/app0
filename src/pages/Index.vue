@@ -3,76 +3,61 @@
     <q-card flat bordered class="chart-list">
       <q-toolbar style="border-bottom: 1px dashed #ebebeb;">
         <q-toolbar-title>
-          <span class="text-subtitle1 text-weight-bold">
-            {{ $t('comapplication.header') }}</span
-          >
+          <span class="text-subtitle1 text-weight-bold"> 离线应用</span>
         </q-toolbar-title>
-        <q-space />
-        <draggable
-          style="width: 2rem;height: 2rem;"
-          filter="ignore-elements"
-          :list="droplist"
-          group="dragmod"
-        >
-          <q-card flat>
-            <q-card-section horizontal align="center">
-              <q-list padding>
-                <q-item-section
-                  class="rounded-borders"
-                  style="width: 2rem;height: 2rem;border:1px dashed #ebebeb;"
-                >
-                  <q-icon
-                    name="delete_sweep"
-                    color="blue-grey-3"
-                    style="font-size: 2rem;padding: 5px;"
-                  ></q-icon>
-                </q-item-section>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </draggable>
       </q-toolbar>
       <q-card-section
         class="row items-start"
         style="min-height: 60px;max-height:335px;padding: 8px;overflow-y:auto"
       >
-        <draggable
-          class="row"
-          style="width:300px;min-height:83px;margin-top:5px;"
-          :list="modulelist"
-          delay="1000"
-          touchStartThreshold="5"
-          group="dragmod"
-          @change="dataunique"
-          @remove="delmodu"
+        <q-card
+          flat
+          class="col-3"
+          style="cursor: pointer;"
+          @click="linktoURL('p2s1/p2s1questionnaire')"
         >
-          <q-card
-            v-for="element in modulelist"
-            :key="element.id"
-            flat
-            class="col-3"
-            style="cursor: pointer;"
-            @click="linktoURL(element.url)"
-          >
-            <q-card-section horizontal align="center">
-              <q-list padding>
-                <q-item-section
-                  class="rounded-borders bg-primary"
-                  style="width: 3rem;height: 3rem;"
-                >
-                  <q-icon
-                    :name="element.icon"
-                    color="white"
-                    style="font-size: 2rem;padding: 5px;"
-                  ></q-icon>
-                </q-item-section>
-                <q-item-section style="margin-left: 1px;font-size: xx-small">
-                  {{ element.title }}
-                </q-item-section>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </draggable>
+          <q-card-section horizontal align="center">
+            <q-list padding>
+              <q-item-section
+                class="rounded-borders bg-primary"
+                style="width: 3rem;height: 3rem;"
+              >
+                <q-icon
+                  name="queue"
+                  color="white"
+                  style="font-size: 2rem;padding: 5px;"
+                ></q-icon>
+              </q-item-section>
+              <q-item-section style="margin-left: 1px;font-size: xx-small">
+                发起问卷
+              </q-item-section>
+            </q-list>
+          </q-card-section>
+        </q-card>
+        <q-card
+          flat
+          class="col-3"
+          style="cursor: pointer;"
+          @click="linktoURL('p2s1/p2s1localquestionnaire')"
+        >
+          <q-card-section horizontal align="center">
+            <q-list padding>
+              <q-item-section
+                class="rounded-borders bg-primary"
+                style="width: 3rem;height: 3rem;"
+              >
+                <q-icon
+                  name="format_list_bulleted"
+                  color="white"
+                  style="font-size: 2rem;padding: 5px;"
+                ></q-icon>
+              </q-item-section>
+              <q-item-section style="margin-left: 1px;font-size: xx-small">
+                本地问卷
+              </q-item-section>
+            </q-list>
+          </q-card-section>
+        </q-card>
       </q-card-section>
     </q-card>
     <q-card flat bordered class="chart-list">
@@ -110,9 +95,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import draggable from 'vuedraggable'
-
 import VeRadar from 'v-charts/lib/radar.common.js'
 import VePie from 'v-charts/lib/pie.common.js'
 import VeMap from 'v-charts/lib/map.common.js'
@@ -121,12 +103,9 @@ import VeLine from 'v-charts/lib/line.common.js'
 // branch test
 export default {
   name: 'PageIndex',
-  components: { VeHistogram, VePie, VeMap, VeLine, VeRadar, draggable },
+  components: { VeHistogram, VePie, VeMap, VeLine, VeRadar },
   data() {
     return {
-      usercfg: { quickapplication: [] },
-      modlist: [],
-      droplist: [],
       HistogramchartSettings: null,
       HistogramchartData: null,
       PiechartSettings: null,
@@ -139,28 +118,7 @@ export default {
       VeRadarchartSettings: null
     }
   },
-  computed: {
-    ...mapState('zero', ['ZPermissions']),
-    modulelist: {
-      get: function() {
-        let tmpObjs = []
-        if (
-          this.usercfg?.quickapplication !== undefined &&
-          this.ZPermissions?.modules !== undefined
-        ) {
-          tmpObjs = this.usercfg?.quickapplication?.filter(
-            obj =>
-              this.ZPermissions.modules.filter(ob => ob.id === obj.id)
-                .length === 1
-          )
-        }
-        return tmpObjs
-      },
-      set: function(value) {
-        // console.log(value)
-      }
-    }
-  },
+  computed: {},
   created() {
     this.HistogramchartSettings = {
       axisSite: { right: ['下单率'] },
@@ -249,47 +207,11 @@ export default {
       ]
     }
   },
-  mounted() {
-    // 返回菜单
-    if (this.$auth.user().usercfg) {
-      this.usercfg = JSON.parse(this.$auth.user().usercfg)
-    }
-  },
-  beforeDestroy() {
-    // 写入数据库
-    if (this.$auth.check()) {
-      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      if (tmpUsercfg === null) tmpUsercfg = {}
-      tmpUsercfg.quickapplication = this.modulelist
-      if (tmpUsercfg.quickapplication !== null) {
-        this.$router.app.$http
-          .post('/zero/setMyUsercfg/', {
-            usercfg: JSON.stringify(tmpUsercfg)
-          })
-          .then(res => {
-            if (res.data.success) {
-              this.$auth.user().usercfg = res.data.data.usercfg
-            }
-          })
-      }
-    }
-  },
+  mounted() {},
+  beforeDestroy() {},
   methods: {
     linktoURL(url) {
       location.href = '#/user/' + url
-    },
-    dataunique(e) {
-      if (e.added) {
-        const obj = this.modulelist.filter(obj => obj.id === e.added.element.id)
-        if (obj.length > 1) {
-          this.modulelist.splice(e.added.newIndex, 1)
-        } else {
-          this.usercfg.quickapplication.push(e.added.element)
-        }
-      }
-    },
-    delmodu(evt) {
-      // console.log(this.droplist, '++++++++++del')
     }
   }
 }
