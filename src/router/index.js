@@ -25,7 +25,7 @@ export default function({ store } /* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Vue.axios.defaults.baseURL = 'http://202.115.137.211/api/v1'
+  Vue.axios.defaults.baseURL = process.env.BASE_URL
   if (process.env.DEV) {
     console.log('baseurl:', process.env.BASE_URL)
     console.log('client id:', process.env.CLIENT_ID)
@@ -73,7 +73,7 @@ export default function({ store } /* { store, ssrContext } */) {
     fetchData: {
       url: 'auth/user',
       method: 'GET',
-      enabled: true
+      enabled: false
     },
     passportData: {
       client_id: 2,
