@@ -118,7 +118,7 @@ import VePie from 'v-charts/lib/pie.common.js'
 import VeMap from 'v-charts/lib/map.common.js'
 import VeHistogram from 'v-charts/lib/histogram.common.js'
 import VeLine from 'v-charts/lib/line.common.js'
-
+// branch test
 export default {
   name: 'PageIndex',
   components: { VeHistogram, VePie, VeMap, VeLine, VeRadar, draggable },
