@@ -84,6 +84,7 @@ export function getMyPermissions({ commit }, payload) {
       .post('/zero/getMyPermissions', payload)
       .then(res => {
         if (res.data.success) {
+          this.$router.app.$q.localStorage.set('ZPermissions', res.data)
           commit('storeZPermissions', res.data)
           resolve(res.data)
         } else {
@@ -91,7 +92,12 @@ export function getMyPermissions({ commit }, payload) {
         }
       })
       .catch(e => {
-        reject(e)
+        commit(
+          'storeZPermissions',
+          this.$router.app.$q.localStorage.getItem('ZPermissions')
+        )
+        resolve(this.$router.app.$q.localStorage.getItem('ZPermissions'))
+        // reject(e)
       })
   })
 }
