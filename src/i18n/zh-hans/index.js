@@ -268,6 +268,7 @@ export default {
       name: '用户名',
       password: '密码',
       remember_me: '记住我',
+      offline_login: '离线登录',
       repeat_password: '重复密码'
     },
     errors: {
@@ -285,6 +286,7 @@ export default {
       invalid_credentials: '用户名或密码不正确.',
       email: '@:auth.labels.email',
       password: '@:auth.labels.password',
+      offline_login: '@:auth.labels.offline_login',
       remember_me: '@:auth.labels.remember_me'
     },
     register: {

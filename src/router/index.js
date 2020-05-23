@@ -25,7 +25,7 @@ export default function({ store } /* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Vue.axios.defaults.baseURL = process.env.BASE_URL
+  Vue.axios.defaults.baseURL = 'http://202.115.137.211/api/v1'
   if (process.env.DEV) {
     console.log('baseurl:', process.env.BASE_URL)
     console.log('client id:', process.env.CLIENT_ID)
@@ -76,8 +76,8 @@ export default function({ store } /* { store, ssrContext } */) {
       enabled: true
     },
     passportData: {
-      client_id: process.env.CLIENT_ID,
-      client_secret: process.env.CLIENT_SECRET
+      client_id: 2,
+      client_secret: 'CC23yZADi2VKPt9ADsO5VqfjjEJ8T1fx6cAoKP7h'
     }
   })
   // Vue.axios.defaults.headers.common = {

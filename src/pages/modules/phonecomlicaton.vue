@@ -392,10 +392,10 @@ export default {
       var filename = 'myrecording.mp3'
       if (device.platform === 'iOS') {
         this.soundstatus = '平台为:IOS；设备名称：' + device.model
-        path = cordova.file.tempDirectory + 'AmartApp/' + filename
+        path = cordova.file.tempDirectory + 'AsmartApp/' + filename
       } else if (device.platform === 'Android') {
         this.soundstatus = '平台为:Android；设备名称：' + device.model
-        path = cordova.file.externalRootDirectory + 'AmartApp/' + filename
+        path = cordova.file.externalRootDirectory + 'AsmartApp/' + filename
       }
       if (this.mediaRec === null) {
         this.mediaRec = new Media(
