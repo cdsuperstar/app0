@@ -339,6 +339,15 @@ export default {
           maxWidth: 260,
           sortable: true,
           filter: true
+        },
+        {
+          headerName: this.$t('modules.memo'),
+          field: 'memo',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 260,
+          sortable: true,
+          filter: true
         }
       ]
       this.defaultColDef = {
