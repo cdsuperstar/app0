@@ -32,6 +32,10 @@ export default function({ store } /* { store, ssrContext } */) {
     console.log('client secret:', process.env.CLIENT_SECRET)
   }
 
+  if (process.env.PROD) {
+    Vue.axios.defaults.baseURL = 'http://202.115.137.211/api/v1'
+  }
+
   Vue.router = Router
   Vue.use(require('@websanova/vue-auth'), {
     auth: require('@websanova/vue-auth/drivers/auth/laravel-passport-bearer.js'),
