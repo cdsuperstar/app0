@@ -172,6 +172,7 @@ export default {
     icon: '图标',
     ismenu: '类型',
     url: '路径名',
+    memo: '备注',
     badd: '[模块管理]是否有添加功能',
     bDelete: '[模块管理]是否有删除功能',
     bmodify: '[模块管理]是否有修改功能',
