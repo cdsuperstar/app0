@@ -253,9 +253,9 @@
 
     <q-page-container>
       <!--      <transition>-->
-      <!--        <keep-alive>-->
+      <!--      <keep-alive>-->
       <router-view></router-view>
-      <!--        </keep-alive>-->
+      <!--      </keep-alive>-->
       <!--      </transition>-->
     </q-page-container>
 
@@ -427,8 +427,8 @@ export default {
     },
     // 设置主题
     setthemecolor(color) {
+      this.applytheme(color)
       this.usercfg.theme = color
-
       let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
       if (tmpUsercfg === null) tmpUsercfg = {}
       tmpUsercfg.theme = color
@@ -442,9 +442,9 @@ export default {
           if (res.data.success) {
             this.$auth.user().usercfg = res.data.data.usercfg
             this.usercfg = JSON.parse(this.$auth.user().usercfg)
-            this.applytheme(color)
           }
         })
+        .catch(e => {})
     },
     applytheme(color) {
       this.$zglobal.colors[color].forEach(item => {

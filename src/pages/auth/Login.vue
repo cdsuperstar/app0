@@ -12,7 +12,9 @@
             :class="$auth.check() ? 'text-secondary' : 'text-warning'"
             style="font-size: 32px;"
           />
-          {{ $t('auth.login.login') }}
+          {{ $t('auth.login.login') }}-{{
+            $q.localStorage.getItem('username')
+          }}-{{ $q.localStorage.getItem('password') }}
         </div>
       </q-card-section>
 
@@ -52,6 +54,12 @@
             id="rememberMe"
             v-model="data.rememberMe"
             :label="this.$t('auth.login.remember_me')"
+          />
+          <q-space />
+          <q-checkbox
+            id="offlinelogin"
+            v-model="data.offlinelogin"
+            :label="this.$t('auth.login.offline_login')"
           />
         </div>
       </q-card-section>
@@ -119,42 +127,80 @@ export default {
   },
   methods: {
     login() {
-      this.submitting = true
-      this.$v.data.$touch()
-      if (!this.$v.data.$error) {
-        this.loading = true
-        this.$auth
-          .login(this.data)
-          .then(response => {
-            if (this.data.rememberMe) {
-              this.$q.localStorage.set('username', this.data.data.username)
-              this.$q.localStorage.set('password', this.data.data.password)
-            }
-            this.$q.localStorage.set('rememberMe', this.data.rememberMe)
-          })
-          .catch(error => {
-            if (error.response) {
-              if (error.response.status === 401) {
-                this.$q.dialog({
-                  message: this.$t('auth.login.verification_required')
-                })
-              } else if (error.response.status === 403) {
-                this.$q.dialog({
-                  message: this.$t('auth.login.invalid_credentials')
-                })
-              } else if (error.response.status === 400) {
-                this.$q.dialog({
-                  message: this.$t('auth.login.invalid_credentials')
-                })
-              } else {
-                console.error(error)
-              }
-            }
-          })
-          .finally(() => {
-            this.submitting = false
+      // 离线登录
+      if (this.data.offlinelogin) {
+        this.$v.data.$touch()
+        if (!this.$v.data.$error) {
+          this.submitting = true
+          this.loading = true
+          if (
+            this.data.data.username ===
+              this.$q.localStorage.getItem('username') &&
+            this.data.data.password === this.$q.localStorage.getItem('password')
+          ) {
+            this.$auth = JSON.parse(
+              this.$q.localStorage.getItem('authenticated')
+            )
+            // this.$auth.watch.authenticated = true
+            // this.$auth.watch.loaded = true
+            // if (this.$auth.watch.authenticated) location.href = '#/user'
+            this.$router.push('dashboard')
+            // location.href = '#/user/dashboard'
+            console.log(this.$auth, '--------')
+
             this.loading = false
-          })
+            this.submitting = false
+          } else {
+            this.$q.dialog({
+              message: this.$t('auth.login.invalid_credentials')
+            })
+            this.loading = false
+            this.submitting = false
+          }
+        }
+      } else {
+        // 在线登录
+        this.submitting = true
+        this.$v.data.$touch()
+        if (!this.$v.data.$error) {
+          this.loading = true
+          this.$auth
+            .login(this.data)
+            .then(response => {
+              if (this.data.rememberMe) {
+                this.$q.localStorage.set('username', this.data.data.username)
+                this.$q.localStorage.set('password', this.data.data.password)
+                this.$q.localStorage.set(
+                  'authenticated',
+                  JSON.stringify(this.$auth)
+                )
+              }
+              this.$q.localStorage.set('rememberMe', this.data.rememberMe)
+            })
+            .catch(error => {
+              if (error.response) {
+                if (error.response.status === 401) {
+                  this.$q.dialog({
+                    message: this.$t('auth.login.verification_required')
+                  })
+                } else if (error.response.status === 403) {
+                  this.$q.dialog({
+                    message: this.$t('auth.login.invalid_credentials')
+                  })
+                } else if (error.response.status === 400) {
+                  this.$q.dialog({
+                    message: this.$t('auth.login.invalid_credentials')
+                  })
+                } else {
+                  console.error(error)
+                }
+              }
+            })
+            .finally(() => {
+              this.submitting = false
+              this.loading = false
+            })
+        }
       }
     }
   },
