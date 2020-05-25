@@ -13,7 +13,7 @@ Vue.use(VueRouter)
  * async/await or return a Promise which resolves
  * with the Router instance.
  */
-export default function({ store } /* { store, ssrContext } */) {
+export default function ({ store } /* { store, ssrContext } */) {
   const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
@@ -42,7 +42,7 @@ export default function({ store } /* { store, ssrContext } */) {
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
     rolesVar: 'role',
-    tokenStore: ['localStorage', 'cookie'],
+    tokenStore: ['localStorage'],
     tokenDefaultName: '0apps_token',
     // authRedirect: { path: '/user' },
     // forbiddenRedirect: { path: '/403' },

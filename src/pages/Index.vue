@@ -14,7 +14,7 @@
           flat
           class="col-3"
           style="cursor: pointer;"
-          @click="linktoURL('p2s1/p2s1questionnaire')"
+          @click="linktoURL('#/user/p2s1/p2s1questionnaire')"
         >
           <q-card-section horizontal align="center">
             <q-list padding>
@@ -38,7 +38,7 @@
           flat
           class="col-3"
           style="cursor: pointer;"
-          @click="linktoURL('p2s1/p2s1localquestionnaire')"
+          @click="linktoURL('#/user/p2s1/p2s1localquestionnaire')"
         >
           <q-card-section horizontal align="center">
             <q-list padding>
@@ -211,7 +211,7 @@ export default {
   beforeDestroy() {},
   methods: {
     linktoURL(url) {
-      location.href = '#/user/' + url
+      location.href = url
     }
   }
 }

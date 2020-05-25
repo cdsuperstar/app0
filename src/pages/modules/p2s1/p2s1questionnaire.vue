@@ -371,6 +371,7 @@
             <div>第四部分 政策落实情况</div>
             <div>第五部分 家庭收入核实情况</div>
             <div>第六部分 认可度调查</div>
+            <div>- {{ result }} -</div>
             <div>
               <q-btn
                 type="submit"
@@ -384,6 +385,12 @@
                   <q-spinner-rings />
                 </template>
               </q-btn>
+              <q-btn
+                class="q-ma-xs"
+                icon="post_add"
+                label="读取文件"
+                @click="getAndReadFile()"
+              />
             </div>
           </q-card-section>
         </q-card>
@@ -402,6 +409,7 @@ export default {
   data() {
     return {
       saving: false,
+      result: null,
       vote: {},
       show2: true,
       addressoptions: [
@@ -586,6 +594,162 @@ export default {
         this.saving = false
         console.log('-=----=---=---=---=---=--' + JSON.stringify(this.vote))
       }, 3000)
+      this.createAndWriteFile()
+    },
+    // 文件读写
+    /*
+     * 打开或创建文件夹,创建文件并写入内容
+     * Android:sdcard/AIApp/assets目录
+     * IOS:cdvfile://localhost/persistent/AIApp/assets目录
+     * 文件目录存在则打开,不存在则创建
+     * */
+    createAndWriteFile() {
+      window.resolveLocalFileSystemURL(
+        cordova.file.externalRootDirectory,
+        function(root) {
+          // 创建文件夹AIApp
+          root.getDirectory(
+            'AIApp',
+            { create: true },
+            function(dirEntry) {
+              alert('您创建了：' + dirEntry.name + ' 文件夹。')
+            },
+            function(err) {
+              alert('创建文件夹出错' + err.toString())
+            }
+          )
+          // 先查找这个文件，如果没有则创建
+          root.getFile(
+            '/AIApp/someFile.json',
+            { create: true, exclusive: false },
+            function(fileEntry) {
+              // 开始写入文件
+              fileEntry.createWriter(function(fileWriter) {
+                fileWriter.onwriteend = function() {
+                  this.$zglobal.showMessage(
+                    'positive',
+                    'center',
+                    '数据保存成功！'
+                  )
+                }
+                // 失败回调
+                fileWriter.onerror = function(err) {
+                  this.$zglobal.showMessage(
+                    'red-7',
+                    'center',
+                    '数据保存失败' + err.toString()
+                  )
+                }
+                // 以上创建新文件后，开始向文件中写入blob文件对象
+                const tmpobj = JSON.stringify(this.vote)
+                var dataObj = new Blob([tmpobj], {
+                  type: 'text/plain'
+                })
+                fileWriter.write(dataObj)
+              })
+            },
+            function(err) {
+              alert('写入文件出错' + err.toString())
+            }
+          )
+        },
+        function(err) {
+          alert('创建文件出错' + err.toString())
+        }
+      )
+    },
+
+    /*
+     * 依次打开指定目录文件夹,读取文件内容
+     * Android:sdcard/AsmartApp/assets/task.json
+     * IOS:cdvfile://localhost/persistent/AsmartApp/assets/task.json
+     * 目录和文件存在则打开,不存在则退出
+     * */
+    getAndReadFile() {
+      window.requestFileSystem(
+        LocalFileSystem.PERSISTENT, // eslint-disable-line
+        0,
+        function(fs) {
+          alert('打开的文件系统: ' + fs.name)
+          fs.root.getDirectory(
+            'xbrother',
+            { create: false },
+            function(dirEntry) {
+              dirEntry.getDirectory(
+                'assets',
+                { create: false },
+                function(subDirEntry) {
+                  subDirEntry.getFile(
+                    'task.json',
+                    { create: false, exclusive: false },
+                    function(fileEntry) {
+                      alert('是否是个文件？' + fileEntry.isFile.toString())
+                      fileEntry.name = 'task.json'
+                      fileEntry.fullPath = 'xbrother/assets/task.json'
+                      this.readFile(fileEntry)
+                    },
+                    this.onErrorCreateFile()
+                  )
+                },
+                this.onErrorGetDir()
+              )
+            },
+            this.onErrorGetDir()
+          )
+        },
+        this.onErrorLoadFs()
+      )
+    },
+
+    // 将内容数据写入到文件中
+    writeFile(fileEntry, dataObj) {
+      // 创建一个写入对象
+      fileEntry.createWriter(function(fileWriter) {
+        // 文件写入成功
+        fileWriter.onwriteend = function() {
+          alert('Successful file write...')
+        }
+
+        // 文件写入失败
+        fileWriter.onerror = function(e) {
+          alert('Failed file write: ' + e.toString())
+        }
+
+        // 写入文件
+        fileWriter.write(dataObj)
+      })
+    },
+
+    // 读取文件
+    readFile(fileEntry) {
+      fileEntry.file(function(file) {
+        var reader = new FileReader()
+        reader.onloadend = function() {
+          // 文件结果
+          alert('file read success:' + this.result)
+        }
+        reader.readAsText(file)
+      }, this.onErrorReadFile())
+    },
+
+    // FileSystem加载失败回调
+    onErrorLoadFs(error) {
+      alert('文件系统加载失败！', error)
+    },
+
+    // 文件夹创建失败回调
+    onErrorGetDir(error) {
+      alert('文件夹创建失败！', error)
+    },
+
+    // 文件创建失败回调
+    onErrorCreateFile(error) {
+      alert('文件创建失败！', error)
+    },
+
+    // 读取文件失败响应
+    onErrorReadFile() {
+      alert('文件读取失败!')
     }
   }
 }
