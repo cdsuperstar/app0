@@ -563,38 +563,25 @@ export default {
       // this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     },
-    // 1 查询当前位置信息
+    // 查询当前位置信息
     getPosition() {
       navigator.geolocation.getCurrentPosition(
-        this.getPositionSuccess,
-        this.getPositionError,
+        function(position) {
+          this.vote.latitude = String(position.coords.latitude.toFixed(2))
+          this.vote.longitude = String(position.coords.longitude.toFixed(2))
+        },
+        this.errorHandler,
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
       )
     },
-    // 1-1 查询当前位置信息成功
-    getPositionSuccess(position) {
-      this.vote.latitude = String(position.coords.latitude.toFixed(2))
-      this.vote.longitude = String(position.coords.longitude.toFixed(2))
-    },
-    // 1-2 查询当前位置信息失败
-    getPositionError(error) {
-      if (error) {
-        this.$zglobal.showMessage(
-          'red-7',
-          'center',
-          this.$t('getlocationfailed')
-        )
-      }
-    },
     savedata() {
       this.saving = true
+      this.writeToFile('/AIApp/someFile.json', this.vote)
       console.log(this.vote, '提交成功')
       setTimeout(() => {
-        // we're done, we reset loading state
         this.saving = false
         console.log('-=----=---=---=---=---=--' + JSON.stringify(this.vote))
       }, 3000)
-      this.createAndWriteFile()
     },
     // 文件读写
     /*
@@ -603,61 +590,59 @@ export default {
      * IOS:cdvfile://localhost/persistent/AIApp/assets目录
      * 文件目录存在则打开,不存在则创建
      * */
-    createAndWriteFile() {
+    writeToFile(fileName, data) {
+      data = JSON.stringify(data, null, '\t')
       window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory,
-        function(root) {
-          // 创建文件夹AIApp
-          root.getDirectory(
-            'AIApp',
-            { create: true },
-            function(dirEntry) {
-              alert('您创建了：' + dirEntry.name + ' 文件夹。')
-            },
-            function(err) {
-              alert('创建文件夹出错' + err.toString())
-            }
-          )
-          // 先查找这个文件，如果没有则创建
-          root.getFile(
-            '/AIApp/someFile.json',
+        cordova.file.dataDirectory,
+        function(directoryEntry) {
+          directoryEntry.getFile(
+            fileName,
             { create: true, exclusive: false },
             function(fileEntry) {
-              // 开始写入文件
               fileEntry.createWriter(function(fileWriter) {
-                fileWriter.onwriteend = function() {
-                  this.$zglobal.showMessage(
-                    'positive',
-                    'center',
-                    '数据保存成功！'
-                  )
+                fileWriter.onwriteend = function(e) {
+                  // for real-world usage, you might consider passing a success callback
+                  alert('写入 "' + fileName + '"" 文件成功.')
                 }
-                // 失败回调
-                fileWriter.onerror = function(err) {
-                  this.$zglobal.showMessage(
-                    'red-7',
-                    'center',
-                    '数据保存失败' + err.toString()
-                  )
+                fileWriter.onerror = function(e) {
+                  // you could hook this up with our global error handler, or pass in an error callback
+                  alert('写入失败: ' + e.toString())
                 }
-                // 以上创建新文件后，开始向文件中写入blob文件对象
-                const tmpobj = JSON.stringify(this.vote)
-                var dataObj = new Blob([tmpobj], {
-                  type: 'text/plain'
-                })
-                fileWriter.write(dataObj)
-              })
+                var blob = new Blob([data], { type: 'text/plain' })
+                fileWriter.write(blob)
+              }, this.errorHandler(fileName, null))
             },
-            function(err) {
-              alert('写入文件出错' + err.toString())
-            }
+            this.errorHandler(fileName, null)
           )
         },
-        function(err) {
-          alert('创建文件出错' + err.toString())
-        }
+        this.errorHandler(fileName, null)
       )
     },
+    //处理错误
+    errorHandler(e, fileName) {
+      var msg = ''
+      switch (e.code) {
+        case FileError.QUOTA_EXCEEDED_ERR:
+          msg = '超出存储配额！'
+          break
+        case FileError.NOT_FOUND_ERR:
+          msg = '文件不存在！'
+          break
+        case FileError.SECURITY_ERR:
+          msg = '安全错误！'
+          break
+        case FileError.INVALID_MODIFICATION_ERR:
+          msg = '无效的修改！'
+          break
+        case FileError.INVALID_STATE_ERR:
+          msg = '无效的状态！'
+          break
+        default:
+          msg = '未知错误！'
+          break
+      }
+      console.log('错误： (' + fileName + '): ' + msg)
+    }
 
     /*
      * 依次打开指定目录文件夹,读取文件内容
@@ -665,92 +650,6 @@ export default {
      * IOS:cdvfile://localhost/persistent/AsmartApp/assets/task.json
      * 目录和文件存在则打开,不存在则退出
      * */
-    getAndReadFile() {
-      window.requestFileSystem(
-        LocalFileSystem.PERSISTENT, // eslint-disable-line
-        0,
-        function(fs) {
-          alert('打开的文件系统: ' + fs.name)
-          fs.root.getDirectory(
-            'xbrother',
-            { create: false },
-            function(dirEntry) {
-              dirEntry.getDirectory(
-                'assets',
-                { create: false },
-                function(subDirEntry) {
-                  subDirEntry.getFile(
-                    'task.json',
-                    { create: false, exclusive: false },
-                    function(fileEntry) {
-                      alert('是否是个文件？' + fileEntry.isFile.toString())
-                      fileEntry.name = 'task.json'
-                      fileEntry.fullPath = 'xbrother/assets/task.json'
-                      this.readFile(fileEntry)
-                    },
-                    this.onErrorCreateFile()
-                  )
-                },
-                this.onErrorGetDir()
-              )
-            },
-            this.onErrorGetDir()
-          )
-        },
-        this.onErrorLoadFs()
-      )
-    },
-
-    // 将内容数据写入到文件中
-    writeFile(fileEntry, dataObj) {
-      // 创建一个写入对象
-      fileEntry.createWriter(function(fileWriter) {
-        // 文件写入成功
-        fileWriter.onwriteend = function() {
-          alert('Successful file write...')
-        }
-
-        // 文件写入失败
-        fileWriter.onerror = function(e) {
-          alert('Failed file write: ' + e.toString())
-        }
-
-        // 写入文件
-        fileWriter.write(dataObj)
-      })
-    },
-
-    // 读取文件
-    readFile(fileEntry) {
-      fileEntry.file(function(file) {
-        var reader = new FileReader()
-        reader.onloadend = function() {
-          // 文件结果
-          alert('file read success:' + this.result)
-        }
-        reader.readAsText(file)
-      }, this.onErrorReadFile())
-    },
-
-    // FileSystem加载失败回调
-    onErrorLoadFs(error) {
-      alert('文件系统加载失败！', error)
-    },
-
-    // 文件夹创建失败回调
-    onErrorGetDir(error) {
-      alert('文件夹创建失败！', error)
-    },
-
-    // 文件创建失败回调
-    onErrorCreateFile(error) {
-      alert('文件创建失败！', error)
-    },
-
-    // 读取文件失败响应
-    onErrorReadFile() {
-      alert('文件读取失败!')
-    }
   }
 }
 </script>
