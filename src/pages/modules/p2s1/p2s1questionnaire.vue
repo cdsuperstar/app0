@@ -583,12 +583,8 @@ export default {
         console.log('-=----=---=---=---=---=--' + JSON.stringify(this.vote))
       }, 3000)
     },
-    // 文件读写
-    /*
+    /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容
-     * Android:sdcard/AIApp/assets目录
-     * IOS:cdvfile://localhost/persistent/AIApp/assets目录
-     * 文件目录存在则打开,不存在则创建
      * */
     writeToFile(fileName, data) {
       data = JSON.stringify(data, null, '\t')
@@ -618,7 +614,7 @@ export default {
         this.errorHandler(fileName, null)
       )
     },
-    //处理错误
+    // 处理错误
     errorHandler(e, fileName) {
       var msg = ''
       switch (e.code) {
@@ -643,12 +639,8 @@ export default {
       }
       console.log('错误： (' + fileName + '): ' + msg)
     }
-
     /*
      * 依次打开指定目录文件夹,读取文件内容
-     * Android:sdcard/AsmartApp/assets/task.json
-     * IOS:cdvfile://localhost/persistent/AsmartApp/assets/task.json
-     * 目录和文件存在则打开,不存在则退出
      * */
   }
 }
