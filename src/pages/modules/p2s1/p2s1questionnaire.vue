@@ -570,7 +570,7 @@ export default {
           this.vote.latitude = String(position.coords.latitude.toFixed(2))
           this.vote.longitude = String(position.coords.longitude.toFixed(2))
         },
-        this.errorHandler,
+        this.errorHandler('pe'),
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
       )
     },
@@ -617,6 +617,14 @@ export default {
     // 处理错误
     errorHandler(e, fileName) {
       var msg = ''
+      switch (e) {
+        case 'pe':
+          msg = '定位失败！'
+          break
+        default:
+          msg = '未知错误！'
+          break
+      }
       switch (e.code) {
         case FileError.QUOTA_EXCEEDED_ERR:
           msg = '超出存储配额！'
@@ -637,7 +645,7 @@ export default {
           msg = '未知错误！'
           break
       }
-      console.log('错误： (' + fileName + '): ' + msg)
+      console.log('错误： ' + fileName + msg)
     }
     /*
      * 依次打开指定目录文件夹,读取文件内容
