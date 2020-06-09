@@ -563,16 +563,28 @@ export default {
       // this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     },
-    // 查询当前位置信息
+    // 1 查询当前位置信息
     getPosition() {
       navigator.geolocation.getCurrentPosition(
-        function(position) {
-          this.vote.latitude = String(position.coords.latitude.toFixed(2))
-          this.vote.longitude = String(position.coords.longitude.toFixed(2))
-        },
-        this.errorHandler('pe'),
+        this.getPositionSuccess,
+        this.getPositionError,
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
       )
+    },
+    // 1-1 查询当前位置信息成功
+    getPositionSuccess(position) {
+      this.vote.latitude = String(position.coords.latitude.toFixed(2))
+      this.vote.longitude = String(position.coords.longitude.toFixed(2))
+    },
+    // 1-2 查询当前位置信息失败
+    getPositionError(error) {
+      if (error) {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('getlocationfailed')
+        )
+      }
     },
     savedata() {
       this.saving = true
@@ -587,14 +599,27 @@ export default {
      * 打开或创建文件夹,创建文件并写入内容
      * */
     writeToFile(fileName, data) {
-      data = JSON.stringify(data, null, '\t')
+      data = JSON.stringify(data) + 'aaflags!'
       window.resolveLocalFileSystemURL(
         cordova.file.dataDirectory,
         function(directoryEntry) {
+          // 创建文件夹AIApp
+          directoryEntry.getDirectory(
+            'AIApp',
+            { create: true },
+            function(dirEntry) {
+              alert('您创建了：' + dirEntry.name + ' 文件夹。')
+            },
+            function(err) {
+              alert('创建文件夹出错' + err.toString())
+            }
+          )
+          // 查找这个文件，如果没有则创建
           directoryEntry.getFile(
             fileName,
             { create: true, exclusive: false },
             function(fileEntry) {
+              alert(data)
               fileEntry.createWriter(function(fileWriter) {
                 fileWriter.onwriteend = function(e) {
                   // for real-world usage, you might consider passing a success callback
@@ -605,47 +630,19 @@ export default {
                   alert('写入失败: ' + e.toString())
                 }
                 var blob = new Blob([data], { type: 'text/plain' })
+                fileWriter.seek(fileWriter.length)
                 fileWriter.write(blob)
-              }, this.errorHandler(fileName, null))
+              })
             },
-            this.errorHandler(fileName, null)
+            function(err) {
+              alert('写入文件出错' + err.toString())
+            }
           )
         },
-        this.errorHandler(fileName, null)
+        function(err) {
+          alert('创建文件出错' + err.toString())
+        }
       )
-    },
-    // 处理错误
-    errorHandler(e, fileName) {
-      var msg = ''
-      switch (e) {
-        case 'pe':
-          msg = '定位失败！'
-          break
-        default:
-          msg = '未知错误！'
-          break
-      }
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = '超出存储配额！'
-          break
-        case FileError.NOT_FOUND_ERR:
-          msg = '文件不存在！'
-          break
-        case FileError.SECURITY_ERR:
-          msg = '安全错误！'
-          break
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = '无效的修改！'
-          break
-        case FileError.INVALID_STATE_ERR:
-          msg = '无效的状态！'
-          break
-        default:
-          msg = '未知错误！'
-          break
-      }
-      console.log('错误： ' + fileName + msg)
     }
     /*
      * 依次打开指定目录文件夹,读取文件内容
