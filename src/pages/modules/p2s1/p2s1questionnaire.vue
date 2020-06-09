@@ -629,9 +629,9 @@ export default {
                   // you could hook this up with our global error handler, or pass in an error callback
                   alert('写入失败: ' + e.toString())
                 }
-                var blob = new Blob([data], { type: 'text/plain' })
                 fileWriter.seek(fileWriter.length)
-                fileWriter.write(blob)
+                var blob = new Blob([data], { type: 'text/plain' })
+                fileWriter.write(blob.getBlob())
               })
             },
             function(err) {
