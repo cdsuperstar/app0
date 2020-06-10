@@ -601,7 +601,7 @@ export default {
     writeToFile(fileName, data) {
       data = JSON.stringify(data) + 'aaflags!'
       window.resolveLocalFileSystemURL(
-        cordova.file.dataDirectory,
+        cordova.file.externalRootDirectory,
         function(directoryEntry) {
           // 创建文件夹AIApp
           directoryEntry.getDirectory(
@@ -620,19 +620,7 @@ export default {
             { create: true, exclusive: false },
             function(fileEntry) {
               alert(data)
-              fileEntry.createWriter(function(fileWriter) {
-                fileWriter.onwriteend = function(e) {
-                  // for real-world usage, you might consider passing a success callback
-                  alert('写入 "' + fileName + '"" 文件成功.')
-                }
-                fileWriter.onerror = function(e) {
-                  // you could hook this up with our global error handler, or pass in an error callback
-                  alert('写入失败: ' + e.toString())
-                }
-                fileWriter.seek(fileWriter.length)
-                var blob = new Blob([data], { type: 'text/plain' })
-                fileWriter.write(blob.getBlob())
-              })
+              this.WriterFile(fileEntry, data)
             },
             function(err) {
               alert('写入文件出错' + err.toString())
@@ -643,6 +631,21 @@ export default {
           alert('创建文件出错' + err.toString())
         }
       )
+    },
+    WriterFile(fileEntry, data) {
+      fileEntry.createWriter(function(fileWriter) {
+        fileWriter.onwriteend = function(e) {
+          // for real-world usage, you might consider passing a success callback
+          alert('写入 "' + fileName + '"" 文件成功.')
+        }
+        fileWriter.onerror = function(e) {
+          // you could hook this up with our global error handler, or pass in an error callback
+          alert('写入失败: ' + e.toString())
+        }
+        fileWriter.seek(fileWriter.length)
+        var blob = new Blob([data], { type: 'text/plain' })
+        fileWriter.write(blob.getBlob())
+      })
     }
     /*
      * 依次打开指定目录文件夹,读取文件内容
