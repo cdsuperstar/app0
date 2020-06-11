@@ -90,6 +90,7 @@ export default {
   },
   data() {
     return {
+      result: null,
       loading: false,
       quickFilter: null,
       gridOptions: null,
@@ -112,16 +113,54 @@ export default {
   },
   computed: {},
   created() {
-    this.$router.app.$http
-      .get('/users/')
-      .then(res => {
-        if (res.data.success) {
-          // console.log(res.data.data)
-          this.rowData = res.data.data
-        } else {
-        }
-      })
-      .catch(e => {})
+    // 读取文件，导入JSON
+    var fileName = '/AIApp/Votedata.json'
+    window.resolveLocalFileSystemURL(
+      cordova.file.externalRootDirectory,
+      function(directoryEntry) {
+        // 创建文件夹AIApp
+        directoryEntry.getDirectory(
+          'AIApp',
+          { create: true },
+          function(dirEntry) {
+            // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+          },
+          function(err) {
+            alert('创建文件夹出错' + err.toString())
+          }
+        )
+        // 查找这个文件，如果没有则创建
+        directoryEntry.getFile(
+          fileName,
+          { create: true, exclusive: false },
+          function(fileEntry) {
+            fileEntry.file(
+              function(file) {
+                var reader = new FileReader()
+                reader.onloadend = function() {
+                  var tmpdata = '[' + this.result.substr(1) + ']'
+                  alert(tmpdata + 'tmpdata')
+                  this.rowData = JSON.parse(tmpdata)
+                }
+                reader.readAsText(file)
+              },
+              function(err) {
+                alert('文件读取出错' + err.toString())
+              }
+            )
+          },
+          function(err) {
+            alert('文件出错' + err.toString())
+          }
+        )
+      },
+      function(err) {
+        alert('创建文件出错' + err.toString())
+      }
+    )
+    /*
+     * 打开指定目录文件夹,读取文件内容
+     * */
   },
   beforeMount() {
     this.initGrid()
@@ -138,14 +177,34 @@ export default {
       this.columnDefs = [
         {
           editable: false,
-          headerName: 'ID',
-          field: 'id',
-          width: 70,
-          minWidth: 70,
-          maxWidth: 70,
+          headerName: '经度',
+          field: 'longitude',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
           sortable: true,
           headerCheckboxSelection: true,
           checkboxSelection: true
+        },
+        {
+          editable: false,
+          headerName: '纬度',
+          field: 'latitude',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: true,
+          headerName: '省',
+          field: 'province',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
         }
       ]
       this.defaultColDef = {

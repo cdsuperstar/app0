@@ -588,8 +588,11 @@ export default {
     },
     savedata() {
       this.saving = true
-      this.writeToFile('/AIApp/someFile.json', this.vote)
-      this.saving = false
+      this.writeToFile('/AIApp/Votedata.json', this.vote)
+      setTimeout(() => {
+        this.saving = false
+        // console.log('数据：' + JSON.stringify(this.vote))
+      }, 3000)
     },
     /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容
@@ -617,16 +620,9 @@ export default {
             function(fileEntry) {
               fileEntry.createWriter(function(fileWriter) {
                 fileWriter.onwriteend = function(e) {
-                  // for real-world usage, you might consider passing a success callback
-                  // alert('保存成功： "' + fileName)
-                  this.$zglobal.showMessage(
-                    'grenn-7',
-                    'center',
-                    '数据保存成功！'
-                  )
+                  alert('保存成功： "' + fileName)
                 }
                 fileWriter.onerror = function(e) {
-                  // you could hook this up with our global error handler, or pass in an error callback
                   alert('保存失败：' + e.toString())
                 }
                 // alert(data + '-' + fileWriter.length)
