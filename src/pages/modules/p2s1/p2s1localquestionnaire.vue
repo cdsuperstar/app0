@@ -29,25 +29,20 @@
         :label="this.$t('buttons.save')"
         @click="saveItems()"
       />
+      <q-separator
+        v-if="!$q.screen.gt.xs"
+        class="col-10 q-ma-xs"
+        color="info"
+      />
       <q-btn
         color="expbtn"
         text-color="white"
         class="q-ma-xs"
         icon="autorenew"
         label="获取数据"
-        @click="getJsondata()"
-      />
-      <q-separator
-        v-if="!$q.screen.gt.xs"
-        class="col-10 q-ma-xs"
-        color="info"
+        @click="freshJsondata()"
       />
       <q-space />
-      <q-separator
-        v-if="!$q.screen.gt.xs"
-        class="col-10 q-ma-xs"
-        color="info"
-      />
       <q-input
         v-model="quickFilter"
         dense
@@ -293,7 +288,7 @@ export default {
       var selectedData = this.gridApi.getSelectedRows()
       alert('编辑：' + JSON.stringify(selectedData))
     },
-    getJsondata() {
+    freshJsondata() {
       // 读取文件，导入JSON数据
       var fileName = '/AIApp/Votedata.json'
       window.resolveLocalFileSystemURL(
@@ -321,9 +316,6 @@ export default {
                   reader.onloadend = function() {
                     var tmpdata = '[' + this.result.substr(1) + ']'
                     alert('tmpdata:' + tmpdata)
-                    this.rowData = JSON.parse(tmpdata)
-                    this.gridApi.setRowData(JSON.parse(tmpdata))
-                    alert('加载成功！')
                   }
                   reader.readAsText(file)
                 },
@@ -341,6 +333,7 @@ export default {
           alert('创建文件出错' + err.toString())
         }
       )
+      this.rowData = JSON.parse(txtArea.value)
       /*
        * 打开指定目录文件夹,读取文件内容
        * */

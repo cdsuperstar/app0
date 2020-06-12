@@ -2,7 +2,7 @@
   <q-page class="flex flex-center">
     <q-carousel
       v-model="slide"
-      transition-prev="scale"
+      transition-prev="slide-right"
       transition-next="slide-left"
       swipeable
       animated
@@ -81,7 +81,7 @@
               icon-right="input"
               @click="login"
             >
-              {{ $t('auth.login.login') }}
+              &nbsp;&nbsp;{{ $t('auth.login.login') }} &nbsp;&nbsp;
               <!--        <q-btn-->
               <!--          type="submit"-->
               <!--          color="secondary"-->
@@ -95,7 +95,6 @@
               <!--          </template>-->
             </q-btn>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
             <q-btn color="warning" icon-right="how_to_reg" to="register">
               &nbsp;&nbsp;{{ $t('auth.register.register') }} &nbsp;&nbsp;
             </q-btn>
@@ -124,7 +123,7 @@
           </q-toolbar>
           <q-card-section
             class="row items-start"
-            style="min-height: 60px;max-height:335px;overflow-y:auto"
+            style="min-height: 60px;max-height:335px;padding:3px;overflow-y:auto"
           >
             <q-card
               flat
@@ -135,13 +134,13 @@
               <q-card-section horizontal align="center">
                 <q-list padding>
                   <q-item-section
-                    class="rounded-borders bg-primary"
+                    class="rounded-borders bg-secondary"
                     style="width: 4rem;height: 4rem;"
                   >
                     <q-icon
                       name="queue"
                       color="white"
-                      style="font-size: 2rem;padding: 5px;"
+                      style="font-size: 3rem;padding: 5px;"
                     ></q-icon>
                   </q-item-section>
                   <q-item-section style="margin-left: 1px;font-size: 1em">
@@ -165,7 +164,7 @@
                     <q-icon
                       name="format_list_bulleted"
                       color="white"
-                      style="font-size: 2rem;padding: 5px;"
+                      style="font-size: 3rem;padding: 5px;"
                     ></q-icon>
                   </q-item-section>
                   <q-item-section style="margin-left: 1px;font-size: 1em">
