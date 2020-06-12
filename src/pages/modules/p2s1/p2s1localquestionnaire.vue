@@ -333,7 +333,6 @@ export default {
           alert('创建文件出错' + err.toString())
         }
       )
-      this.rowData = JSON.parse(txtArea.value)
       /*
        * 打开指定目录文件夹,读取文件内容
        * */
