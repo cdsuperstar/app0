@@ -78,7 +78,7 @@ export default {
   getlocationfailed: '获取定位信息失败',
   success: '操作成功',
   system: {
-    name: '综合智能管理系统'
+    name: '数据采集系统'
   },
   operation: {
     addsuccess: '添加成功！',
@@ -113,6 +113,7 @@ export default {
     add: '添加',
     show: '显示',
     update: '更新',
+    modify: '编辑',
     delete: '删除',
     save: '保存',
     import: '导入',

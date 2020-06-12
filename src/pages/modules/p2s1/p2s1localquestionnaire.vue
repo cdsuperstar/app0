@@ -1,7 +1,7 @@
 <template>
   <q-page padding class="q-pa-ma">
     <div class="text-h5 q-ma-md text-secondary">
-      本地问卷
+      【离线】本地问卷
     </div>
     <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -10,8 +10,8 @@
         text-color="white"
         class="q-ma-xs"
         icon="post_add"
-        :label="this.$t('buttons.add')"
-        @click="addItems()"
+        :label="this.$t('buttons.modify')"
+        @click="modifyItems()"
       />
       <q-btn
         color="deldbtn"
@@ -28,6 +28,14 @@
         icon="save"
         :label="this.$t('buttons.save')"
         @click="saveItems()"
+      />
+      <q-btn
+        color="expbtn"
+        text-color="white"
+        class="q-ma-xs"
+        icon="autorenew"
+        label="获取数据"
+        @click="getJsondata()"
       />
       <q-separator
         v-if="!$q.screen.gt.xs"
@@ -98,7 +106,7 @@ export default {
       gridApi: null,
       columnApi: null,
       columnDefs: null,
-      rowData: null,
+      rowData: [],
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null,
@@ -112,59 +120,11 @@ export default {
     }
   },
   computed: {},
-  created() {
-    // 读取文件，导入JSON
-    var fileName = '/AIApp/Votedata.json'
-    window.resolveLocalFileSystemURL(
-      cordova.file.externalRootDirectory,
-      function(directoryEntry) {
-        // 创建文件夹AIApp
-        directoryEntry.getDirectory(
-          'AIApp',
-          { create: true },
-          function(dirEntry) {
-            // alert('您创建了：' + dirEntry.name + ' 文件夹。')
-          },
-          function(err) {
-            alert('创建文件夹出错' + err.toString())
-          }
-        )
-        // 查找这个文件，如果没有则创建
-        directoryEntry.getFile(
-          fileName,
-          { create: true, exclusive: false },
-          function(fileEntry) {
-            fileEntry.file(
-              function(file) {
-                var reader = new FileReader()
-                reader.onloadend = function() {
-                  var tmpdata = '[' + this.result.substr(1) + ']'
-                  alert(tmpdata + 'tmpdata')
-                  this.rowData = JSON.parse(tmpdata)
-                }
-                reader.readAsText(file)
-              },
-              function(err) {
-                alert('文件读取出错' + err.toString())
-              }
-            )
-          },
-          function(err) {
-            alert('文件出错' + err.toString())
-          }
-        )
-      },
-      function(err) {
-        alert('创建文件出错' + err.toString())
-      }
-    )
-    /*
-     * 打开指定目录文件夹,读取文件内容
-     * */
-  },
+  created() {},
   beforeMount() {
     this.initGrid()
   },
+  beforeDestroy() {},
   mounted() {
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
@@ -197,9 +157,99 @@ export default {
           filter: true
         },
         {
-          editable: true,
-          headerName: '省',
-          field: 'province',
+          editable: false,
+          headerName: '区（县）',
+          field: 'country',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '镇（乡）',
+          field: 'town',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '行政村（社区）',
+          field: 'village',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '被访者姓名',
+          field: 'a1name',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '联系方式',
+          field: 'a1tel',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '户主姓名',
+          field: 'b1',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '户主性别',
+          field: 'b2',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '户主身份证号',
+          field: 'b5',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '人口数',
+          field: 'c1',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          editable: false,
+          headerName: '脱贫时间',
+          field: 'c19',
           width: 110,
           minWidth: 110,
           maxWidth: 170,
@@ -208,7 +258,7 @@ export default {
         }
       ]
       this.defaultColDef = {
-        editable: true,
+        editable: false,
         resizable: true
       }
       this.getRowStyle = this.onchangerowcolor
@@ -221,6 +271,7 @@ export default {
     },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
+      alert('删除：' + JSON.stringify(selectedData))
     },
     onchangerowcolor() {
       return { backgroundColor: this.changerowcolor }
@@ -236,7 +287,63 @@ export default {
       this.changerowcolor = ''
     },
     saveItems() {
-      const selectedData = this.gridApi.getSelectedRows()
+      alert('保存：' + JSON.stringify(this.rowData))
+    },
+    modifyItems() {
+      var selectedData = this.gridApi.getSelectedRows()
+      alert('编辑：' + JSON.stringify(selectedData))
+    },
+    getJsondata() {
+      // 读取文件，导入JSON数据
+      var fileName = '/AIApp/Votedata.json'
+      window.resolveLocalFileSystemURL(
+        cordova.file.externalRootDirectory,
+        function(directoryEntry) {
+          // 创建文件夹AIApp
+          directoryEntry.getDirectory(
+            'AIApp',
+            { create: true },
+            function(dirEntry) {
+              // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+            },
+            function(err) {
+              alert('创建文件夹出错' + err.toString())
+            }
+          )
+          // 查找这个文件，如果没有则创建
+          directoryEntry.getFile(
+            fileName,
+            { create: true, exclusive: false },
+            function(fileEntry) {
+              fileEntry.file(
+                function(file) {
+                  var reader = new FileReader()
+                  reader.onloadend = function() {
+                    var tmpdata = '[' + this.result.substr(1) + ']'
+                    alert('tmpdata:' + tmpdata)
+                    this.rowData = JSON.parse(tmpdata)
+                    this.gridApi.setRowData(JSON.parse(tmpdata))
+                    alert('加载成功！')
+                  }
+                  reader.readAsText(file)
+                },
+                function(err) {
+                  alert('文件读取出错' + err.toString())
+                }
+              )
+            },
+            function(err) {
+              alert('文件出错' + err.toString())
+            }
+          )
+        },
+        function(err) {
+          alert('创建文件出错' + err.toString())
+        }
+      )
+      /*
+       * 打开指定目录文件夹,读取文件内容
+       * */
     }
   }
 }

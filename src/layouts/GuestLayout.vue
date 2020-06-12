@@ -10,9 +10,19 @@
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
         </q-toolbar-title>
+        <q-btn
+          flat
+          round
+          dense
+          icon="home"
+          class="text-white"
+          to="/login"
+          :title="this.$t('buttons.home')"
+        />
         <q-btn-dropdown
           stretch
           flat
+          dense
           :label="
             lang.label === undefined ? this.$t('langs.header') : lang.label
           "
@@ -67,11 +77,11 @@ export default {
     return {
       langs: [
         {
-          label: '中文',
+          label: 'CN',
           value: 'zh-hans'
         },
         {
-          label: 'English',
+          label: 'EN',
           value: 'en-us'
         }
       ],

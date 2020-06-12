@@ -34,6 +34,28 @@ const routes = [
     ]
   },
   {
+    path: '/p2s1questionnaire',
+    meta: { auth: false },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/modules/p2s1/p2s1questionnaire.vue')
+      }
+    ]
+  },
+  {
+    path: '/p2s1localquestionnaire',
+    meta: { auth: false },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/modules/p2s1/p2s1localquestionnaire.vue')
+      }
+    ]
+  },
+  {
     path: '/user',
     meta: { auth: true },
     component: () => import('layouts/DashboardLayout.vue'),
