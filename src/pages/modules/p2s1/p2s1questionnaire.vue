@@ -5,14 +5,14 @@
         <p
           class="text-bold"
           align="center"
-          style="margin-bottom: 0.5em; color: var(--q-color-positive);"
+          style="margin-bottom:.5em;color: var(--q-color-positive)"
         >
           <font size="4">2019 年贫困县退出专项评估检查</font><br />
           <font size="3" style="text-indent: 3em;"
             >（建档立卡脱贫户调查问卷）</font
           >
         </p>
-        <p style="text-indent: 2em;">
+        <p style="text-indent:2em;">
           您好！我们是西藏自治区 2019 年贫困县退出专项评估检查的调查员。
           您家是我们选取的抽样农户，现需要访谈了解您家庭生产、生活及有关情况。希望您如实提供信息，我们将遵守规定对您所提供的信息严格保密。谢谢您的理解与配合！
         </p>
@@ -73,7 +73,7 @@
             dense
             standout="bg-secondary text-white"
             label="省"
-            style="min-width: 10em;"
+            style="min-width: 10em"
             emit-value
             :options="addressoptions"
           />
@@ -82,7 +82,7 @@
             dense
             standout="bg-secondary text-white"
             label="市"
-            style="min-width: 10em;"
+            style="min-width: 10em"
             emit-value
             :options="cityArray"
           />
@@ -92,7 +92,7 @@
             standout="bg-secondary text-white"
             label="区（县）"
             emit-value
-            style="min-width: 10em;"
+            style="min-width: 10em"
             :options="countryArray"
           />
           <q-select
@@ -101,7 +101,7 @@
             standout="bg-secondary text-white"
             label="镇（乡）"
             emit-value
-            style="min-width: 10em;"
+            style="min-width: 10em"
             :options="townArray"
           />
         </div>
@@ -115,7 +115,7 @@
           <q-select
             v-model="vote.villagetype"
             label="行政村属性"
-            style="min-width: 10em;"
+            style="min-width: 10em"
             :options="['农区', '牧区', '半农半牧区']"
           />
         </div>
@@ -167,7 +167,7 @@
           </dt>
           <dd
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">A1. 被访者姓名？</div>
             <q-input v-model="vote.a1name" type="text" dense />
@@ -197,7 +197,7 @@
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">A2. 被访者文化程度？</div>
             <q-select
@@ -220,7 +220,7 @@
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">B1. 户主姓名：</div>
             <q-input v-model="vote.b1" type="text" dense />
@@ -247,7 +247,7 @@
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">B4. 户主文化程度：</div>
             <q-select
@@ -278,7 +278,7 @@
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
             <q-input
@@ -308,7 +308,7 @@
           <dd
             class="text-body1"
             :class="$q.screen.gt.xs ? 'text-body1 row' : 'text-body1'"
-            style="margin-inline-start: 20px;"
+            style="margin-inline-start:20px;"
           >
             <div style="padding-top: 10px;">
               C17.全家 2019 年领取的低保金是多少？ （元）
@@ -346,7 +346,7 @@
           bordered
           multiple
           color="secondary"
-          style="max-width: 275px;"
+          style="max-width: 275px"
           :filter="checkFileSize"
           :label="$t('article.attachment')"
           :headers="[
@@ -364,7 +364,7 @@
       </q-step>
       <q-step :name="4" title="第四部分 其他部分" icon="stars" :done="done4">
         <q-card flat dense>
-          <q-card-section style="padding: 1px;">
+          <q-card-section style="padding:1px;">
             <div>第一部分 基础信息</div>
             <div>第二部分 农户家庭基本信息</div>
             <div>第三部分 “两不愁、三保障” 情况</div>
@@ -498,7 +498,7 @@ export default {
 
   computed: {
     // 获得列表
-    cityArray: function () {
+    cityArray: function() {
       let tmpRe1 = []
       for (var i in this.addressoptions) {
         if (this.addressoptions[i].value === this.vote.province) {
@@ -508,7 +508,7 @@ export default {
       }
       return tmpRe1
     },
-    countryArray: function () {
+    countryArray: function() {
       let tmpRe2 = []
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
@@ -518,7 +518,7 @@ export default {
       }
       return tmpRe2
     },
-    townArray: function () {
+    townArray: function() {
       let tmpRe3 = []
       for (var i in this.countryArray) {
         if (this.countryArray[i].value === this.vote.country) {
@@ -563,91 +563,84 @@ export default {
       // this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     },
-    // 1查询当前位置信息
+    // 1 查询当前位置信息
     getPosition() {
       navigator.geolocation.getCurrentPosition(
         this.getPositionSuccess,
-        this.errorHandler('pe'),
+        this.getPositionError,
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 5000 }
       )
     },
-    // 1-1查询当前位置信息成功
+    // 1-1 查询当前位置信息成功
     getPositionSuccess(position) {
       this.vote.latitude = String(position.coords.latitude.toFixed(2))
       this.vote.longitude = String(position.coords.longitude.toFixed(2))
     },
+    // 1-2 查询当前位置信息失败
+    getPositionError(error) {
+      if (error) {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('getlocationfailed')
+        )
+      }
+    },
     savedata() {
       this.saving = true
-      this.writeToFile('someFile.json', this.vote)
-      console.log(this.vote, '提交成功')
+      this.writeToFile('/AIApp/Votedata.json', this.vote)
       setTimeout(() => {
         this.saving = false
-        console.log('-=----=---=---=---=---=--' + JSON.stringify(this.vote))
+        // console.log('数据：' + JSON.stringify(this.vote))
       }, 3000)
     },
     /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容
      * */
     writeToFile(fileName, data) {
-      data = JSON.stringify(data, null, '\t')
+      data = JSON.stringify(data)
       window.resolveLocalFileSystemURL(
         cordova.file.externalRootDirectory,
-        function (directoryEntry) {
+        function(directoryEntry) {
+          // 创建文件夹AIApp
+          directoryEntry.getDirectory(
+            'AIApp',
+            { create: true },
+            function(dirEntry) {
+              // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+            },
+            function(err) {
+              alert('创建文件夹出错' + err.toString())
+            }
+          )
+          // 查找这个文件，如果没有则创建
           directoryEntry.getFile(
             fileName,
             { create: true, exclusive: false },
-            function (fileEntry) {
-              fileEntry.createWriter(function (fileWriter) {
-                fileWriter.onwriteend = function (e) {
-                  // for real-world usage, you might consider passing a success callback
-                  alert('写入 "' + fileName + '"" 文件成功.')
+            function(fileEntry) {
+              fileEntry.createWriter(function(fileWriter) {
+                fileWriter.onwriteend = function(e) {
+                  alert('保存成功： "' + fileName)
                 }
-                fileWriter.onerror = function (e) {
-                  // you could hook this up with our global error handler, or pass in an error callback
-                  alert('写入失败: ' + e.toString())
+                fileWriter.onerror = function(e) {
+                  alert('保存失败：' + e.toString())
                 }
-                var blob = new Blob([data], { type: 'text/plain' })
+                // alert(data + '-' + fileWriter.length)
+                fileWriter.seek(fileWriter.length)
+                var blob = new Blob([',' + data], { type: 'text/plain' })
                 fileWriter.write(blob)
-              }, this.errorHandler(fileName, null))
+                fileWriter.close()
+              })
             },
-            this.errorHandler(fileName, null)
+            function(err) {
+              alert('写入文件出错' + err.toString())
+            }
           )
         },
-        this.errorHandler(fileName, null)
+        function(err) {
+          alert('创建文件出错' + err.toString())
+        }
       )
-    },
-    // 处理错误
-    errorHandler(e, fileName) {
-      var msg = ''
-      switch (e) {
-        case 'pe':
-          msg = '定位失败！'
-          break
-        default:
-          msg = '未知错误！'
-          break
-      }
-      switch (e.code) {
-        case FileError.QUOTA_EXCEEDED_ERR:
-          msg = '超出存储配额！'
-          break
-        case FileError.NOT_FOUND_ERR:
-          msg = '文件不存在！'
-          break
-        case FileError.SECURITY_ERR:
-          msg = '安全错误！'
-          break
-        case FileError.INVALID_MODIFICATION_ERR:
-          msg = '无效的修改！'
-          break
-        case FileError.INVALID_STATE_ERR:
-          msg = '无效的状态！'
-          break
-        default:
-          msg = '未知错误！'
-          break
-      }
-      console.log('错误： ' + fileName + msg)
     }
     /*
      * 依次打开指定目录文件夹,读取文件内容

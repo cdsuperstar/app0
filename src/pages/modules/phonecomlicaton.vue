@@ -188,12 +188,21 @@ export default {
   },
   created() {
     this.getPosition()
-    window.addEventListener('batterystatus', this.onBatteryStatus, false)
-    window.addEventListener('deviceready', this.onDeviceReady, false)
+    document.addEventListener('batterystatus', this.onBatteryStatus, false)
+    document.addEventListener('deviceready', this.onDeviceReady, false)
   },
   beforeMount() {},
+  beforeDestroy() {
+    document.removeEventListener('batterystatus', this.onBatteryStatus, false)
+    document.removeEventListener('deviceready', this.onDeviceReady, false)
+  },
   mounted() {
     this.checkConnection()
+    window.setTimeout(function() {
+      var e = document.createEvent('Events')
+      e.initEvent('deviceready', true, false)
+      document.dispatchEvent(e)
+    }, 50)
   },
   methods: {
     onDeviceReady() {},
