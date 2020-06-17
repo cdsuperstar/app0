@@ -116,6 +116,9 @@ export default {
     modify: '编辑',
     delete: '删除',
     save: '保存',
+    refresh: '刷新',
+    modifyd: '修改',
+    upload: '上传',
     import: '导入',
     export: '导出'
   },
