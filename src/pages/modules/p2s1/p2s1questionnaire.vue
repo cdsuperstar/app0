@@ -554,6 +554,7 @@ export default {
   mounted() {
     this.getPosition()
   },
+
   methods: {
     checkFileSize(files) {
       return files.filter(file => file.size < 20480000)
@@ -604,7 +605,7 @@ export default {
         function(directoryEntry) {
           // 创建文件夹AIApp
           directoryEntry.getDirectory(
-            'AIApp',
+            'AIApp/Images',
             { create: true },
             function(dirEntry) {
               // alert('您创建了：' + dirEntry.name + ' 文件夹。')

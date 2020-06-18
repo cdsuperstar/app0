@@ -193,7 +193,6 @@ export default {
   },
   beforeMount() {},
   beforeDestroy() {
-    document.removeEventListener('batterystatus', this.onBatteryStatus, false)
     document.removeEventListener('deviceready', this.onDeviceReady, false)
   },
   mounted() {
@@ -335,7 +334,45 @@ export default {
     // 拍照
     picturesuccess(imageData) {
       // imageURI imageData
-      this.divstatus = '返回的数据:' + imageData
+      this.soundstatus = '返回的数据:' + imageData
+      // 复制到指定文件夹
+      window.resolveLocalFileSystemURL(
+        imageData,
+        function(fileEntry) {
+          window.resolveLocalFileSystemURL(
+            'file:///storage/emulated/0/AIApp/Images',
+            function(dirEntry) {
+              var date = new Date()
+              var seperator1 = 'AIApp_'
+              var month = date.getMonth() + 1
+              var strDate = date.getDate()
+              if (month >= 1 && month <= 9) {
+                month = '0' + month
+              }
+              if (strDate >= 0 && strDate <= 9) {
+                strDate = '0' + strDate
+              }
+              var currentdate =
+                seperator1 +
+                date.getFullYear() +
+                month +
+                strDate +
+                '_' +
+                date.getHours() +
+                date.getMinutes() +
+                date.getSeconds()
+
+              fileEntry.moveTo(dirEntry, currentdate + '.jpg')
+            },
+            function(error) {
+              alert('创建失败！' + error.code.toString())
+            }
+          )
+        },
+        function(error) {
+          alert('创建失败！' + error.code.toString())
+        }
+      )
       // alert('调用相册返回的数据:' + imageData)
       // //使用FileTransfer上传到服务器
       // var options = new FileUploadOptions() // 文件参数选项
@@ -361,9 +398,9 @@ export default {
       navigator.camera.getPicture(this.picturesuccess, onLoadImageFail, {
         destinationType: navigator.camera.DestinationType.FILE_URI,
         // 返回类型：DATA_URL= 0，返回作为 base64 編碼字串。 FILE_URI=1，返回影像档的 URI。NATIVE_URI=2，返回图像本机URI （在andorid中 FILE_URI和NATIVE_URI返回的结果是一样的）
-        quality: 80, // 图片质量  0-100
-        targetWidth: 800, // 照片宽度
-        targetHeight: 600, // 照片高度
+        quality: 100, // 图片质量  0-100
+        targetWidth: 1600, // 照片宽度
+        targetHeight: 1800, // 照片高度
         saveToPhotoAlbum: true, // 保存到手机相册
         encodingType: navigator.camera.EncodingType.JPEG, // 保存的图片格式： JPEG = 0, PNG = 1
         allowEdit: false, // 选择之前允许修改截图
