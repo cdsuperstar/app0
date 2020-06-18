@@ -346,11 +346,23 @@ export default {
               var seperator1 = 'AIApp_'
               var month = date.getMonth() + 1
               var strDate = date.getDate()
+              var hour = date.getHours()
+              var minutes = date.getMinutes()
+              var seconds = date.getSeconds()
               if (month >= 1 && month <= 9) {
                 month = '0' + month
               }
               if (strDate >= 0 && strDate <= 9) {
                 strDate = '0' + strDate
+              }
+              if (hour >= 0 && hour <= 9) {
+                hour = '0' + hour
+              }
+              if (minutes >= 0 && minutes <= 9) {
+                minutes = '0' + minutes
+              }
+              if (seconds >= 0 && seconds <= 9) {
+                seconds = '0' + seconds
               }
               var currentdate =
                 seperator1 +
@@ -358,9 +370,9 @@ export default {
                 month +
                 strDate +
                 '_' +
-                date.getHours() +
-                date.getMinutes() +
-                date.getSeconds()
+                hour +
+                minutes +
+                seconds
 
               fileEntry.moveTo(dirEntry, currentdate + '.jpg')
             },
@@ -398,9 +410,9 @@ export default {
       navigator.camera.getPicture(this.picturesuccess, onLoadImageFail, {
         destinationType: navigator.camera.DestinationType.FILE_URI,
         // 返回类型：DATA_URL= 0，返回作为 base64 編碼字串。 FILE_URI=1，返回影像档的 URI。NATIVE_URI=2，返回图像本机URI （在andorid中 FILE_URI和NATIVE_URI返回的结果是一样的）
-        quality: 100, // 图片质量  0-100
-        targetWidth: 1600, // 照片宽度
-        targetHeight: 1800, // 照片高度
+        quality: 95, // 图片质量  0-100
+        targetWidth: 1200, // 照片宽度
+        targetHeight: 1600, // 照片高度
         saveToPhotoAlbum: true, // 保存到手机相册
         encodingType: navigator.camera.EncodingType.JPEG, // 保存的图片格式： JPEG = 0, PNG = 1
         allowEdit: false, // 选择之前允许修改截图
