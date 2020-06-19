@@ -447,7 +447,31 @@ export default {
             },
             {
               label: '广元市',
-              value: '广元市'
+              value: '广元市',
+              country: [
+                {
+                  label: '苍溪县',
+                  value: '苍溪县',
+                  town: [
+                    {
+                      label: '云峰镇',
+                      value: '云峰镇'
+                    },
+                    { label: '八里庄', value: '八里庄' }
+                  ]
+                },
+                {
+                  label: '昭化区',
+                  value: '昭化区',
+                  town: [
+                    {
+                      label: '西南交通大学',
+                      value: '西南交通大学'
+                    },
+                    { label: '西南石油大学', value: '西南石油大学' }
+                  ]
+                }
+              ]
             },
             {
               label: '南充市',

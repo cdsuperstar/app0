@@ -188,7 +188,7 @@ export default {
   },
   created() {
     this.getPosition()
-    document.addEventListener('batterystatus', this.onBatteryStatus, false)
+    window.addEventListener('batterystatus', this.onBatteryStatus, false)
     document.addEventListener('deviceready', this.onDeviceReady, false)
   },
   beforeMount() {},
@@ -450,10 +450,10 @@ export default {
       var filename = 'myrecording.mp3'
       if (device.platform === 'iOS') {
         this.soundstatus = '平台为:IOS；设备名称：' + device.model
-        path = cordova.file.tempDirectory + 'AsmartApp/' + filename
+        path = cordova.file.tempDirectory + 'AIApp/Record/' + filename
       } else if (device.platform === 'Android') {
         this.soundstatus = '平台为:Android；设备名称：' + device.model
-        path = cordova.file.externalRootDirectory + 'AsmartApp/' + filename
+        path = cordova.file.externalRootDirectory + 'AIApp/Record/' + filename
       }
       if (this.mediaRec === null) {
         this.mediaRec = new Media(
