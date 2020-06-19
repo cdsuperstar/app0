@@ -44,7 +44,7 @@
               :label="this.$t('auth.login.email')"
               :error="this.$v.data.data.username.$error"
               :error-message="this.$t('auth.errors.email')"
-              @blur="$v.data.data.username.$touch"
+              @blur="usernameblur"
             />
             <q-input
               id="password"
@@ -54,7 +54,7 @@
               :label="this.$t('auth.login.password')"
               :error="$v.data.data.password.$error"
               :error-message="this.$t('auth.errors.password')"
-              @blur="usernameblur"
+              @blur="$v.data.data.password.$touch"
             >
               <template v-slot:append>
                 <q-icon
@@ -126,7 +126,12 @@
           </q-toolbar>
           <q-card-section
             class="row items-start"
-            style="min-height: 60px;max-height:335px;padding:3px;overflow-y:auto"
+            style="
+              min-height: 60px;
+              max-height: 335px;
+              padding: 3px;
+              overflow-y: auto;
+            "
           >
             <q-card
               flat
@@ -138,15 +143,15 @@
                 <q-list padding>
                   <q-item-section
                     class="rounded-borders bg-secondary"
-                    style="width: 4rem;height: 4rem;"
+                    style="width: 4rem; height: 4rem;"
                   >
                     <q-icon
                       name="queue"
                       color="white"
-                      style="font-size: 3rem;padding: 5px;"
+                      style="font-size: 3rem; padding: 5px;"
                     ></q-icon>
                   </q-item-section>
-                  <q-item-section style="margin-left: 1px;font-size: 1em">
+                  <q-item-section style="margin-left: 1px; font-size: 1em;">
                     发起问卷
                   </q-item-section>
                 </q-list>
@@ -162,15 +167,15 @@
                 <q-list padding>
                   <q-item-section
                     class="rounded-borders bg-primary"
-                    style="width: 4rem;height: 4rem;"
+                    style="width: 4rem; height: 4rem;"
                   >
                     <q-icon
                       name="format_list_bulleted"
                       color="white"
-                      style="font-size: 3rem;padding: 5px;"
+                      style="font-size: 3rem; padding: 5px;"
                     ></q-icon>
                   </q-item-section>
-                  <q-item-section style="margin-left: 1px;font-size: 1em">
+                  <q-item-section style="margin-left: 1px; font-size: 1em;">
                     本地问卷
                   </q-item-section>
                 </q-list>
