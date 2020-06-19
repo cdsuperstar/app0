@@ -3,7 +3,7 @@
     <q-card
       square
       :flat="!$q.screen.gt.xs ? true : false"
-      style="width: 400px; padding:50px"
+      style="width: 360px; padding: 30px;"
     >
       <q-card-section>
         <div class="row text-h6 no-wrap text-bold" style="color: #ff9800">
@@ -76,6 +76,7 @@ export default {
               timeout: 2500,
               actions: [{ icon: 'close', color: 'white' }]
             })
+            this.loading = false
           })
           .catch(error => {
             if (error.response) {
@@ -88,6 +89,7 @@ export default {
                 actions: [{ icon: 'close', color: 'white' }]
               })
               console.error(error)
+              this.loading = false
             }
           })
           .finally(() => {

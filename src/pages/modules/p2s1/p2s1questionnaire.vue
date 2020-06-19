@@ -15,6 +15,9 @@
         <p style="text-indent:2em;">
           您好！我们是西藏自治区 2019 年贫困县退出专项评估检查的调查员。
           您家是我们选取的抽样农户，现需要访谈了解您家庭生产、生活及有关情况。希望您如实提供信息，我们将遵守规定对您所提供的信息严格保密。谢谢您的理解与配合！
+          <a class="text-weight-bold text-overline text-deep-orange">{{
+            username
+          }}</a>
         </p>
       </q-card-section>
     </q-card>
@@ -410,6 +413,7 @@ export default {
     return {
       saving: false,
       result: null,
+      username: null,
       vote: {},
       show2: true,
       addressoptions: [
@@ -577,6 +581,7 @@ export default {
   created() {},
   mounted() {
     this.getPosition()
+    this.username = this.$q.localStorage.getItem('username')
   },
 
   methods: {

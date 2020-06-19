@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center">
     <!-- content -->
-    <q-card square style="width: 400px; padding:50px">
+    <q-card square style="width: 360px; padding: 30px;">
       <q-card-section>
         <div class="row text-h6 no-wrap text-bold" style="color: #c10015">
           {{ $t('auth.password.reset.header') }}
@@ -148,6 +148,7 @@ export default {
           .finally(() => {
             this.loading = false
           })
+        this.loading = false
       }
     }
   },

@@ -54,7 +54,7 @@
               :label="this.$t('auth.login.password')"
               :error="$v.data.data.password.$error"
               :error-message="this.$t('auth.errors.password')"
-              @blur="$v.data.data.password.$touch"
+              @blur="usernameblur"
             >
               <template v-slot:append>
                 <q-icon
@@ -217,6 +217,10 @@ export default {
     }
   },
   methods: {
+    usernameblur() {
+      this.$q.localStorage.set('username', this.data.data.username)
+      this.$q.localStorage.set('rememberMe', true)
+    },
     login() {
       this.submitting = true
       this.$v.data.$touch()
