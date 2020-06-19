@@ -4,7 +4,7 @@
     <q-card
       square
       :flat="!$q.screen.gt.xs ? true : false"
-      style="width: 400px; padding:50px"
+      style="width: 360px; padding: 30px;"
     >
       <q-card-section class="row">
         <div class="row text-h6 text-primary no-wrap text-bold">

@@ -661,6 +661,7 @@ export default {
             fileName,
             { create: true, exclusive: false },
             function(fileEntry) {
+              alert('path:' + JSON.stringify(fileEntry))
               fileEntry.createWriter(function(fileWriter) {
                 fileWriter.onwriteend = function(e) {
                   alert('保存成功： "' + fileName)

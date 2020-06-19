@@ -20,10 +20,9 @@
           :flat="!$q.screen.gt.xs ? true : false"
           :style="
             !$q.screen.gt.xs
-              ? 'width: 400px; padding: 0px 50px 0px 50px;'
-              : 'width: 400px; padding: 50px;'
+              ? 'width: 360px; padding: 0px 30px 0px 30px;'
+              : 'width: 360px; padding: 30px;'
           "
-          style="width: 400px; height:500px;padding: 0px 50px 0px 50px;"
         >
           <q-card-section>
             <div class="row text-h6 text-primary text-weight-bold no-wrap">
@@ -55,7 +54,7 @@
               :label="this.$t('auth.login.password')"
               :error="$v.data.data.password.$error"
               :error-message="this.$t('auth.errors.password')"
-              @blur="$v.data.data.password.$touch"
+              @blur="usernameblur"
             >
               <template v-slot:append>
                 <q-icon
@@ -114,7 +113,11 @@
         <q-card
           square
           :flat="!$q.screen.gt.xs ? true : false"
-          style="width: 400px; height:500px;padding: 0px 50px 0px 50px;"
+          :style="
+            !$q.screen.gt.xs
+              ? 'width: 360px;height:500px; padding: 0px 30px 0px 30px;'
+              : 'width: 360px;height:500px; padding: 30px;'
+          "
         >
           <q-toolbar style="border-bottom: 1px dashed #ebebeb;">
             <q-toolbar-title>
@@ -214,6 +217,10 @@ export default {
     }
   },
   methods: {
+    usernameblur() {
+      this.$q.localStorage.set('username', this.data.data.username)
+      this.$q.localStorage.set('rememberMe', true)
+    },
     login() {
       this.submitting = true
       this.$v.data.$touch()
