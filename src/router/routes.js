@@ -3,13 +3,19 @@ const routes = [
     path: '/',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [{ path: '', component: () => import('pages/auth/Login.vue') }]
+    children: [{ path: '', component: () => import('pages/webindex.vue') }]
   },
   {
     path: '/login',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
     children: [{ path: '', component: () => import('pages/auth/Login.vue') }]
+  },
+  {
+    path: '/product',
+    meta: { auth: false },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [{ path: '', component: () => import('pages/web0/product.vue') }]
   },
   {
     path: '/register',

@@ -1,63 +1,161 @@
 <template>
-  <q-layout view="lHh lpR fFf">
-    <q-header bordered class="bg-primary text-white">
-      <q-toolbar>
-        <q-toolbar-title class="row">
-          <q-avatar>
-            <img src="../statics/app-logo.jpg" />
-          </q-avatar>
-          <div style="margin-top: 5px;">
-            &nbsp;&nbsp;{{ $t('system.name') }}
+  <q-layout view="hHh lpR lFf">
+    <q-header reveal class="bg-grey-7">
+      <q-toolbar style="height: 60px;">
+        <q-btn flat round dense icon="menu" @click="left = !left" />
+        <q-toolbar-title class="row col-4">
+          <q-img
+            src="../statics/app-logo1.png"
+            spinner-color="white"
+            style="height: 38px; max-width: 38px"
+          />
+          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
+            &nbsp;&nbsp;<font face="黑体">成都概率矩阵科技有限公司</font>
           </div>
         </q-toolbar-title>
-        <q-btn-dropdown
+        <q-space />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
           stretch
           flat
-          :label="
-            lang.label === undefined ? this.$t('langs.header') : lang.label
-          "
-        >
-          <q-list dense>
-            <q-item-label
-              header
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 8px;"
-              >{{ $t('langs.title') }}
-            </q-item-label>
-            <q-item
-              v-for="n in langs"
-              :key="n.value"
-              v-close-popup
-              clickable
-              style="text-align:left;border-bottom: 1px dashed #d6d6d6;padding: 6px;"
-              :class="lang.value === n.value ? 'text-primary' : 'text-grey-7'"
-              @click="setlanguage(n)"
-            >
-              <q-item-section avatar style="min-width:30px;">
-                <q-icon size="25px" name="directions" />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>{{ n.label }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+          to="/"
+          label="公司首页"
+        />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
+          stretch
+          flat
+          to="/product"
+          label="产品&案例"
+        />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
+          stretch
+          flat
+          to="/product"
+          label="支持服务"
+        />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
+          stretch
+          flat
+          to="/product"
+          label="关于我们"
+        />
+        <q-space />
+        <div style="cursor: pointer;" @click="setlanguage('zh-hans')">简</div>
+        <div class="text-grey-1">&nbsp;/&nbsp;</div>
+        <div style="cursor: pointer;" @click="setlanguage('en-us')">EN</div>
+        &nbsp;&nbsp;&nbsp;&nbsp;
       </q-toolbar>
     </q-header>
-
+    <q-drawer
+      v-model="left"
+      v-touch-swipe.mouse.left="handleleftSwipe"
+      overlay
+      show-if-above
+      side="left"
+      behavior="desktop"
+      :width="leftdrawer"
+    >
+      <!-- drawer content -->
+      <div class="row absolute-top bg-green-5" style="height: 60px;">
+        <q-input
+          dark
+          borderless
+          v-model="searchcontenet"
+          input-class="text-left"
+          class="q-ml-xs"
+        >
+          <template v-slot:append>
+            <q-icon name="search" class="cursor-pointer" @click="searchtxt" />
+          </template>
+        </q-input>
+      </div>
+      <div class="scroll" style="margin-top: 60px;">
+        <q-list link class="rounded-borders">
+          <q-item to="/" v-ripple clickable>
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="home" />
+            </q-item-section>
+            <q-item-section>首页</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item to="/product" v-ripple clickable>
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="dashboard" />
+            </q-item-section>
+            <q-item-section>产品&案例</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item to="/service" v-ripple clickable>
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="build" />
+            </q-item-section>
+            <q-item-section>支持服务</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item to="/product" v-ripple clickable>
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="share" />
+            </q-item-section>
+            <q-item-section>关于我们</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item v-ripple clickable @click="handleleftSwipe">
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="call_missed" />
+            </q-item-section>
+            <q-item-section>关闭菜单</q-item-section>
+          </q-item>
+          <q-separator />
+        </q-list>
+      </div>
+    </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
-
-    <!--    <q-footer bordered class="bg-white text-black">-->
-    <!--      <q-toolbar>-->
-    <!--        <q-toolbar-title>-->
-    <!--          <q-avatar>-->
-    <!--            <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg" />-->
-    <!--          </q-avatar>-->
-    <!--          Title-->
-    <!--        </q-toolbar-title>-->
-    <!--      </q-toolbar>-->
-    <!--    </q-footer>-->
+    <q-footer class="bg-grey-1 text-black">
+      <q-list class="col-6">
+        <q-item>
+          <q-item-section>
+            <div class="row text-grey-7" style="margin-left:5%; ">
+              <font size="4">关注我们</font>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="#">
+                <div class="icon-avi">
+                  <img src="../statics/share/qq.png" height="24" />
+                </div>
+              </a>
+              &nbsp;&nbsp;
+              <a href="#">
+                <div class="icon-avi">
+                  <img src="../statics/share/icon_wechat.png" height="24" />
+                </div>
+              </a>
+              &nbsp;&nbsp;
+              <a href="#">
+                <div class="icon-avi">
+                  <img src="../statics/share/sinaweibo.png" height="24" />
+                </div>
+              </a>
+            </div>
+          </q-item-section>
+        </q-item>
+        <q-item
+          style="border-top: 1px solid rgba(229,229,229,0.75);width:90%;margin-left:5%; "
+        >
+          <q-item-section class="text-grey-7 text-center">
+            Copyright © 2020 - 2050 All Rights Reserved.
+            成都概率矩阵科技有限公司 版权所有
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -65,35 +163,47 @@
 export default {
   data() {
     return {
-      langs: [
-        {
-          label: '中文',
-          value: 'zh-hans'
-        },
-        {
-          label: 'English',
-          value: 'en-us'
-        }
-      ],
+      searchcontenet: '搜索…',
+      left: false,
+      leftdrawer: 210,
       lang: this.$i18n.locale
     }
   },
   watch: {
     lang(lang) {
-      this.$i18n.locale = lang.value
+      this.$i18n.locale = lang
       // set quasar's language too!!
-      import(`quasar/lang/${lang.value}`).then(language => {
+      import(`quasar/lang/${lang}`).then(language => {
         this.$q.lang.set(language.default)
       })
     }
   },
-  mounted() {
-    this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
-  },
+  mounted() {},
   methods: {
     setlanguage(lang) {
+      console.log(lang, '----')
       this.lang = lang
+    },
+    // 左滑关闭菜单列表
+    handleleftSwipe() {
+      this.left = false
+    },
+    searchtxt() {
+      console.log(this.searchcontenet, '++++++')
     }
   }
 }
 </script>
+<style scoped>
+.icon-avi {
+  -webkit-filter: grayscale(100%);
+  -moz-filter: grayscale(1);
+  -ms-filter: grayscale(100%);
+  -o-filter: grayscale(100%);
+  filter: grayscale(100%);
+  filter: gray;
+}
+.icon-avi:hover {
+  -webkit-filter: grayscale(0%);
+}
+</style>
