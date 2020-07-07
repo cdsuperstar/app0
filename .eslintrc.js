@@ -51,7 +51,7 @@ module.exports = {
     'prefer-promise-reject-errors': 'off',
     // 'prettier/prettier': 'error',
     'prettier/prettier': [
-      'warning',
+      1,
       {
         endOfLine: 'auto'
       }
