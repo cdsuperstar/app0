@@ -1,6 +1,30 @@
 // This is just an example,
 // so you can safely delete all default props below
 export default {
+  p2s1: {
+    qdname: '设置问卷区域',
+    province: '省份',
+    country: '市（州）',
+    city: '区（县）',
+    town: '乡（镇）',
+    qsname: '管理问卷',
+    no: '问卷编号',
+    created_at: '调查时间',
+    conclusion: '问卷结论',
+    review: '审核',
+    reviewstatus: '审核状态',
+    reviewuser: '审核人',
+    upattachment: '上传附件',
+    isattachment: '问卷附件',
+    Suspectedscreening: '疑似排查',
+    Suspecteduser: '排查人',
+    finalstate: '最终状态',
+    qyname: '疑似问卷排查',
+    screening: '排查',
+    Suspectedattachment: '排查附件',
+    qtname: '问卷统计',
+    qpname: '问卷类型'
+  },
   p1s1techfile: {
     header: '技术文件',
     addfiles: '新增技术文件',
@@ -108,6 +132,7 @@ export default {
     json: 'Json编辑器',
     navigation: '浏览',
     search: '搜索',
+    screening: '筛选',
     back: '返回',
     submit: '提交',
     add: '添加',

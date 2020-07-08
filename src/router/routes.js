@@ -40,7 +40,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/modules/p2s1/p2s1questionnaire.vue')
+        component: () => import('pages/modules/p2s1/p2s1_off_qn.vue')
       }
     ]
   },
@@ -51,7 +51,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('pages/modules/p2s1/p2s1localquestionnaire.vue')
+        component: () => import('pages/modules/p2s1/p2s1_off_qnl.vue')
       }
     ]
   },

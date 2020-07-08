@@ -11,7 +11,6 @@
       navigation
       padding
       infinite
-      :arrows="$q.screen.gt.xs ? true : false"
       height="550px"
     >
       <q-carousel-slide name="login" class="column no-wrap flex-center">

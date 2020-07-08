@@ -23,7 +23,7 @@
     </q-card>
 
     <div class="q-ma-sm row items-start q-gutter-md">
-      <q-icon name="where_to_vote" class="text-warning" size="sm" />
+      <q-icon name="map" class="text-warning" size="sm" />
       <q-input
         v-model="vote.longitude"
         dense
@@ -543,48 +543,50 @@ export default {
      * */
     writeToFile(fileName, data) {
       data = JSON.stringify(data)
-      window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory,
-        function(directoryEntry) {
-          // 创建文件夹AIApp
-          directoryEntry.getDirectory(
-            'AIApp/Images',
-            { create: true },
-            function(dirEntry) {
-              // alert('您创建了：' + dirEntry.name + ' 文件夹。')
-            },
-            function(err) {
-              alert('创建文件夹出错' + err.toString())
-            }
-          )
-          // 查找这个文件，如果没有则创建
-          directoryEntry.getFile(
-            fileName,
-            { create: true, exclusive: false },
-            function(fileEntry) {
-              fileEntry.createWriter(function(fileWriter) {
-                fileWriter.onwriteend = function(e) {
-                  alert('保存成功： "' + fileName)
-                }
-                fileWriter.onerror = function(e) {
-                  alert('保存失败：' + e.toString())
-                }
-                // alert(data + '-' + fileWriter.length)
-                fileWriter.seek(fileWriter.length)
-                var blob = new Blob([',' + data], { type: 'text/plain' })
-                fileWriter.write(blob)
-                fileWriter.close()
-              })
-            },
-            function(err) {
-              alert('写入文件出错' + err.toString())
-            }
-          )
-        },
-        function(err) {
-          alert('创建文件出错' + err.toString())
-        }
-      )
+      if (process.env.MODE === 'cordova') {
+        window.resolveLocalFileSystemURL(
+          cordova.file.externalRootDirectory,
+          function(directoryEntry) {
+            // 创建文件夹AIApp
+            directoryEntry.getDirectory(
+              'AIApp/Images',
+              { create: true },
+              function(dirEntry) {
+                // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+              },
+              function(err) {
+                alert('创建文件夹出错' + err.toString())
+              }
+            )
+            // 查找这个文件，如果没有则创建
+            directoryEntry.getFile(
+              fileName,
+              { create: true, exclusive: false },
+              function(fileEntry) {
+                fileEntry.createWriter(function(fileWriter) {
+                  fileWriter.onwriteend = function(e) {
+                    alert('保存成功： "' + fileName)
+                  }
+                  fileWriter.onerror = function(e) {
+                    alert('保存失败：' + e.toString())
+                  }
+                  // alert(data + '-' + fileWriter.length)
+                  fileWriter.seek(fileWriter.length)
+                  var blob = new Blob([',' + data], { type: 'text/plain' })
+                  fileWriter.write(blob)
+                  fileWriter.close()
+                })
+              },
+              function(err) {
+                alert('写入文件出错' + err.toString())
+              }
+            )
+          },
+          function(err) {
+            alert('创建文件出错' + err.toString())
+          }
+        )
+      }
     }
     /*
      * 依次打开指定目录文件夹,读取文件内容

@@ -234,7 +234,7 @@
 import { AgGridVue } from 'ag-grid-vue'
 
 export default {
-  name: 'P2s1localquestionnaire',
+  name: 'P2s1OffQnl',
   components: {
     AgGridVue
   },
@@ -327,7 +327,7 @@ export default {
       columnApi: null,
       columnDefs: null,
       rowData: null,
-      rowtmpdata: null,
+      rowtmpdata: '',
       getRowStyle: null,
       changerowcolor: null,
       defaultColDef: null
@@ -642,108 +642,116 @@ export default {
       var strlength = str.length - 2
       data = str.substr(1, strlength)
       alert(strlength + 'data:' + data)
-      window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory,
-        function(directoryEntry) {
-          // 创建文件夹AIApp
-          directoryEntry.getDirectory(
-            'AIApp',
-            { create: true },
-            function(dirEntry) {
-              // alert('您创建了：' + dirEntry.name + ' 文件夹。')
-            },
-            function(err) {
-              alert('创建文件夹出错' + err.toString())
-            }
-          )
-          // 查找这个文件，如果没有则创建
-          directoryEntry.getFile(
-            fileName,
-            { create: true, exclusive: false },
-            function(fileEntry) {
-              alert('path:' + JSON.stringify(fileEntry))
-              fileEntry.createWriter(function(fileWriter) {
-                fileWriter.onwriteend = function(e) {
-                  alert('保存成功： "' + fileName)
-                }
-                fileWriter.onerror = function(e) {
-                  alert('保存失败：' + e.toString())
-                }
-                // alert(data + '-' + fileWriter.length)
-                // fileWriter.seek(fileWriter.length)
-                var blob = new Blob([',' + data], { type: 'text/plain' })
-                fileWriter.write(blob)
-                fileWriter.close()
-              })
-            },
-            function(err) {
-              alert('写入文件出错' + err.toString())
-            }
-          )
-        },
-        function(err) {
-          alert('创建文件出错' + err.toString())
-        }
-      )
+      if (process.env.MODE === 'cordova') {
+        window.resolveLocalFileSystemURL(
+          cordova.file.externalRootDirectory,
+          function(directoryEntry) {
+            // 创建文件夹AIApp
+            directoryEntry.getDirectory(
+              'AIApp',
+              { create: true },
+              function(dirEntry) {
+                // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+              },
+              function(err) {
+                alert('创建文件夹出错' + err.toString())
+              }
+            )
+            // 查找这个文件，如果没有则创建
+            directoryEntry.getFile(
+              fileName,
+              { create: true, exclusive: false },
+              function(fileEntry) {
+                alert('path:' + JSON.stringify(fileEntry))
+                fileEntry.createWriter(function(fileWriter) {
+                  fileWriter.onwriteend = function(e) {
+                    alert('保存成功： "' + fileName)
+                  }
+                  fileWriter.onerror = function(e) {
+                    alert('保存失败：' + e.toString())
+                  }
+                  // alert(data + '-' + fileWriter.length)
+                  // fileWriter.seek(fileWriter.length)
+                  var blob = new Blob([',' + data], { type: 'text/plain' })
+                  fileWriter.write(blob)
+                  fileWriter.close()
+                })
+              },
+              function(err) {
+                alert('写入文件出错' + err.toString())
+              }
+            )
+          },
+          function(err) {
+            alert('创建文件出错' + err.toString())
+          }
+        )
+      }
     },
     freshJsondata() {
       this.getJsondate()
       // 延迟0.5秒执行
       setTimeout(() => {
         const tmpb = document.getElementById('rowtmpdata').value
-        this.rowData = JSON.parse(tmpb)
+        if (tmpb) {
+          this.rowData = JSON.parse(tmpb)
+        } else {
+          this.rowData = ''
+        }
         this.rowtmpdata = tmpb
       }, 500)
     },
     // 读取文件，导入JSON数据
     getJsondate() {
       var fileName = '/AIApp/Votedata.json'
-      window.resolveLocalFileSystemURL(
-        cordova.file.externalRootDirectory,
-        function(directoryEntry) {
-          // 创建文件夹AIApp
-          directoryEntry.getDirectory(
-            'AIApp',
-            { create: true },
-            function(dirEntry) {
-              // alert('您创建了：' + dirEntry.name + ' 文件夹。')
-            },
-            function(err) {
-              alert('创建文件夹出错' + err.toString())
-            }
-          )
-          // 查找这个文件，如果没有则创建
-          directoryEntry.getFile(
-            fileName,
-            { create: true, exclusive: false },
-            function(fileEntry) {
-              fileEntry.file(
-                function(file) {
-                  var reader = new FileReader()
-                  reader.onloadend = function() {
-                    var tmpdata = '[' + reader.result.substr(1) + ']'
-                    // alert('tmpdata:' + tmpdata)
-                    // 显示文件路径
-                    // alert(fileEntry.fullPath)
-                    // 给控件赋值
-                    document.getElementById('rowtmpdata').value = tmpdata
+      if (process.env.MODE === 'cordova') {
+        window.resolveLocalFileSystemURL(
+          cordova.file.externalRootDirectory,
+          function(directoryEntry) {
+            // 创建文件夹AIApp
+            directoryEntry.getDirectory(
+              'AIApp',
+              { create: true },
+              function(dirEntry) {
+                // alert('您创建了：' + dirEntry.name + ' 文件夹。')
+              },
+              function(err) {
+                alert('创建文件夹出错' + err.toString())
+              }
+            )
+            // 查找这个文件，如果没有则创建
+            directoryEntry.getFile(
+              fileName,
+              { create: true, exclusive: false },
+              function(fileEntry) {
+                fileEntry.file(
+                  function(file) {
+                    var reader = new FileReader()
+                    reader.onloadend = function() {
+                      var tmpdata = '[' + reader.result.substr(1) + ']'
+                      // alert('tmpdata:' + tmpdata)
+                      // 显示文件路径
+                      // alert(fileEntry.fullPath)
+                      // 给控件赋值
+                      document.getElementById('rowtmpdata').value = tmpdata
+                    }
+                    reader.readAsText(file)
+                  },
+                  function(err) {
+                    alert('文件读取出错' + err.toString())
                   }
-                  reader.readAsText(file)
-                },
-                function(err) {
-                  alert('文件读取出错' + err.toString())
-                }
-              )
-            },
-            function(err) {
-              alert('文件出错' + err.toString())
-            }
-          )
-        },
-        function(err) {
-          alert('创建文件出错' + err.toString())
-        }
-      )
+                )
+              },
+              function(err) {
+                alert('文件出错' + err.toString())
+              }
+            )
+          },
+          function(err) {
+            alert('创建文件出错' + err.toString())
+          }
+        )
+      }
       /*
        * 打开指定目录文件夹,读取文件内容
        * */
