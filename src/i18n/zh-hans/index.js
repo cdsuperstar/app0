@@ -1,6 +1,16 @@
 // This is just an example,
 // so you can safely delete all default props below
 export default {
+  webtxt: {
+    companyname: '成都概率矩阵科技有限公司',
+    search: '搜索',
+    index: '首页',
+    profile: '公司简介',
+    product: '技术产品',
+    service: '技术服务',
+    case: '案例',
+    about: '关于我们'
+  },
   p1s1techfile: {
     header: '技术文件',
     addfiles: '新增技术文件',

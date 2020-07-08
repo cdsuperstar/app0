@@ -3,53 +3,37 @@ const routes = [
     path: '/',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [{ path: '', component: () => import('pages/webindex.vue') }]
+    children: [{ path: '', component: () => import('pages/Index.vue') }]
   },
   {
-    path: '/login',
+    path: '/profile',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [{ path: '', component: () => import('pages/auth/Login.vue') }]
+    children: [{ path: '', component: () => import('pages/Profile.vue') }]
   },
   {
     path: '/product',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [{ path: '', component: () => import('pages/web0/product.vue') }]
+    children: [{ path: '', component: () => import('pages/Product.vue') }]
   },
   {
-    path: '/register',
+    path: '/service',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [{ path: '', component: () => import('pages/auth/Register.vue') }]
+    children: [{ path: '', component: () => import('pages/Service.vue') }]
   },
   {
-    path: '/forgot',
+    path: '/case',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/auth/password/Forgot.vue') }
-    ]
+    children: [{ path: '', component: () => import('pages/Case.vue') }]
   },
   {
-    path: '/reset',
+    path: '/about',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/auth/password/Reset.vue') }
-    ]
-  },
-  {
-    path: '/user',
-    meta: { auth: true },
-    component: () => import('layouts/DashboardLayout.vue'),
-    children: [
-      {
-        path: 'dashboard',
-        name: 'dashboard',
-        component: () => import('pages/Index.vue')
-      }
-    ]
+    children: [{ path: '', component: () => import('pages/About.vue') }]
   }
 ]
 // Always leave this as last one

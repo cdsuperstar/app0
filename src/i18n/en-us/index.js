@@ -2,6 +2,16 @@
 // so you can safely delete all default props below
 
 export default {
+  webtxt: {
+    companyname: 'Chengdu probability matrix Technology Co., Ltd',
+    search: 'search',
+    index: 'Home',
+    profile: 'Profile',
+    product: 'Product',
+    service: 'Service',
+    case: 'Case',
+    about: 'About'
+  },
   failed: 'Action failed',
   success: 'Action was successful',
   buttons: {

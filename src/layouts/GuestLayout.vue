@@ -3,14 +3,14 @@
     <q-header reveal class="bg-grey-7">
       <q-toolbar style="height: 60px;">
         <q-btn flat round dense icon="menu" @click="left = !left" />
-        <q-toolbar-title class="row col-4">
+        <q-toolbar-title class="row col-5">
           <q-img
             src="../statics/app-logo1.png"
             spinner-color="white"
             style="height: 38px; max-width: 38px"
           />
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
-            &nbsp;&nbsp;<font face="黑体">成都概率矩阵科技有限公司</font>
+            &nbsp;&nbsp;<font face="黑体">{{ $t('webtxt.companyname') }}</font>
           </div>
         </q-toolbar-title>
         <q-space />
@@ -20,7 +20,15 @@
           stretch
           flat
           to="/"
-          label="公司首页"
+          :label="$t('webtxt.index')"
+        />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
+          stretch
+          flat
+          to="/profile"
+          :label="$t('webtxt.profile')"
         />
         <q-btn
           v-if="$q.screen.gt.xs"
@@ -28,24 +36,33 @@
           stretch
           flat
           to="/product"
-          label="产品&案例"
+          :label="$t('webtxt.product')"
         />
         <q-btn
           v-if="$q.screen.gt.xs"
           v-ripple
           stretch
           flat
-          to="/product"
-          label="支持服务"
+          to="/service"
+          :label="$t('webtxt.service')"
         />
         <q-btn
           v-if="$q.screen.gt.xs"
           v-ripple
           stretch
           flat
-          to="/product"
-          label="关于我们"
+          to="/case"
+          :label="$t('webtxt.case')"
         />
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          v-ripple
+          stretch
+          flat
+          to="/about"
+          :label="$t('webtxt.about')"
+        />
+
         <q-space />
         <div style="cursor: pointer;" @click="setlanguage('zh-hans')">简</div>
         <div class="text-grey-1">&nbsp;/&nbsp;</div>
@@ -65,11 +82,12 @@
       <!-- drawer content -->
       <div class="row absolute-top bg-green-5" style="height: 60px;">
         <q-input
+          v-model="searchcontenet"
           dark
           borderless
-          v-model="searchcontenet"
           input-class="text-left"
           class="q-ml-xs"
+          :label="$t('webtxt.search')"
         >
           <template v-slot:append>
             <q-icon name="search" class="cursor-pointer" @click="searchtxt" />
@@ -78,28 +96,42 @@
       </div>
       <div class="scroll" style="margin-top: 60px;">
         <q-list link class="rounded-borders">
-          <q-item to="/" v-ripple clickable>
+          <q-item v-ripple clickable to="/">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="home" />
             </q-item-section>
             <q-item-section>首页</q-item-section>
           </q-item>
           <q-separator />
-          <q-item to="/product" v-ripple clickable>
+          <q-item v-ripple clickable to="/profile">
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="assignment" />
+            </q-item-section>
+            <q-item-section>公司简介</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item v-ripple clickable to="/product">
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="dns" />
+            </q-item-section>
+            <q-item-section>技术产品</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item v-ripple clickable to="/service">
+            <q-item-section avatar class="text-weight-bold">
+              <q-icon name="card_travel" />
+            </q-item-section>
+            <q-item-section>技术服务</q-item-section>
+          </q-item>
+          <q-separator />
+          <q-item v-ripple clickable to="/case">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dashboard" />
             </q-item-section>
-            <q-item-section>产品&案例</q-item-section>
+            <q-item-section>案例</q-item-section>
           </q-item>
           <q-separator />
-          <q-item to="/service" v-ripple clickable>
-            <q-item-section avatar class="text-weight-bold">
-              <q-icon name="build" />
-            </q-item-section>
-            <q-item-section>支持服务</q-item-section>
-          </q-item>
-          <q-separator />
-          <q-item to="/product" v-ripple clickable>
+          <q-item v-ripple clickable to="/about">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="share" />
             </q-item-section>
@@ -163,7 +195,7 @@
 export default {
   data() {
     return {
-      searchcontenet: '搜索…',
+      searchcontenet: '',
       left: false,
       leftdrawer: 210,
       lang: this.$i18n.locale

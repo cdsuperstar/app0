@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <div class="background-img">
-      首页
+    <div>
+      案例
     </div>
     AAAAAAAAAAAAAAAAAAAAAAA<br />
     AAAAAAAAAAAAAAAAAAAAAAA<br />
@@ -18,21 +18,8 @@
 
 <script>
 export default {
-  name: 'Index',
-  components: {},
-  data() {
-    return {}
-  },
-  created() {},
-  methods: {}
+  name: 'Case'
 }
 </script>
-<style scoped>
-.background-img {
-  width: 100%;
-  height: 430px;
-  overflow: hidden;
-  background: url(../statics/business-1.jpg) no-repeat top;
-  background-size: cover;
-}
-</style>
+
+<style scoped></style>
