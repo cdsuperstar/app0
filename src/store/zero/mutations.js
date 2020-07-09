@@ -26,9 +26,10 @@ export function storeZOptHist(state, value) {
     if (index !== -1) {
       state.ZOptHist.splice(index, 1)
     }
-    const histmodel = state.ZPermissions.modules.filter(
-      obj => value === obj.name
-    )
+    let histmodel = []
+    if (state.ZPermissions.modules !== undefined) {
+      histmodel = state.ZPermissions.modules.filter(obj => value === obj.name)
+    }
     if (histmodel[0] !== undefined) state.ZOptHist.unshift(histmodel[0])
   }
 }
