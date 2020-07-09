@@ -545,7 +545,31 @@ export default {
       this.vote.au_comments = '该户排查过程中……'
       this.vote.au_conclusion = '正常'
       this.vote.au_files = '排查附件'
-      this.writeToFile('/AIApp/Votedata.json', this.vote)
+      if (process.env.MODE === 'cordova') {
+        this.writeToFile('/AIApp/Votedata.json', this.vote)
+      } else {
+        this.$router.app.$http
+          .post('/p2/s1/p2s1questionnaire1', this.vote)
+          .then(res => {
+            // console.log(res)
+            if (res.data.success) {
+              this.gridApi.updateRowData({
+                add: [res.data.data]
+              })
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.addsuccess')
+              )
+            } else {
+              this.$zglobal.showMessage(
+                'red-7',
+                'center',
+                this.$t('auth.errors.adderror')
+              )
+            }
+          })
+      }
       setTimeout(() => {
         this.saving = false
         console.log('数据：' + JSON.stringify(this.vote))
