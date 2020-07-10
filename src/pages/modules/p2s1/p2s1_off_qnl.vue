@@ -67,13 +67,13 @@
             :options="cityArray"
           />
           <q-select
-            v-model="vote.country"
+            v-model="vote.county"
             dense
             standout="bg-secondary text-white"
             label="区（县）"
             emit-value
             style="min-width: 10em"
-            :options="countryArray"
+            :options="countyArray"
           />
           <q-select
             v-model="vote.town"
@@ -242,82 +242,7 @@ export default {
     return {
       result: null,
       vote: {},
-      addressoptions: [
-        {
-          label: '四川省',
-          value: '四川省',
-          city: [
-            {
-              label: '成都市',
-              value: '成都市',
-              country: [
-                {
-                  label: '成华区',
-                  value: '成华区',
-                  town: [
-                    {
-                      label: '二仙桥',
-                      value: '二仙桥'
-                    },
-                    { label: '八里庄', value: '八里庄' }
-                  ]
-                },
-                {
-                  label: '青羊区',
-                  value: '青羊区',
-                  town: [
-                    {
-                      label: '西南交通大学',
-                      value: '西南交通大学'
-                    },
-                    { label: '西南石油大学', value: '西南石油大学' }
-                  ]
-                }
-              ]
-            },
-            {
-              label: '广元市',
-              value: '广元市'
-            },
-            {
-              label: '南充市',
-              value: '南充市'
-            }
-          ]
-        },
-        {
-          label: '海南省',
-          value: '海南省',
-          city: [
-            {
-              label: '三亚市',
-              value: '三亚市'
-            },
-            {
-              label: '海口市',
-              value: '海口市'
-            }
-          ]
-        },
-        {
-          label: '重庆市',
-          value: '重庆市',
-          city: [
-            {
-              label: '嘉陵区',
-              value: '嘉陵区'
-            },
-            {
-              label: '北碚区',
-              value: '北碚区'
-            },
-            {
-              label: '黔江县',
-              value: '黔江县'
-            }
-          ]
-        }
-      ],
+      addressoptions: this.$t('p2s1.addressArray'),
       loading: false,
       editItem: false,
       quickFilter: null,
@@ -345,11 +270,11 @@ export default {
       }
       return tmpRe1
     },
-    countryArray: function() {
+    countyArray: function() {
       let tmpRe2 = []
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
-          tmpRe2 = this.cityArray[i].country
+          tmpRe2 = this.cityArray[i].county
           break
         }
       }
@@ -357,9 +282,9 @@ export default {
     },
     townArray: function() {
       let tmpRe3 = []
-      for (var i in this.countryArray) {
-        if (this.countryArray[i].value === this.vote.country) {
-          tmpRe3 = this.countryArray[i].town
+      for (var i in this.countyArray) {
+        if (this.countyArray[i].value === this.vote.county) {
+          tmpRe3 = this.countyArray[i].town
           break
         }
       }
@@ -369,14 +294,14 @@ export default {
   watch: {
     'vote.province'(val) {
       if (this.vote.city) this.vote.city = null
-      if (this.vote.country) this.vote.country = null
+      if (this.vote.county) this.vote.county = null
       if (this.vote.town) this.vote.town = null
     },
     'vote.city'(val) {
-      if (this.vote.country) this.vote.country = null
+      if (this.vote.county) this.vote.county = null
       if (this.vote.town) this.vote.town = null
     },
-    'vote.country'(val) {
+    'vote.county'(val) {
       if (this.vote.town) this.vote.town = null
     }
   },
@@ -444,7 +369,7 @@ export default {
         {
           editable: false,
           headerName: '区（县）',
-          field: 'country',
+          field: 'county',
           width: 110,
           minWidth: 110,
           maxWidth: 170,

@@ -328,108 +328,47 @@ export default {
       saving: false,
       result: null,
       username: null,
-      vote: {},
+      vote: {
+        province: '四川省',
+        city: '成都市',
+        county: '成华区',
+        town: '二仙桥',
+        village: '11',
+        group: '11',
+        villagetype: '半农半牧区',
+        investigator1: '11',
+        investigatortel1: '11',
+        investigator2: '11',
+        investigatortel2: '11',
+        a1name: '11',
+        a1renation: '本人',
+        a1tel: '1111',
+        a2: '小学及以下',
+        b1: '111',
+        b2: '男',
+        b3: '土家族',
+        b4: '小学及以下',
+        b5: '11111',
+        c1: '11',
+        c14: '2015',
+        c17: '3600',
+        c19: '2019',
+        no: '2020070922390001',
+        investigator: '在线调查员',
+        qtype: '建档立卡户问卷',
+        q_files: '问卷附件',
+        qsource: '扫码问卷',
+        isUpload: '是',
+        reviewer: '某某某',
+        re_comments: '问卷一切正常',
+        re_conclusion: '审核通过',
+        auditor: '排查人',
+        au_comments: '该户排查过程中……',
+        au_conclusion: '正常',
+        au_files: '排查附件'
+      },
       show2: true,
-      addressoptions: [
-        {
-          label: '四川省',
-          value: '四川省',
-          city: [
-            {
-              label: '成都市',
-              value: '成都市',
-              county: [
-                {
-                  label: '成华区',
-                  value: '成华区',
-                  town: [
-                    {
-                      label: '二仙桥',
-                      value: '二仙桥'
-                    },
-                    { label: '八里庄', value: '八里庄' }
-                  ]
-                },
-                {
-                  label: '青羊区',
-                  value: '青羊区',
-                  town: [
-                    {
-                      label: '西南交通大学',
-                      value: '西南交通大学'
-                    },
-                    { label: '西南石油大学', value: '西南石油大学' }
-                  ]
-                }
-              ]
-            },
-            {
-              label: '广元市',
-              value: '广元市',
-              county: [
-                {
-                  label: '苍溪县',
-                  value: '苍溪县',
-                  town: [
-                    {
-                      label: '云峰镇',
-                      value: '云峰镇'
-                    },
-                    { label: '八里庄', value: '八里庄' }
-                  ]
-                },
-                {
-                  label: '昭化区',
-                  value: '昭化区',
-                  town: [
-                    {
-                      label: '西南交通大学',
-                      value: '西南交通大学'
-                    },
-                    { label: '西南石油大学', value: '西南石油大学' }
-                  ]
-                }
-              ]
-            },
-            {
-              label: '南充市',
-              value: '南充市'
-            }
-          ]
-        },
-        {
-          label: '海南省',
-          value: '海南省',
-          city: [
-            {
-              label: '三亚市',
-              value: '三亚市'
-            },
-            {
-              label: '海口市',
-              value: '海口市'
-            }
-          ]
-        },
-        {
-          label: '重庆市',
-          value: '重庆市',
-          city: [
-            {
-              label: '嘉陵区',
-              value: '嘉陵区'
-            },
-            {
-              label: '北碚区',
-              value: '北碚区'
-            },
-            {
-              label: '黔江县',
-              value: '黔江县'
-            }
-          ]
-        }
-      ],
+      addressoptions: this.$t('p2s1.addressArray'),
       step: 2,
       done1: false,
       done2: false,
@@ -532,16 +471,49 @@ export default {
     },
     savedata() {
       this.saving = true
-      this.vote.no = '2020070922390001'
-      this.vote.investigator = '在线调查员'
+      this.vote.investigator = this.$auth.user().id
+      // 生成问卷编号
+      var date = new Date()
+      var seperator1 = 'U' + this.vote.investigator + 'D'
+      var month = date.getMonth() + 1
+      var strDate = date.getDate()
+      var hour = date.getHours()
+      var minutes = date.getMinutes()
+      var seconds = date.getSeconds()
+      if (month >= 1 && month <= 9) {
+        month = '0' + month
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = '0' + strDate
+      }
+      if (hour >= 0 && hour <= 9) {
+        hour = '0' + hour
+      }
+      if (minutes >= 0 && minutes <= 9) {
+        minutes = '0' + minutes
+      }
+      if (seconds >= 0 && seconds <= 9) {
+        seconds = '0' + seconds
+      }
+      var currentdate =
+        seperator1 +
+        date.getFullYear() +
+        month +
+        strDate +
+        'T' +
+        hour +
+        minutes +
+        seconds
+      this.vote.no = currentdate
+      // 问卷编号结束
       this.vote.qtype = '建档立卡户问卷'
       this.vote.q_files = '问卷附件'
       this.vote.qsource = '扫码问卷'
-      this.vote.isUpload = '是'
-      this.vote.reviewer = '某某某'
+      this.vote.isUpload = true
+      this.vote.reviewer = '22222'
       this.vote.re_comments = '问卷一切正常'
       this.vote.re_conclusion = '审核通过'
-      this.vote.auditor = '排查人'
+      this.vote.auditor = '333333'
       this.vote.au_comments = '该户排查过程中……'
       this.vote.au_conclusion = '正常'
       this.vote.au_files = '排查附件'
@@ -553,19 +525,16 @@ export default {
           .then(res => {
             // console.log(res)
             if (res.data.success) {
-              this.gridApi.updateRowData({
-                add: [res.data.data]
-              })
               this.$zglobal.showMessage(
                 'positive',
                 'center',
-                this.$t('operation.addsuccess')
+                this.$t('p2s1.savesuccess')
               )
             } else {
               this.$zglobal.showMessage(
                 'red-7',
                 'center',
-                this.$t('auth.errors.adderror')
+                this.$t('p2s1.savefail')
               )
             }
           })
@@ -573,7 +542,7 @@ export default {
       setTimeout(() => {
         this.saving = false
         console.log('数据：' + JSON.stringify(this.vote))
-      }, 3000)
+      }, 2000)
     },
     /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容

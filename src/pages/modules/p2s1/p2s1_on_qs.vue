@@ -1,5 +1,150 @@
 <template>
   <q-page padding class="q-pa-ma">
+    <q-dialog v-model="editItem">
+      <q-card class="q-dialog-plugin">
+        <q-toolbar>
+          <q-icon color="primary" size="30px" name="account_box" />
+          <q-toolbar-title>
+            <span class="text-weight-bold"> 修改问卷 </span>
+          </q-toolbar-title>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+        </q-toolbar>
+        <q-separator color="accent" />
+        <div class="q-mb-lg row">
+          <q-icon name="where_to_vote" class="text-warning" size="sm" />
+          <q-input
+            v-model="vote.longitude"
+            dense
+            disable
+            type="text"
+            style="max-width: 8em;"
+          >
+            <template v-slot:before>
+              <font size="3">经度</font>
+            </template>
+          </q-input>
+          <q-input
+            v-model="vote.latitude"
+            dense
+            disable
+            type="text"
+            style="max-width: 7em;"
+          >
+            <template v-slot:before>
+              <font size="3">纬度</font>
+            </template>
+          </q-input>
+        </div>
+        <div
+          :class="
+            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
+          "
+        >
+          <q-select
+            v-model="vote.province"
+            dense
+            standout="bg-secondary text-white"
+            label="省"
+            style="min-width: 10em"
+            emit-value
+            :options="addressoptions"
+          />
+          <q-select
+            v-model="vote.city"
+            dense
+            standout="bg-secondary text-white"
+            label="市"
+            style="min-width: 10em"
+            emit-value
+            :options="cityArray"
+          />
+          <q-select
+            v-model="vote.county"
+            dense
+            standout="bg-secondary text-white"
+            label="区（县）"
+            emit-value
+            style="min-width: 10em"
+            :options="countyArray"
+          />
+          <q-select
+            v-model="vote.town"
+            dense
+            standout="bg-secondary text-white"
+            label="镇（乡）"
+            emit-value
+            style="min-width: 10em"
+            :options="townArray"
+          />
+        </div>
+        <div
+          :class="
+            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
+          "
+        >
+          <q-input v-model="vote.village" type="text" label="行政村（社区）" />
+          <q-input v-model="vote.group" type="text" label="自然村（组）" />
+          <q-select
+            v-model="vote.villagetype"
+            label="行政村属性"
+            style="min-width: 10em"
+            :options="['农区', '牧区', '半农半牧区']"
+          />
+        </div>
+        <div
+          :class="
+            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
+          "
+        >
+          <q-input
+            v-model="vote.investigator1"
+            type="text"
+            label="调查员1姓名"
+          />
+          <q-input
+            v-model="vote.investigatortel1"
+            type="text"
+            label="调查员1联系方式"
+            mask="### - #### ####"
+          />
+        </div>
+        <div
+          :class="
+            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
+          "
+        >
+          <q-input
+            v-model="vote.investigator2"
+            type="text"
+            label="调查员2姓名"
+          />
+          <q-input
+            v-model="vote.investigatortel2"
+            type="text"
+            label="调查员2联系方式"
+            mask="### - #### ####"
+          />
+        </div>
+        <q-separator color="accent" />
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="saveItems()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p2s1.qsname') }}
     </div>
@@ -101,6 +246,9 @@ export default {
   },
   data() {
     return {
+      editItem: false,
+      vote: {},
+      addressoptions: this.$t('p2s1.addressArray'),
       loading: true,
       quickFilter: null,
       gridOptions: null,
@@ -111,14 +259,59 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       frameworkComponents: null,
-      defaultColDef: null,
-      mPermissions: []
+      defaultColDef: null
     }
   },
-  computed: {},
+  computed: {
+    // 获得列表
+    cityArray: function() {
+      let tmpRe1 = []
+      for (var i in this.addressoptions) {
+        if (this.addressoptions[i].value === this.vote.province) {
+          tmpRe1 = this.addressoptions[i].city
+          break
+        }
+      }
+      return tmpRe1
+    },
+    countyArray: function() {
+      let tmpRe2 = []
+      for (var i in this.cityArray) {
+        if (this.cityArray[i].value === this.vote.city) {
+          tmpRe2 = this.cityArray[i].county
+          break
+        }
+      }
+      return tmpRe2
+    },
+    townArray: function() {
+      let tmpRe3 = []
+      for (var i in this.countyArray) {
+        if (this.countyArray[i].value === this.vote.county) {
+          tmpRe3 = this.countyArray[i].town
+          break
+        }
+      }
+      return tmpRe3
+    }
+  },
+  watch: {
+    'vote.province'(val) {
+      if (this.vote.city) this.vote.city = null
+      if (this.vote.county) this.vote.county = null
+      if (this.vote.town) this.vote.town = null
+    },
+    'vote.city'(val) {
+      if (this.vote.county) this.vote.county = null
+      if (this.vote.town) this.vote.town = null
+    },
+    'vote.county'(val) {
+      if (this.vote.town) this.vote.town = null
+    }
+  },
   created() {
     this.$router.app.$http
-      .get('/z_module/')
+      .get('/p2/s1/p2s1questionnaire1/')
       .then(res => {
         if (res.data.success) {
           // console.log(res.data.data)
@@ -156,7 +349,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.no'),
-          field: 'name',
+          field: 'no',
           width: 110,
           minWidth: 110,
           maxWidth: 170,
@@ -165,7 +358,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.qpname'),
-          field: 'name',
+          field: 'qtype',
           width: 110,
           minWidth: 110,
           maxWidth: 170,
@@ -174,7 +367,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.created_at'),
-          field: 'title',
+          field: 'created_at',
           width: 120,
           minWidth: 120,
           maxWidth: 180,
@@ -183,7 +376,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.conclusion'),
-          field: 'title',
+          field: 'c19',
           width: 120,
           minWidth: 120,
           maxWidth: 180,
@@ -191,8 +384,8 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.reviewstatus'),
-          field: 'icon',
+          headerName: this.$t('p2s1.re_comments'),
+          field: 're_comments',
           width: 100,
           minWidth: 100,
           maxWidth: 180,
@@ -200,8 +393,17 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.reviewuser'),
-          field: 'url',
+          headerName: this.$t('p2s1.re_conclusion'),
+          field: 're_conclusion',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('p2s1.reviewer'),
+          field: 'reviewer',
           width: 120,
           minWidth: 120,
           maxWidth: 260,
@@ -210,7 +412,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.isattachment'),
-          field: 'icon',
+          field: 'files',
           width: 100,
           minWidth: 100,
           maxWidth: 180,
@@ -218,8 +420,8 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.Suspectedscreening'),
-          field: 'memo',
+          headerName: this.$t('p2s1.au_comments'),
+          field: 'au_comments',
           width: 120,
           minWidth: 120,
           maxWidth: 260,
@@ -227,8 +429,8 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.finalstate'),
-          field: 'icon',
+          headerName: this.$t('p2s1.au_conclusion'),
+          field: 'au_conclusion',
           width: 100,
           minWidth: 100,
           maxWidth: 180,
@@ -248,10 +450,6 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    getSelector(params) {
-      const mapMenu = this.$t('menu.types')
-      return mapMenu[params.value]
-    },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length > 0) {
@@ -268,7 +466,7 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_module/' + val.id)
+                .delete('/p2/s1/p2s1questionnaire1/' + val.id)
                 .then(res => {
                   if (res.data.success) {
                     // console.log(res.data.data)
@@ -298,7 +496,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'p2s1area.xls',
+        fileName: 'p2s1onqs.xls',
         suppressQuotes: true,
         columnSeparator: ','
       }
@@ -318,61 +516,50 @@ export default {
       }
       this.changerowcolor = ''
     },
-    addItems() {
-      var newItems = [{}]
-      this.gridApi.updateRowData({ add: newItems })
-      // console.log(res)
+    modifyItems() {
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1) {
+        this.vote = selectedData[0]
+        this.editItem = true
+        console.log(
+          JSON.stringify(this.vote),
+          '-----------------',
+          this.townArray
+        )
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
     },
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         // console.log(val)
-        if (val.id === undefined) {
-          this.$router.app.$http
-            .post('/z_module/', val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.addsuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.addfailed')
-                )
-              }
-            })
-            .catch(e => {})
-        } else {
-          this.$router.app.$http
-            .put('/z_module/' + val.id, val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.updatesuccess')
-                )
-                // console.log(res.data.data)
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.updatefailed')
-                )
-              }
-            })
-            .catch(e => {})
-        }
+        this.$router.app.$http
+          .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
+          .then(res => {
+            if (res.data.success) {
+              this.gridApi.updateRowData({
+                update: [Object.assign(val, res.data.data)]
+              })
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.updatesuccess')
+              )
+              // console.log(res.data.data)
+            } else {
+              this.$zglobal.showMessage(
+                'red-7',
+                'center',
+                this.$t('operation.updatefailed')
+              )
+            }
+          })
+          .catch(e => {})
       })
     }
   }

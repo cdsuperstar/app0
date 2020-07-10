@@ -12,18 +12,121 @@ export default {
     created_at: '调查时间',
     conclusion: '问卷结论',
     review: '审核',
-    reviewstatus: '审核状态',
-    reviewuser: '审核人',
+    re_comments: '审核意见',
+    re_conclusion: '审核状态',
+    reviewer: '审核人',
     upattachment: '上传附件',
     isattachment: '问卷附件',
-    Suspectedscreening: '疑似排查',
+    au_comments: '排查意见',
     Suspecteduser: '排查人',
-    finalstate: '最终状态',
+    au_conclusion: '排查结论',
     qyname: '疑似问卷排查',
     screening: '排查',
     Suspectedattachment: '排查附件',
     qtname: '问卷统计',
-    qpname: '问卷类型'
+    qpname: '问卷类型',
+    savesuccess: '保存问卷成功！',
+    savefail: '保存问卷失败！',
+    addressArray: [
+      {
+        label: '四川省',
+        value: '四川省',
+        city: [
+          {
+            label: '成都市',
+            value: '成都市',
+            county: [
+              {
+                label: '成华区',
+                value: '成华区',
+                town: [
+                  {
+                    label: '二仙桥',
+                    value: '二仙桥'
+                  },
+                  { label: '八里庄', value: '八里庄' }
+                ]
+              },
+              {
+                label: '青羊区',
+                value: '青羊区',
+                town: [
+                  {
+                    label: '西南交通大学',
+                    value: '西南交通大学'
+                  },
+                  { label: '西南石油大学', value: '西南石油大学' }
+                ]
+              }
+            ]
+          },
+          {
+            label: '广元市',
+            value: '广元市',
+            county: [
+              {
+                label: '苍溪县',
+                value: '苍溪县',
+                town: [
+                  {
+                    label: '云峰镇',
+                    value: '云峰镇'
+                  },
+                  { label: '八里庄', value: '八里庄' }
+                ]
+              },
+              {
+                label: '昭化区',
+                value: '昭化区',
+                town: [
+                  {
+                    label: '西南交通大学',
+                    value: '西南交通大学'
+                  },
+                  { label: '西南石油大学', value: '西南石油大学' }
+                ]
+              }
+            ]
+          },
+          {
+            label: '南充市',
+            value: '南充市'
+          }
+        ]
+      },
+      {
+        label: '海南省',
+        value: '海南省',
+        city: [
+          {
+            label: '三亚市',
+            value: '三亚市'
+          },
+          {
+            label: '海口市',
+            value: '海口市'
+          }
+        ]
+      },
+      {
+        label: '重庆市',
+        value: '重庆市',
+        city: [
+          {
+            label: '嘉陵区',
+            value: '嘉陵区'
+          },
+          {
+            label: '北碚区',
+            value: '北碚区'
+          },
+          {
+            label: '黔江县',
+            value: '黔江县'
+          }
+        ]
+      }
+    ]
   },
   p1s1techfile: {
     header: '技术文件',
