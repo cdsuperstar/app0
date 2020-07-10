@@ -1,5 +1,75 @@
 <template>
   <q-page padding class="q-pa-ma">
+    <q-dialog v-model="DaddFiles" seamless>
+      <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
+        <q-uploader
+          style="max-width: 300px"
+          :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
+          method="POST"
+          multiple
+          auto-expand
+          :filter="checkFileSize"
+          :label="this.$t('article.attachment')"
+          :headers="[
+            {
+              name: 'enctype',
+              value: 'multipart/form-data'
+            },
+            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+          ]"
+          @uploading="upfileing"
+          @uploaded="upfilished"
+        >
+          <template v-slot:list="scope">
+            <div class="text-right">
+              <q-btn
+                v-close-popup
+                flat
+                round
+                color="primary"
+                size="sm"
+                icon="close"
+                title="关闭此窗口"
+                :disable="fileupdone"
+              />
+            </div>
+            <q-list separator>
+              <q-item v-for="file in scope.files" :key="file.name">
+                <q-item-section>
+                  <q-item-label class="full-width ellipsis">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    Status: {{ file.__status }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    {{ file.__sizeLabel }} / {{ file.__progressLabel }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section v-if="file.__img" thumbnail class="gt-xs">
+                  <img :src="file.__img.src" />
+                </q-item-section>
+
+                <q-item-section top side>
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    icon="delete"
+                    @click="scope.removeFile(file)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+        </q-uploader>
+      </q-item-section>
+    </q-dialog>
     <q-dialog v-model="editItem">
       <q-card class="q-dialog-plugin">
         <q-toolbar>
@@ -147,6 +217,17 @@
     </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p2s1.qsname') }}
+      <q-banner
+        v-if="currentrowdataid"
+        dense
+        rounded
+        class="text-h6 bg-textinfo"
+      >
+        <q-icon name="warning" color="negative" siae="10px" />
+        ID【<font class="text-warning">{{ currentrowdataid }}</font>
+        】 待保存文件：
+        <font class="text-warning">{{ files }}</font>
+      </q-banner>
     </div>
     <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px;">
@@ -172,7 +253,7 @@
         class="q-ma-xs"
         icon="cloud_upload"
         :label="this.$t('p2s1.upattachment')"
-        @click="freshJsondata()"
+        @click="saveItems()"
       />
       <q-separator
         v-if="!$q.screen.gt.xs"
@@ -216,7 +297,7 @@
     </div>
     <div class="shadow-1">
       <ag-grid-vue
-        style="width: 100%; height: 600px;"
+        style="width: 100%; height: 500px;"
         class="ag-theme-balham p2sonqs-agGrid"
         row-selection="multiple"
         row-multi-select-with-click="true"
@@ -239,6 +320,8 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import agAttachmentCellRander from '../../frameworkComponents/agAttachmentCellRander'
+
 export default {
   name: 'P2s1OnQs',
   components: {
@@ -249,6 +332,13 @@ export default {
       editItem: false,
       vote: {},
       addressoptions: this.$t('p2s1.addressArray'),
+      cityArray: [],
+      countyArray: [],
+      townArray: [],
+      DaddFiles: false,
+      files: [],
+      fileupdone: false,
+      currentrowdataid: false,
       loading: true,
       quickFilter: null,
       gridOptions: null,
@@ -262,51 +352,41 @@ export default {
       defaultColDef: null
     }
   },
-  computed: {
+  computed: {},
+  watch: {
     // 获得列表
-    cityArray: function() {
-      let tmpRe1 = []
+    'vote.province'(val, oldval) {
       for (var i in this.addressoptions) {
         if (this.addressoptions[i].value === this.vote.province) {
-          tmpRe1 = this.addressoptions[i].city
+          this.cityArray = this.addressoptions[i].city
           break
         }
       }
-      return tmpRe1
+      if (oldval !== val && this.editItem) {
+        this.vote.city = ''
+      }
     },
-    countyArray: function() {
-      let tmpRe2 = []
+    'vote.city'(val, oldval) {
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
-          tmpRe2 = this.cityArray[i].county
+          this.countyArray = this.cityArray[i].county
           break
         }
       }
-      return tmpRe2
+      if (oldval !== val && this.editItem) {
+        this.vote.county = ''
+      }
     },
-    townArray: function() {
-      let tmpRe3 = []
+    'vote.county'(val, oldval) {
       for (var i in this.countyArray) {
         if (this.countyArray[i].value === this.vote.county) {
-          tmpRe3 = this.countyArray[i].town
+          this.townArray = this.countyArray[i].town
           break
         }
       }
-      return tmpRe3
-    }
-  },
-  watch: {
-    'vote.province'(val) {
-      if (this.vote.city) this.vote.city = null
-      if (this.vote.county) this.vote.county = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.city'(val) {
-      if (this.vote.county) this.vote.county = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.county'(val) {
-      if (this.vote.town) this.vote.town = null
+      if (oldval !== val && this.editItem) {
+        this.vote.town = ''
+      }
     }
   },
   created() {
@@ -333,6 +413,9 @@ export default {
     initGrid() {
       this.gridOptions = {
         allowShowChangeAfterFilter: true
+      }
+      this.frameworkComponents = {
+        agAttachmentCellRander: agAttachmentCellRander
       }
       this.columnDefs = [
         {
@@ -413,11 +496,16 @@ export default {
         {
           headerName: this.$t('p2s1.isattachment'),
           field: 'files',
-          width: 100,
-          minWidth: 100,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
+          width: 80,
+          minWidth: 80,
+          editable: true,
+          filter: true,
+          cellRendererFramework: agAttachmentCellRander,
+          cellRendererParams: {
+            down: this.downloadfile,
+            del: this.deletefile,
+            add: this.addfile
+          }
         },
         {
           headerName: this.$t('p2s1.au_comments'),
@@ -520,12 +608,9 @@ export default {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length === 1) {
         this.vote = selectedData[0]
-        this.editItem = true
-        console.log(
-          JSON.stringify(this.vote),
-          '-----------------',
-          this.townArray
-        )
+        this.$nextTick(() => {
+          this.editItem = true
+        })
       } else {
         this.$zglobal.showMessage(
           'red-7',
@@ -538,29 +623,89 @@ export default {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         // console.log(val)
-        this.$router.app.$http
-          .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
-          .then(res => {
-            if (res.data.success) {
-              this.gridApi.updateRowData({
-                update: [Object.assign(val, res.data.data)]
-              })
-              this.$zglobal.showMessage(
-                'positive',
-                'center',
-                this.$t('operation.updatesuccess')
-              )
-              // console.log(res.data.data)
-            } else {
-              this.$zglobal.showMessage(
-                'red-7',
-                'center',
-                this.$t('operation.updatefailed')
-              )
-            }
-          })
-          .catch(e => {})
+        if (val.id) {
+          if (this.files.length) {
+            val.files = this.files
+          }
+          this.$router.app.$http
+            .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.updatesuccess')
+                )
+                // console.log(res.data.data)
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.updatefailed')
+                )
+              }
+            })
+            .catch(e => {})
+        }
       })
+      this.currentrowdataid = false
+    },
+    // 文件上传
+    checkFileSize(files) {
+      return files.filter(file => file.size < 20480000)
+    },
+    uploadFile() {
+      this.DaddFiles = true
+      this.files = []
+    },
+    upfileing() {
+      this.fileupdone = true
+    },
+    upfilished(info) {
+      this.files.push(info.files[0].name)
+      this.fileupdone = false
+    },
+    downloadfile(rowid, filename) {
+      this.$router.app.$http
+        .post('/p2/s1/p2s1questionnaire1/downAttachFile/' + rowid, {
+          filename: filename
+        })
+        .then(res => {
+          console.log(res, '----------')
+          if (res.data.success) {
+            window.open(res.data.data, '_blank')
+          }
+        })
+        .catch(e => {})
+      // end
+    },
+    deletefile(rowid, rowdata, filename) {
+      console.log(rowid, filename, 'del')
+      this.$router.app.$http
+        .post('/p2/s1/p2s1questionnaire1/deleteAttachFile/' + rowid, {
+          filename: filename
+        })
+        .then(res => {
+          if (res.data.success) {
+            // console.log(res)
+            this.gridApi.updateRowData({
+              update: [Object.assign(rowdata, res.data.data)]
+            })
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('operation.delsuccess')
+            )
+          }
+        })
+        .catch(e => {})
+    },
+    addfile(rowdata) {
+      this.currentrowdataid = rowdata.data.id
+      this.uploadFile()
     }
   }
 }

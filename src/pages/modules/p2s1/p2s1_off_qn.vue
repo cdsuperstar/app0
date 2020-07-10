@@ -332,7 +332,7 @@ export default {
         province: '四川省',
         city: '成都市',
         county: '成华区',
-        town: '二仙桥',
+        town: '青龙场',
         village: '11',
         group: '11',
         villagetype: '半农半牧区',
@@ -369,6 +369,9 @@ export default {
       },
       show2: true,
       addressoptions: this.$t('p2s1.addressArray'),
+      cityArray: [],
+      countyArray: [],
+      townArray: [],
       step: 2,
       done1: false,
       done2: false,
@@ -377,57 +380,40 @@ export default {
     }
   },
 
-  computed: {
+  computed: {},
+  watch: {
     // 获得列表
-    cityArray: function() {
-      let tmpRe1 = []
+    'vote.province'(val, oldval) {
       for (var i in this.addressoptions) {
         if (this.addressoptions[i].value === this.vote.province) {
-          tmpRe1 = this.addressoptions[i].city
+          this.cityArray = this.addressoptions[i].city
           break
         }
       }
-      return tmpRe1
+      if (oldval !== val) {
+        this.vote.city = ''
+      }
     },
-    countyArray: function() {
-      let tmpRe2 = []
+    'vote.city'(val, oldval) {
       for (var i in this.cityArray) {
         if (this.cityArray[i].value === this.vote.city) {
-          tmpRe2 = this.cityArray[i].county
+          this.countyArray = this.cityArray[i].county
           break
         }
       }
-      return tmpRe2
+      if (oldval !== val) {
+        this.vote.county = ''
+      }
     },
-    townArray: function() {
-      let tmpRe3 = []
+    'vote.county'(val, oldval) {
       for (var i in this.countyArray) {
         if (this.countyArray[i].value === this.vote.county) {
-          tmpRe3 = this.countyArray[i].town
+          this.townArray = this.countyArray[i].town
           break
         }
       }
-      return tmpRe3
-    }
-  },
-  watch: {
-    'vote.province'(val) {
-      if (this.vote.city) this.vote.city = null
-      if (this.vote.county) this.vote.county = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.city'(val) {
-      if (this.vote.county) this.vote.county = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.county'(val) {
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.sex'(val) {
-      if (val === 'female') {
-        this.show2 = false
-      } else {
-        this.show2 = true
+      if (oldval !== val) {
+        this.vote.town = ''
       }
     }
   },
@@ -471,10 +457,11 @@ export default {
     },
     savedata() {
       this.saving = true
-      this.vote.investigator = this.$auth.user().id
+      const tmpa = this.$auth.user()
+      this.vote.investigator = tmpa.id
       // 生成问卷编号
       var date = new Date()
-      var seperator1 = 'U' + this.vote.investigator + 'D'
+      var seperator1 = 'D'
       var month = date.getMonth() + 1
       var strDate = date.getDate()
       var hour = date.getHours()
@@ -503,7 +490,8 @@ export default {
         'T' +
         hour +
         minutes +
-        seconds
+        seconds +
+        this.vote.b5
       this.vote.no = currentdate
       // 问卷编号结束
       this.vote.qtype = '建档立卡户问卷'

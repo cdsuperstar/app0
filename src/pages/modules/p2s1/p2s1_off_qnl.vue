@@ -615,8 +615,7 @@ export default {
     },
     freshJsondata() {
       this.getJsondate()
-      // 延迟0.5秒执行
-      setTimeout(() => {
+      this.$nextTick(() => {
         const tmpb = document.getElementById('rowtmpdata').value
         if (tmpb) {
           this.rowData = JSON.parse(tmpb)
@@ -624,7 +623,9 @@ export default {
           this.rowData = ''
         }
         this.rowtmpdata = tmpb
-      }, 500)
+      })
+      // 延迟0.5秒执行
+      // setTimeout(() => {}, 500)
     },
     // 读取文件，导入JSON数据
     getJsondate() {

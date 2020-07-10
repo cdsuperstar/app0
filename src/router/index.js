@@ -77,7 +77,7 @@ export default function({ store } /* { store, ssrContext } */) {
     fetchData: {
       url: 'auth/user',
       method: 'GET',
-      enabled: false
+      enabled: true
     },
     passportData: {
       client_id: 2,

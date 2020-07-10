@@ -2,7 +2,6 @@
 // so you can safely delete all default props below
 export default {
   p2s1: {
-    qdname: '设置问卷区域',
     province: '省份',
     country: '市（州）',
     city: '区（县）',
@@ -15,7 +14,7 @@ export default {
     re_comments: '审核意见',
     re_conclusion: '审核状态',
     reviewer: '审核人',
-    upattachment: '上传附件',
+    upattachment: '保存附件',
     isattachment: '问卷附件',
     au_comments: '排查意见',
     Suspecteduser: '排查人',
