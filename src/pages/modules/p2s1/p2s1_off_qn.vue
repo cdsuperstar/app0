@@ -600,7 +600,4 @@ export default {
   position: relative;
   border-radius: 3px 5px 5px 0;
 }
-.q-stepper__step {
-  padding: 1px 1px;
-}
 </style>

@@ -71,7 +71,7 @@
       </q-item-section>
     </q-dialog>
     <q-dialog v-model="editItem">
-      <q-card class="q-dialog-plugin">
+      <q-card class="modify-question">
         <q-toolbar>
           <q-icon color="primary" size="30px" name="account_box" />
           <q-toolbar-title>
@@ -88,121 +88,314 @@
           />
         </q-toolbar>
         <q-separator color="accent" />
-        <div class="q-mb-lg row">
-          <q-icon name="where_to_vote" class="text-warning" size="sm" />
-          <q-input
-            v-model="vote.longitude"
-            dense
-            disable
-            type="text"
-            style="max-width: 8em;"
+        <div class="q-ml-ma">
+          <div class="q-ma-sm row items-start q-gutter-md">
+            <q-icon name="map" class="text-warning" size="sm" />
+            <q-input
+              v-model="vote.longitude"
+              dense
+              disable
+              type="text"
+              label="经度"
+              style="max-width: 8em;"
+            />
+            <q-input
+              v-model="vote.latitude"
+              dense
+              disable
+              type="text"
+              label="纬度"
+              style="max-width: 8em;"
+            />
+          </div>
+          <div
+            :class="
+              $q.screen.gt.xs
+                ? 'q-ma-sm row items-start q-gutter-md'
+                : 'q-ma-sm q-mr-sm q-gutter-md'
+            "
           >
-            <template v-slot:before>
-              <font size="3">经度</font>
-            </template>
-          </q-input>
-          <q-input
-            v-model="vote.latitude"
-            dense
-            disable
-            type="text"
-            style="max-width: 7em;"
+            <q-select
+              v-model="vote.province"
+              dense
+              standout="bg-secondary text-white"
+              label="省"
+              style="min-width: 10em;"
+              emit-value
+              :options="addressoptions"
+            />
+            <q-select
+              v-model="vote.city"
+              dense
+              standout="bg-secondary text-white"
+              label="市"
+              style="min-width: 10em;"
+              emit-value
+              :options="cityArray"
+            />
+            <q-select
+              v-model="vote.county"
+              dense
+              standout="bg-secondary text-white"
+              label="区（县）"
+              emit-value
+              style="min-width: 10em;"
+              :options="countyArray"
+            />
+            <q-select
+              v-model="vote.town"
+              dense
+              standout="bg-secondary text-white"
+              label="镇（乡）"
+              emit-value
+              style="min-width: 10em;"
+              :options="townArray"
+            />
+          </div>
+          <div
+            :class="
+              $q.screen.gt.xs
+                ? 'q-mx-sm row items-start q-gutter-md'
+                : 'q-mx-sm q-mr-sm q-gutter-md'
+            "
           >
-            <template v-slot:before>
-              <font size="3">纬度</font>
-            </template>
-          </q-input>
+            <q-input
+              v-model="vote.village"
+              type="text"
+              label="行政村（社区）"
+            />
+            <q-input v-model="vote.group" type="text" label="自然村（组）" />
+            <q-select
+              v-model="vote.villagetype"
+              label="行政村属性"
+              style="min-width: 10em;"
+              :options="['农区', '牧区', '半农半牧区']"
+            />
+          </div>
+          <div
+            :class="
+              $q.screen.gt.xs
+                ? 'q-mx-sm row items-start q-gutter-md'
+                : 'q-mx-sm q-mr-sm q-gutter-md'
+            "
+          >
+            <q-input
+              v-model="vote.investigator1"
+              type="text"
+              label="调查员1姓名"
+            />
+            <q-input
+              v-model="vote.investigatortel1"
+              type="text"
+              label="调查员1联系方式"
+              mask="### - #### ####"
+            />
+            <q-input
+              v-model="vote.investigator2"
+              type="text"
+              label="调查员2姓名"
+            />
+            <q-input
+              v-model="vote.investigatortel2"
+              type="text"
+              label="调查员2联系方式"
+              mask="### - #### ####"
+            />
+          </div>
+          <div class="q-mx-ma">
+            <dl>
+              <dt class="text-h6 row no-wrap items-center">
+                <div class="doc-card-title">A. 受访者信息</div>
+              </dt>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">A1. 被访者姓名？</div>
+                <q-input v-model="vote.a1name" type="text" dense />
+                <div style="padding-top: 10px;">与户主关系？</div>
+                <q-select
+                  v-model="vote.a1renation"
+                  use-input
+                  use-chips
+                  dense
+                  new-value-mode="add-unique"
+                  behavior="menu"
+                  style="min-width: 12em;"
+                  :options="[
+                    '本人',
+                    '配偶',
+                    '子女',
+                    '父母',
+                    '兄弟',
+                    '姊妹',
+                    '爷孙',
+                    '其他'
+                  ]"
+                ></q-select>
+                <div style="padding-top: 10px;">联系方式：</div>
+                <q-input v-model="vote.a1tel" type="text" dense />
+              </dd>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">A2. 被访者文化程度？</div>
+                <q-select
+                  v-model="vote.a2"
+                  dense
+                  style="min-width: 15em;"
+                  behavior="menu"
+                  :options="[
+                    '小学及以下',
+                    '初中',
+                    '高中',
+                    '职校、中专',
+                    '大专及以上'
+                  ]"
+                ></q-select>
+              </dd>
+              <dt
+                class="text-h6 row no-wrap items-center"
+                style="margin-top: 5px;"
+              >
+                <div class="doc-card-title">B. 户主基本情况</div>
+              </dt>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">B1. 户主姓名：</div>
+                <q-input v-model="vote.b1" type="text" dense />
+                <div style="padding-top: 10px;">B2. 户主性别：</div>
+                <q-select
+                  v-model="vote.b2"
+                  dense
+                  style="min-width: 12em;"
+                  behavior="menu"
+                  :options="['男', '女']"
+                ></q-select>
+                <div style="padding-top: 10px;">B3. 户主民族：</div>
+                <q-select
+                  v-model="vote.b3"
+                  dense
+                  use-input
+                  use-chips
+                  new-value-mode="add-unique"
+                  style="min-width: 12em;"
+                  behavior="menu"
+                  :options="['汉族', '藏族', '土家族']"
+                ></q-select>
+              </dd>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">B4. 户主文化程度：</div>
+                <q-select
+                  v-model="vote.b4"
+                  dense
+                  style="min-width: 12em;"
+                  behavior="menu"
+                  :options="[
+                    '小学及以下',
+                    '初中',
+                    '高中',
+                    '职校、中专',
+                    '大专及以上'
+                  ]"
+                ></q-select>
+                <div style="padding-top: 10px;">B5. 户主身份证号：</div>
+                <q-input
+                  v-model="vote.b5"
+                  type="text"
+                  dense
+                  style="min-width: 15em;"
+                  mask="X##### ######## ###X X"
+                />
+              </dd>
+              <dt
+                class="text-h6 row no-wrap items-center"
+                style="margin-top: 5px;"
+              >
+                <div class="doc-card-title">C. 农户家庭基本情况</div>
+              </dt>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
+                <q-input
+                  v-model="vote.c1"
+                  type="text"
+                  dense
+                  style="min-width: 8em;"
+                  mask="##"
+                  :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+                />
+                <div style="padding-top: 10px;">
+                  C14.您家哪一年被确定为建档立卡户？
+                </div>
+                <q-input
+                  v-model="vote.c14"
+                  type="text"
+                  dense
+                  style="min-width: 8em;"
+                  mask="####"
+                  hint="年（4 位数年份）（取值范围为2014-2019）"
+                  :rules="[
+                    val =>
+                      (val >= 2014 && val <= 2019) || '该项取值范围为2014-2019 '
+                  ]"
+                />
+              </dd>
+              <dd
+                :class="
+                  $q.screen.gt.xs
+                    ? 'text-body1 row q-mx-ma'
+                    : 'text-body1 q-mx-sm'
+                "
+              >
+                <div style="padding-top: 10px;">
+                  C17.全家 2019 年领取的低保金是多少？ （元）
+                </div>
+                <q-input
+                  v-model="vote.c17"
+                  type="number"
+                  dense
+                  style="min-width: 8em;"
+                />
+                <div style="padding-top: 10px;">
+                  C19.是哪一年脱贫的？
+                </div>
+                <q-input
+                  v-model="vote.c19"
+                  type="text"
+                  dense
+                  style="min-width: 8em;"
+                  hint="年（4 位数年份） "
+                  mask="####"
+                />
+              </dd>
+            </dl>
+          </div>
         </div>
-        <div
-          :class="
-            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
-          "
-        >
-          <q-select
-            v-model="vote.province"
-            dense
-            standout="bg-secondary text-white"
-            label="省"
-            style="min-width: 10em"
-            emit-value
-            :options="addressoptions"
-          />
-          <q-select
-            v-model="vote.city"
-            dense
-            standout="bg-secondary text-white"
-            label="市"
-            style="min-width: 10em"
-            emit-value
-            :options="cityArray"
-          />
-          <q-select
-            v-model="vote.county"
-            dense
-            standout="bg-secondary text-white"
-            label="区（县）"
-            emit-value
-            style="min-width: 10em"
-            :options="countyArray"
-          />
-          <q-select
-            v-model="vote.town"
-            dense
-            standout="bg-secondary text-white"
-            label="镇（乡）"
-            emit-value
-            style="min-width: 10em"
-            :options="townArray"
-          />
-        </div>
-        <div
-          :class="
-            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
-          "
-        >
-          <q-input v-model="vote.village" type="text" label="行政村（社区）" />
-          <q-input v-model="vote.group" type="text" label="自然村（组）" />
-          <q-select
-            v-model="vote.villagetype"
-            label="行政村属性"
-            style="min-width: 10em"
-            :options="['农区', '牧区', '半农半牧区']"
-          />
-        </div>
-        <div
-          :class="
-            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
-          "
-        >
-          <q-input
-            v-model="vote.investigator1"
-            type="text"
-            label="调查员1姓名"
-          />
-          <q-input
-            v-model="vote.investigatortel1"
-            type="text"
-            label="调查员1联系方式"
-            mask="### - #### ####"
-          />
-        </div>
-        <div
-          :class="
-            $q.screen.gt.xs ? 'row items-start q-gutter-md' : 'q-gutter-md'
-          "
-        >
-          <q-input
-            v-model="vote.investigator2"
-            type="text"
-            label="调查员2姓名"
-          />
-          <q-input
-            v-model="vote.investigatortel2"
-            type="text"
-            label="调查员2联系方式"
-            mask="### - #### ####"
-          />
-        </div>
+
         <q-separator color="accent" />
         <q-card-actions align="right" class="bg-white text-teal">
           <q-btn
@@ -586,7 +779,7 @@ export default {
       var params = {
         fileName: 'p2s1onqs.xls',
         suppressQuotes: true,
-        columnSeparator: ','
+        columnSeparator: ';'
       }
       this.gridApi.exportDataAsCsv(params)
     },
@@ -732,5 +925,17 @@ export default {
 }
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: var(--q-color-secondary);
+}
+.modify-question {
+  width: 500px;
+  height: 700px;
+}
+.doc-card-title {
+  margin-left: -20px;
+  padding: 2px 10px 2px 24px;
+  background: var(--q-color-info);
+  color: #000000;
+  position: relative;
+  border-radius: 3px 5px 5px 0;
 }
 </style>
