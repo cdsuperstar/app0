@@ -16,7 +16,7 @@
         dense
         standout="bg-secondary text-white"
         label="省"
-        style="min-width: 10em"
+        style="min-width: 10em;"
         emit-value
         :options="addressoptions"
       />
@@ -25,36 +25,44 @@
         dense
         standout="bg-secondary text-white"
         label="市"
-        style="min-width: 10em"
+        style="min-width: 10em;"
         emit-value
         :options="cityArray"
       />
       <q-select
-        v-model="vote.country"
+        v-model="vote.county"
         dense
         standout="bg-secondary text-white"
         label="区（县）"
         emit-value
-        style="min-width: 10em"
-        :options="countryArray"
+        style="min-width: 10em;"
+        :options="countyArray"
       />
       <q-select
         v-model="vote.town"
         dense
+        clearable
         standout="bg-secondary text-white"
-        label="乡（镇）"
+        label="镇（乡）"
         emit-value
-        style="min-width: 10em"
+        style="min-width: 10em;"
         :options="townArray"
       />
       <q-select
-        v-model="vote.town"
+        v-model="vote.qtype"
+        clearable
         dense
         standout="bg-secondary text-white"
         label="问卷类型"
         emit-value
         style="min-width: 10em"
-        :options="townArray"
+        :options="[
+          '建档立卡户问卷',
+          '非建档立卡户问卷',
+          '县领导问卷',
+          '县人大问卷',
+          '县级行业部门问卷'
+        ]"
       />
       <q-btn
         color="warning"
@@ -62,7 +70,7 @@
         class="q-mt-ma"
         icon="search"
         :label="this.$t('buttons.screening')"
-        @click="modifyItems()"
+        @click="searchItems()"
       />
     </div>
     <q-markup-table flat bordered separator="cell">
@@ -81,69 +89,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr v-for="item in earaArray">
           <td class="text-center">1</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-center">159</td>
+          <td class="text-left">{{ item.county }}</td>
+          <td class="text-left">{{ item.town }}</td>
+          <td class="text-left">{{ item.village }}</td>
           <td class="text-center">159</td>
           <td class="text-center">5</td>
           <td class="text-center">6</td>
           <td class="text-center">24</td>
           <td class="text-center">24</td>
           <td class="text-center">4</td>
-        </tr>
-        <tr class="bg-grey-1">
-          <td class="text-center">2</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-left">Ice cream sandwich</td>
-          <td class="text-center">237</td>
-          <td class="text-center">159</td>
-          <td class="text-center">6</td>
-          <td class="text-center">9</td>
-          <td class="text-center">37</td>
-          <td class="text-center">24</td>
-          <td class="text-center">4.3</td>
-        </tr>
-        <tr>
-          <td class="text-center">3</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-left">Eclair</td>
-          <td class="text-center">262</td>
-          <td class="text-center">159</td>
-          <td class="text-center">6</td>
-          <td class="text-center">16</td>
-          <td class="text-center">23</td>
-          <td class="text-center">24</td>
-          <td class="text-center">6</td>
-        </tr>
-        <tr class="bg-grey-1">
-          <td class="text-center">4</td>
-          <td class="text-left">Cupcake</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-center">159</td>
-          <td class="text-center">305</td>
-          <td class="text-center">6</td>
-          <td class="text-center">3.7</td>
-          <td class="text-center">67</td>
-          <td class="text-center">24</td>
-          <td class="text-center">4.3</td>
-        </tr>
-        <tr>
-          <td class="text-center">5</td>
-          <td class="text-left">Gingerbread</td>
-          <td class="text-left">Frozen Yogurt</td>
-          <td class="text-center">356</td>
-          <td class="text-center">159</td>
-          <td class="text-center">6</td>
-          <td class="text-center">16</td>
-          <td class="text-center">49</td>
-          <td class="text-center">24</td>
-          <td class="text-center">3.9</td>
         </tr>
         <tr class="bg-grey-1">
           <td class="text-center text-weight-bold" colspan="5">合计</td>
-          <td class="text-center">3.7</td>
+          <td class="text-center">{{ result.length }}</td>
           <td class="text-center">6</td>
           <td class="text-center">67</td>
           <td class="text-center">24</td>
@@ -159,162 +119,152 @@ export default {
   name: 'P2s1OnQt',
   data() {
     return {
-      vote: {},
-      addressoptions: [
-        {
-          label: '四川省',
-          value: '四川省',
-          city: [
-            {
-              label: '成都市',
-              value: '成都市',
-              country: [
-                {
-                  label: '成华区',
-                  value: '成华区',
-                  town: [
-                    {
-                      label: '二仙桥',
-                      value: '二仙桥'
-                    },
-                    { label: '八里庄', value: '八里庄' }
-                  ]
-                },
-                {
-                  label: '青羊区',
-                  value: '青羊区',
-                  town: [
-                    {
-                      label: '西南交通大学',
-                      value: '西南交通大学'
-                    },
-                    { label: '西南石油大学', value: '西南石油大学' }
-                  ]
-                }
-              ]
-            },
-            {
-              label: '广元市',
-              value: '广元市',
-              country: [
-                {
-                  label: '苍溪县',
-                  value: '苍溪县',
-                  town: [
-                    {
-                      label: '云峰镇',
-                      value: '云峰镇'
-                    },
-                    { label: '八里庄', value: '八里庄' }
-                  ]
-                },
-                {
-                  label: '昭化区',
-                  value: '昭化区',
-                  town: [
-                    {
-                      label: '西南交通大学',
-                      value: '西南交通大学'
-                    },
-                    { label: '西南石油大学', value: '西南石油大学' }
-                  ]
-                }
-              ]
-            },
-            {
-              label: '南充市',
-              value: '南充市'
-            }
-          ]
-        },
-        {
-          label: '海南省',
-          value: '海南省',
-          city: [
-            {
-              label: '三亚市',
-              value: '三亚市'
-            },
-            {
-              label: '海口市',
-              value: '海口市'
-            }
-          ]
-        },
-        {
-          label: '重庆市',
-          value: '重庆市',
-          city: [
-            {
-              label: '嘉陵区',
-              value: '嘉陵区'
-            },
-            {
-              label: '北碚区',
-              value: '北碚区'
-            },
-            {
-              label: '黔江县',
-              value: '黔江县'
-            }
-          ]
-        }
-      ]
+      vote: {
+        province: '四川省',
+        city: '成都市',
+        county: '成华区'
+      },
+      rowData: null,
+      result: [],
+      earaArray: [],
+      addressoptions: this.$t('p2s1.addressArray'),
+      cityArray: [],
+      countyArray: [],
+      townArray: []
     }
   },
-
-  computed: {
+  computed: {},
+  watch: {
     // 获得列表
-    cityArray: function() {
-      let tmpRe1 = []
+    'vote.province'(val, oldval) {
       for (var i in this.addressoptions) {
         if (this.addressoptions[i].value === this.vote.province) {
-          tmpRe1 = this.addressoptions[i].city
+          this.cityArray = this.addressoptions[i].city
           break
         }
       }
-      return tmpRe1
+      if (oldval !== val) {
+        this.vote.city = ''
+      }
     },
-    countryArray: function() {
-      let tmpRe2 = []
-      for (var i in this.cityArray) {
-        if (this.cityArray[i].value === this.vote.city) {
-          tmpRe2 = this.cityArray[i].country
+    'vote.city'(val, oldval) {
+      for (var j in this.cityArray) {
+        if (this.cityArray[j].value === this.vote.city) {
+          this.countyArray = this.cityArray[j].county
           break
         }
       }
-      return tmpRe2
+      if (oldval !== val) {
+        this.vote.county = ''
+      }
     },
-    townArray: function() {
-      let tmpRe3 = []
-      for (var i in this.countryArray) {
-        if (this.countryArray[i].value === this.vote.country) {
-          tmpRe3 = this.countryArray[i].town
+    'vote.county'(val, oldval) {
+      for (var k in this.countyArray) {
+        if (this.countyArray[k].value === this.vote.county) {
+          this.townArray = this.countyArray[k].town
           break
         }
       }
-      return tmpRe3
+      if (oldval !== val) {
+        this.vote.town = ''
+      }
     }
   },
-  watch: {
-    'vote.province'(val) {
-      if (this.vote.city) this.vote.city = null
-      if (this.vote.country) this.vote.country = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.city'(val) {
-      if (this.vote.country) this.vote.country = null
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.country'(val) {
-      if (this.vote.town) this.vote.town = null
-    },
-    'vote.sex'(val) {
-      if (val === 'female') {
-        this.show2 = false
-      } else {
-        this.show2 = true
+  created() {
+    this.$router.app.$http
+      .get('/p2/s1/p2s1questionnaire1/')
+      .then(res => {
+        if (res.data.success) {
+          // console.log(res.data.data)
+          this.rowData = res.data.data
+        } else {
+        }
+      })
+      .catch(e => {})
+    // 得到Array的值
+    console.log(
+      JSON.stringify(this.countyArray),
+      '-----------',
+      this.vote.county
+    )
+  },
+  mounted() {
+    if (this.vote.province) {
+      for (var i in this.addressoptions) {
+        if (this.addressoptions[i].value === this.vote.province) {
+          this.cityArray = this.addressoptions[i].city
+          break
+        }
       }
+    }
+    if (this.vote.city) {
+      for (var j in this.cityArray) {
+        if (this.cityArray[j].value === this.vote.city) {
+          this.countyArray = this.cityArray[j].county
+          break
+        }
+      }
+    }
+    if (this.vote.county) {
+      for (var k in this.countyArray) {
+        if (this.countyArray[k].value === this.vote.county) {
+          this.townArray = this.countyArray[k].town
+          break
+        }
+      }
+    }
+  },
+  methods: {
+    searchItems() {
+      this.result = this.filterData(this.rowData, this.vote)
+      const tmpa = this.JsonSort(this.result, 'town')
+      this.earaArray = this.Jsonduplicate(tmpa, 'town', 'village')
+
+      console.log(tmpa.length, '-----------', JSON.stringify(this.earaArray))
+    },
+    Jsonduplicate(data, key1, key2) {
+      // data是json对象，key1,key2是根据什么字段去重
+      var dest = []
+      for (var i = 0; i < data.length; i++) {
+        var ai = data[i]
+        if (i === 0) {
+          dest.push(ai)
+        } else {
+          var filterData = dest.filter(function(e) {
+            return e[key1] === ai[key1] && e[key2] === ai[key2]
+          })
+          if (filterData.length === 0) {
+            dest.push(ai)
+          }
+        }
+      }
+      return dest
+    },
+    JsonSort(json, key) {
+      for (var j = 1; j < json.length; j++) {
+        var temp = json[j],
+          val = temp[key],
+          i = j - 1
+        while (i >= 0 && json[i][key] > val) {
+          json[i + 1] = json[i]
+          i = i - 1
+        }
+        json[i + 1] = temp
+      }
+      return json
+    },
+    filterData(data, filter) {
+      return data.filter(item => {
+        var isIn = true
+        for (var key in filter) {
+          if (filter[key] === null) continue
+          if (filter[key].indexOf(item[key]) < 0) {
+            isIn = false
+            break
+          }
+        }
+        return isIn
+      })
     }
   }
 }

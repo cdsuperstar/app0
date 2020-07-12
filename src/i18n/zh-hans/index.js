@@ -25,7 +25,9 @@ export default {
     qtname: '问卷统计',
     qpname: '问卷类型',
     savesuccess: '保存问卷成功！',
-    savefail: '保存问卷失败！',
+    savefailed: '保存问卷失败！',
+    uploadsuccess: '上传问卷成功！',
+    uploadfailed: '上传问卷失败！',
     addressArray: [
       {
         label: '四川省',

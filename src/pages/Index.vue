@@ -14,7 +14,7 @@
           flat
           class="col-3"
           style="cursor: pointer;"
-          @click="linktoURL('#/user/p2s1/p2s1questionnaire')"
+          @click="linktoURL('#/user/p2s1/p2s1_off_qn')"
         >
           <q-card-section horizontal align="center">
             <q-list padding>
@@ -38,7 +38,7 @@
           flat
           class="col-3"
           style="cursor: pointer;"
-          @click="linktoURL('#/user/p2s1/p2s1localquestionnaire')"
+          @click="linktoURL('#/user/p2s1/p2s1_off_qnl')"
         >
           <q-card-section horizontal align="center">
             <q-list padding>

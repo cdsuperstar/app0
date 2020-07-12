@@ -128,11 +128,7 @@
         <dt class="text-h6 row no-wrap items-center">
           <div class="doc-card-title">A. 受访者信息</div>
         </dt>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">A1. 被访者姓名？</div>
           <q-input v-model="vote.a1name" type="text" dense />
           <div style="padding-top: 10px;">与户主关系？</div>
@@ -158,11 +154,7 @@
           <div style="padding-top: 10px;">联系方式：</div>
           <q-input v-model="vote.a1tel" type="text" dense />
         </dd>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">A2. 被访者文化程度？</div>
           <q-select
             v-model="vote.a2"
@@ -181,11 +173,7 @@
         <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
           <div class="doc-card-title">B. 户主基本情况</div>
         </dt>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">B1. 户主姓名：</div>
           <q-input v-model="vote.b1" type="text" dense />
           <div style="padding-top: 10px;">B2. 户主性别：</div>
@@ -208,11 +196,7 @@
             :options="['汉族', '藏族', '土家族']"
           ></q-select>
         </dd>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">B4. 户主文化程度：</div>
           <q-select
             v-model="vote.b4"
@@ -239,11 +223,7 @@
         <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
           <div class="doc-card-title">C. 农户家庭基本情况</div>
         </dt>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
           <q-input
             v-model="vote.c1"
@@ -268,11 +248,7 @@
             ]"
           />
         </dd>
-        <dd
-          :class="
-            $q.screen.gt.xs ? 'text-body1 row q-mx-ma' : 'text-body1 q-mx-sm'
-          "
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">
             C17.全家 2019 年领取的低保金是多少？ （元）
           </div>
@@ -326,57 +302,49 @@ export default {
   data() {
     return {
       saving: false,
-      result: null,
       username: null,
       vote: {
         province: '四川省',
         city: '成都市',
         county: '成华区',
-        town: '青龙场',
-        village: '11',
-        group: '11',
-        villagetype: '半农半牧区',
-        investigator1: '11',
-        investigatortel1: '11',
-        investigator2: '11',
-        investigatortel2: '11',
-        a1name: '11',
+        town: '二仙桥',
+        village: 'XX村',
+        group: 'XX组',
+        villagetype: '农区',
+        investigator1: '调查员姓名1',
+        investigatortel1: '138 - 8888 8888',
+        investigator2: '调查员姓名2',
+        investigatortel2: '139 - 9999 9999',
+        a1name: '被访问姓名',
         a1renation: '本人',
-        a1tel: '1111',
+        a1tel: '1300000000000000',
         a2: '小学及以下',
-        b1: '111',
-        b2: '男',
+        b1: '户主1',
+        b2: '女',
         b3: '土家族',
         b4: '小学及以下',
-        b5: '11111',
-        c1: '11',
+        b5: '222222 22222222 2222 2',
+        c1: '7',
         c14: '2015',
         c17: '3600',
         c19: '2019',
-        no: '2020070922390001',
-        investigator: '在线调查员',
+        no: 'D20200712T185555222222 22222222 2222 2',
         qtype: '建档立卡户问卷',
         q_files: '问卷附件',
         qsource: '扫码问卷',
-        isUpload: '是',
-        reviewer: '某某某',
+        isUpload: true,
+        reviewer: '22222',
         re_comments: '问卷一切正常',
         re_conclusion: '审核通过',
-        auditor: '排查人',
+        auditor: '333333',
         au_comments: '该户排查过程中……',
         au_conclusion: '正常',
         au_files: '排查附件'
       },
-      show2: true,
       addressoptions: this.$t('p2s1.addressArray'),
       cityArray: [],
       countyArray: [],
-      townArray: [],
-      step: 2,
-      done1: false,
-      done2: false,
-      done3: false,
-      done4: false
+      townArray: []
     }
   },
 
@@ -395,9 +363,9 @@ export default {
       }
     },
     'vote.city'(val, oldval) {
-      for (var i in this.cityArray) {
-        if (this.cityArray[i].value === this.vote.city) {
-          this.countyArray = this.cityArray[i].county
+      for (var j in this.cityArray) {
+        if (this.cityArray[j].value === this.vote.city) {
+          this.countyArray = this.cityArray[j].county
           break
         }
       }
@@ -406,9 +374,9 @@ export default {
       }
     },
     'vote.county'(val, oldval) {
-      for (var i in this.countyArray) {
-        if (this.countyArray[i].value === this.vote.county) {
-          this.townArray = this.countyArray[i].town
+      for (var k in this.countyArray) {
+        if (this.countyArray[k].value === this.vote.county) {
+          this.townArray = this.countyArray[k].town
           break
         }
       }
@@ -419,6 +387,30 @@ export default {
   },
   created() {},
   mounted() {
+    if (this.vote.province) {
+      for (var i in this.addressoptions) {
+        if (this.addressoptions[i].value === this.vote.province) {
+          this.cityArray = this.addressoptions[i].city
+          break
+        }
+      }
+    }
+    if (this.vote.city) {
+      for (var j in this.cityArray) {
+        if (this.cityArray[j].value === this.vote.city) {
+          this.countyArray = this.cityArray[j].county
+          break
+        }
+      }
+    }
+    if (this.vote.county) {
+      for (var k in this.countyArray) {
+        if (this.countyArray[k].value === this.vote.county) {
+          this.townArray = this.countyArray[k].town
+          break
+        }
+      }
+    }
     this.getPosition()
     this.username = this.$q.localStorage.getItem('username')
   },
@@ -490,8 +482,7 @@ export default {
         'T' +
         hour +
         minutes +
-        seconds +
-        this.vote.b5
+        seconds
       this.vote.no = currentdate
       // 问卷编号结束
       this.vote.qtype = '建档立卡户问卷'
@@ -522,7 +513,7 @@ export default {
               this.$zglobal.showMessage(
                 'red-7',
                 'center',
-                this.$t('p2s1.savefail')
+                this.$t('p2s1.savefailed')
               )
             }
           })

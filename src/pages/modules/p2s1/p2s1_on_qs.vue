@@ -203,17 +203,11 @@
             />
           </div>
           <div class="q-mx-ma">
-            <dl>
+            <dl class="q-mx-lg">
               <dt class="text-h6 row no-wrap items-center">
                 <div class="doc-card-title">A. 受访者信息</div>
               </dt>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">A1. 被访者姓名？</div>
                 <q-input v-model="vote.a1name" type="text" dense />
                 <div style="padding-top: 10px;">与户主关系？</div>
@@ -239,13 +233,7 @@
                 <div style="padding-top: 10px;">联系方式：</div>
                 <q-input v-model="vote.a1tel" type="text" dense />
               </dd>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">A2. 被访者文化程度？</div>
                 <q-select
                   v-model="vote.a2"
@@ -267,13 +255,7 @@
               >
                 <div class="doc-card-title">B. 户主基本情况</div>
               </dt>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">B1. 户主姓名：</div>
                 <q-input v-model="vote.b1" type="text" dense />
                 <div style="padding-top: 10px;">B2. 户主性别：</div>
@@ -296,13 +278,7 @@
                   :options="['汉族', '藏族', '土家族']"
                 ></q-select>
               </dd>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">B4. 户主文化程度：</div>
                 <q-select
                   v-model="vote.b4"
@@ -332,13 +308,7 @@
               >
                 <div class="doc-card-title">C. 农户家庭基本情况</div>
               </dt>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
                 <q-input
                   v-model="vote.c1"
@@ -364,13 +334,7 @@
                   ]"
                 />
               </dd>
-              <dd
-                :class="
-                  $q.screen.gt.xs
-                    ? 'text-body1 row q-mx-ma'
-                    : 'text-body1 q-mx-sm'
-                "
-              >
+              <dd class="text-body q-mx-sm">
                 <div style="padding-top: 10px;">
                   C17.全家 2019 年领取的低保金是多少？ （元）
                 </div>
@@ -405,6 +369,77 @@
             :label="this.$t('buttons.confirm')"
             @click="saveItems()"
           />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="reviewItem">
+      <q-card style="width: 500px;">
+        <q-toolbar class="bg-primary text-white">
+          <q-icon size="30px" name="account_box" />
+          <q-toolbar-title>
+            <span class="text-weight-bold"> 审核问卷 </span>
+          </q-toolbar-title>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            :title="this.$t('buttons.close')"
+          />
+        </q-toolbar>
+        <q-separator color="accent" />
+        <div class="q-pa-md">
+          <div class="row ">
+            <div class="col-12 col-md-7">
+              <q-input v-model="vote.reviewer" type="text">
+                <template v-slot:before>
+                  <font size="3" color="black"> 审 核 人 ：</font>
+                </template>
+              </q-input>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12 col-md-7" style="margin-right: 16px;">
+              <q-select
+                v-model="vote.re_conclusion"
+                use-input
+                use-chips
+                new-value-mode="add-unique"
+                behavior="menu"
+                :options="['审核通过', '疑似漏评', '疑似错退', '其他问题']"
+              >
+                <template v-slot:before>
+                  <font size="3" color="black">审核结论：</font>
+                </template>
+              </q-select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <font size="3" color="black">审核意见：</font>
+            </div>
+            <div class="col-11 col-md-11">
+              <q-input
+                v-model.trim="vote.re_comments"
+                outlined
+                type="textarea"
+                label="意见"
+              />
+            </div>
+          </div>
+        </div>
+
+        <q-separator color="accent" />
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn
+            flat
+            color="secondary"
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="saveItems()"
+          />
+          &nbsp;&nbsp;
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -459,7 +494,7 @@
         class="q-ma-xs"
         icon="lock"
         :label="this.$t('p2s1.review')"
-        @click="freshJsondata()"
+        @click="reviewdata()"
       />
       <q-btn
         color="expbtn"
@@ -522,6 +557,7 @@ export default {
   },
   data() {
     return {
+      reviewItem: false,
       editItem: false,
       vote: {},
       addressoptions: this.$t('p2s1.addressArray'),
@@ -560,9 +596,9 @@ export default {
       }
     },
     'vote.city'(val, oldval) {
-      for (var i in this.cityArray) {
-        if (this.cityArray[i].value === this.vote.city) {
-          this.countyArray = this.cityArray[i].county
+      for (var j in this.cityArray) {
+        if (this.cityArray[j].value === this.vote.city) {
+          this.countyArray = this.cityArray[j].county
           break
         }
       }
@@ -571,9 +607,9 @@ export default {
       }
     },
     'vote.county'(val, oldval) {
-      for (var i in this.countyArray) {
-        if (this.countyArray[i].value === this.vote.county) {
-          this.townArray = this.countyArray[i].town
+      for (var k in this.countyArray) {
+        if (this.countyArray[k].value === this.vote.county) {
+          this.townArray = this.countyArray[k].town
           break
         }
       }
@@ -777,7 +813,7 @@ export default {
     },
     ExportDataAsCVS() {
       var params = {
-        fileName: 'p2s1onqs.xls',
+        fileName: 'p2s1onqs.txt',
         suppressQuotes: true,
         columnSeparator: ';'
       }
@@ -796,6 +832,21 @@ export default {
         })
       }
       this.changerowcolor = ''
+    },
+    reviewdata() {
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1) {
+        this.vote = selectedData[0]
+        this.$nextTick(() => {
+          this.reviewItem = true
+        })
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
     },
     modifyItems() {
       var selectedData = this.gridApi.getSelectedRows()
