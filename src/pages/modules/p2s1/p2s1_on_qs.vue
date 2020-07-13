@@ -866,11 +866,11 @@ export default {
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        // console.log(val)
         if (val.id) {
           if (this.files.length) {
-            val.files = this.files
+            val.q_files = this.files
           }
+          console.log(val)
           this.$router.app.$http
             .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
             .then(res => {

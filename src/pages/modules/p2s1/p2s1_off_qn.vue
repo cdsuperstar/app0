@@ -330,7 +330,6 @@ export default {
         c19: '2019',
         no: 'D20200712T185555222222 22222222 2222 2',
         qtype: '建档立卡户问卷',
-        q_files: '问卷附件',
         qsource: '扫码问卷',
         isUpload: true,
         reviewer: '22222',
@@ -338,8 +337,7 @@ export default {
         re_conclusion: '审核通过',
         auditor: '333333',
         au_comments: '该户排查过程中……',
-        au_conclusion: '正常',
-        au_files: '排查附件'
+        au_conclusion: '正常'
       },
       addressoptions: this.$t('p2s1.addressArray'),
       cityArray: [],
@@ -486,7 +484,6 @@ export default {
       this.vote.no = currentdate
       // 问卷编号结束
       this.vote.qtype = '建档立卡户问卷'
-      this.vote.q_files = '问卷附件'
       this.vote.qsource = '扫码问卷'
       this.vote.isUpload = true
       this.vote.reviewer = '22222'
@@ -495,7 +492,6 @@ export default {
       this.vote.auditor = '333333'
       this.vote.au_comments = '该户排查过程中……'
       this.vote.au_conclusion = '正常'
-      this.vote.au_files = '排查附件'
       if (process.env.MODE === 'cordova') {
         this.writeToFile('/AIApp/Votedata.json', this.vote)
       } else {
