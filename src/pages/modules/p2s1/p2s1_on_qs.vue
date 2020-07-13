@@ -724,7 +724,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.isattachment'),
-          field: 'files',
+          field: 'q_files',
           width: 80,
           minWidth: 80,
           editable: true,

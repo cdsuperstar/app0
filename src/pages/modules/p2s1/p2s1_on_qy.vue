@@ -696,6 +696,20 @@ export default {
           filter: true
         },
         {
+          headerName: this.$t('p2s1.isattachment'),
+          field: 'q_files',
+          width: 80,
+          minWidth: 80,
+          editable: true,
+          filter: true,
+          cellRendererFramework: agAttachmentCellRander,
+          cellRendererParams: {
+            down: this.downloadfile,
+            del: this.deletefile,
+            add: this.addfile
+          }
+        },
+        {
           headerName: this.$t('p2s1.re_comments'),
           field: 're_comments',
           width: 100,
@@ -724,7 +738,7 @@ export default {
         },
         {
           headerName: this.$t('p2s1.isattachment'),
-          field: 'files',
+          field: 'q_files',
           width: 80,
           minWidth: 80,
           editable: true,
@@ -762,6 +776,20 @@ export default {
           maxWidth: 180,
           sortable: true,
           filter: true
+        },
+        {
+          headerName: this.$t('p2s1.isattachment'),
+          field: 'au_files',
+          width: 80,
+          minWidth: 80,
+          editable: true,
+          filter: true,
+          cellRendererFramework: agAttachmentCellRander,
+          cellRendererParams: {
+            down: this.downloadfile,
+            del: this.deletefile,
+            add: this.addfile
+          }
         }
       ]
       this.defaultColDef = {

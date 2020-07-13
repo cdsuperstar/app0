@@ -89,12 +89,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in earaArray">
+        <tr v-for="item in earaArray" :key="item.id">
           <td class="text-center">1</td>
           <td class="text-left">{{ item.county }}</td>
           <td class="text-left">{{ item.town }}</td>
           <td class="text-left">{{ item.village }}</td>
-          <td class="text-center">159</td>
+          <td class="text-center">{{ item.qtype }}</td>
           <td class="text-center">5</td>
           <td class="text-center">6</td>
           <td class="text-center">24</td>
@@ -127,6 +127,53 @@ export default {
       rowData: null,
       result: [],
       earaArray: [],
+      tmp: [
+        {
+          id: 9,
+          investigator: 1,
+          no: 'D20200713T214218',
+          qtype: '建档立卡户问卷',
+          province: '四川省',
+          city: '成都市',
+          county: '成华区',
+          town: '八里庄',
+          village: 'XX村44',
+          group: 'XX组',
+          longitude: null,
+          latitude: null,
+          q_files: '问卷附件',
+          qsource: '扫码问卷',
+          files: '""',
+          isUpload: true,
+          reviewer: 22222,
+          re_comments: '问卷一切正常',
+          re_conclusion: '审核通过',
+          auditor: 333333,
+          au_comments: '该户排查过程中……',
+          au_conclusion: '正常',
+          au_files: '排查附件',
+          villagetype: '农区',
+          investigator1: '调查员姓名1',
+          investigatortel1: '138 - 8888 8888',
+          investigator2: '调查员姓名2',
+          investigatortel2: '139 - 9999 9999',
+          a1name: '被访问姓名',
+          a1relation: null,
+          a1tel: '1300000000000000',
+          a2: '小学及以下',
+          b1: '户主1',
+          b2: '女',
+          b3: '土家族',
+          b4: '小学及以下',
+          b5: '222222 22222222 2222 2',
+          c1: '7',
+          c14: '2015',
+          c17: '3600',
+          c19: '2019',
+          created_at: '2020-07-13 13:42:18',
+          updated_at: '2020-07-13 13:42:18'
+        }
+      ],
       addressoptions: this.$t('p2s1.addressArray'),
       cityArray: [],
       countyArray: [],
@@ -217,8 +264,22 @@ export default {
   methods: {
     searchItems() {
       this.result = this.filterData(this.rowData, this.vote)
-      const tmpa = this.JsonSort(this.result, 'town')
-      this.earaArray = this.Jsonduplicate(tmpa, 'town', 'village')
+      const tmpa = this.Jsonduplicate(
+        this.JsonSort(this.result, 'town'),
+        'town',
+        'village'
+      )
+      this.earaArray = JSON.parse(
+        JSON.stringify(tmpa, [
+          'province',
+          'city',
+          'county',
+          'town',
+          'village',
+          'villagetype',
+          'qtype'
+        ])
+      )
 
       console.log(tmpa.length, '-----------', JSON.stringify(this.earaArray))
     },
