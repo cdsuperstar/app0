@@ -290,7 +290,7 @@ export default {
 
         const tmpb = this.filterData(this.result, tmparray[i])
         console.log(tmpb, '+++++++', tmpb.length)
-        this.earaArray[i][tmpnore] = filtered.length
+        this.earaArray[i][tmpnore] = tmpb.length
       }
 
       console.log(tmpa.length, '-----------', JSON.stringify(this.earaArray))
