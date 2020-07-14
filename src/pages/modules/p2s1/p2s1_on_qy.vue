@@ -527,7 +527,7 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham p2sonqy-agGrid"
-        row-selection="multiple"
+        row-selection="single"
         row-multi-select-with-click="true"
         :grid-options="gridOptions"
         :column-defs="columnDefs"
@@ -655,8 +655,6 @@ export default {
           minWidth: 70,
           maxWidth: 70,
           sortable: true,
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true
         },
         {
@@ -676,79 +674,6 @@ export default {
           maxWidth: 170,
           sortable: true,
           filter: true
-        },
-        {
-          headerName: this.$t('p2s1.created_at'),
-          field: 'created_at',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.conclusion'),
-          field: 'c19',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.isattachment'),
-          field: 'q_files',
-          width: 80,
-          minWidth: 80,
-          editable: true,
-          filter: true,
-          cellRendererFramework: agAttachmentCellRander,
-          cellRendererParams: {
-            down: this.downloadfile,
-            del: this.deletefile,
-            add: this.addfile
-          }
-        },
-        {
-          headerName: this.$t('p2s1.re_comments'),
-          field: 're_comments',
-          width: 100,
-          minWidth: 100,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.re_conclusion'),
-          field: 're_conclusion',
-          width: 100,
-          minWidth: 100,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.reviewer'),
-          field: 'reviewer',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 260,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.isattachment'),
-          field: 'q_files',
-          width: 80,
-          minWidth: 80,
-          editable: true,
-          filter: true,
-          cellRendererFramework: agAttachmentCellRander,
-          cellRendererParams: {
-            down: this.downloadfile,
-            del: this.deletefile,
-            add: this.addfile
-          }
         },
         {
           headerName: this.$t('p2s1.au_comments'),
@@ -778,10 +703,10 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.isattachment'),
+          headerName: this.$t('p2s1.au_attachment'),
           field: 'au_files',
-          width: 80,
-          minWidth: 80,
+          width: 90,
+          minWidth: 90,
           editable: true,
           filter: true,
           cellRendererFramework: agAttachmentCellRander,
@@ -790,10 +715,67 @@ export default {
             del: this.deletefile,
             add: this.addfile
           }
+        },
+        {
+          headerName: this.$t('p2s1.created_at'),
+          field: 'created_at',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('p2s1.conclusion'),
+          field: 'c19',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('p2s1.isattachment'),
+          field: 'q_files',
+          width: 90,
+          minWidth: 90,
+          editable: true,
+          filter: true,
+          cellRendererFramework: agAttachmentCellRander,
+          cellRendererParams: {
+            down: this.downloadfile
+          }
+        },
+        {
+          headerName: this.$t('p2s1.re_comments'),
+          field: 're_comments',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('p2s1.re_conclusion'),
+          field: 're_conclusion',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 180,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('p2s1.reviewer'),
+          field: 'reviewer',
+          width: 120,
+          minWidth: 120,
+          maxWidth: 260,
+          sortable: true,
+          filter: true
         }
       ]
       this.defaultColDef = {
-        editable: true,
+        editable: false,
         resizable: true
       }
       this.getRowStyle = this.onchangerowcolor
@@ -906,7 +888,7 @@ export default {
         // console.log(val)
         if (val.id) {
           if (this.files.length) {
-            val.files = this.files
+            val.au_files = this.files
           }
           this.$router.app.$http
             .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
@@ -949,10 +931,11 @@ export default {
       this.files.push(info.files[0].name)
       this.fileupdone = false
     },
-    downloadfile(rowid, filename) {
+    downloadfile(rowid, filename, fn) {
       this.$router.app.$http
         .post('/p2/s1/p2s1questionnaire1/downAttachFile/' + rowid, {
-          filename: filename
+          filename: filename,
+          collection: fn
         })
         .then(res => {
           console.log(res, '----------')
@@ -967,7 +950,8 @@ export default {
       console.log(rowid, filename, 'del')
       this.$router.app.$http
         .post('/p2/s1/p2s1questionnaire1/deleteAttachFile/' + rowid, {
-          filename: filename
+          filename: filename,
+          collection: 'au_files'
         })
         .then(res => {
           if (res.data.success) {

@@ -491,7 +491,7 @@ export default {
       this.vote.re_conclusion = '审核通过'
       this.vote.auditor = '333333'
       this.vote.au_comments = '该户排查过程中……'
-      this.vote.au_conclusion = '正常'
+      this.vote.au_conclusion = ''
       if (process.env.MODE === 'cordova') {
         this.writeToFile('/AIApp/Votedata.json', this.vote)
       } else {

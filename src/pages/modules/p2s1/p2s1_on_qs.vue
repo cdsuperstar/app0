@@ -437,7 +437,7 @@
             color="secondary"
             icon="save"
             :label="this.$t('buttons.confirm')"
-            @click="saveItems()"
+            @click="resaveItems()"
           />
           &nbsp;&nbsp;
         </q-card-actions>
@@ -527,8 +527,8 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham p2sonqs-agGrid"
-        row-selection="multiple"
-        row-multi-select-with-click="true"
+        row-selection="single"
+        row-multi-select-with-click="false"
         :grid-options="gridOptions"
         :column-defs="columnDefs"
         :row-data="rowData"
@@ -623,8 +623,8 @@ export default {
       .get('/p2/s1/p2s1questionnaire1/')
       .then(res => {
         if (res.data.success) {
-          // console.log(res.data.data)
           this.rowData = res.data.data
+          // console.log(this.rowData)
         } else {
         }
       })
@@ -655,8 +655,6 @@ export default {
           minWidth: 70,
           maxWidth: 70,
           sortable: true,
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true
         },
         {
@@ -725,8 +723,8 @@ export default {
         {
           headerName: this.$t('p2s1.isattachment'),
           field: 'q_files',
-          width: 80,
-          minWidth: 80,
+          width: 90,
+          minWidth: 90,
           editable: true,
           filter: true,
           cellRendererFramework: agAttachmentCellRander,
@@ -756,7 +754,7 @@ export default {
         }
       ]
       this.defaultColDef = {
-        editable: true,
+        editable: false,
         resizable: true
       }
       this.getRowStyle = this.onchangerowcolor
@@ -866,11 +864,52 @@ export default {
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
+        console.log(val.re_conclusion, '-------')
+        if (val.re_conclusion) {
+          this.$zglobal.showMessage(
+            'red-7',
+            'center',
+            this.$t('p2s1.re_failed')
+          )
+          return
+        }
         if (val.id) {
           if (this.files.length) {
             val.q_files = this.files
           }
           console.log(val)
+          this.$router.app.$http
+            .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
+            .then(res => {
+              if (res.data.success) {
+                this.gridApi.updateRowData({
+                  update: [Object.assign(val, res.data.data)]
+                })
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('operation.updatesuccess')
+                )
+                // console.log(res.data.data)
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('operation.updatefailed')
+                )
+              }
+            })
+            .catch(e => {})
+        }
+      })
+      this.currentrowdataid = false
+    },
+    // 审核
+    resaveItems() {
+      const selectedData = this.gridApi.getSelectedRows()
+      selectedData.forEach(val => {
+        if (val.id) {
+          // console.log(val)
           this.$router.app.$http
             .put('/p2/s1/p2s1questionnaire1/' + val.id, val)
             .then(res => {
@@ -912,10 +951,11 @@ export default {
       this.files.push(info.files[0].name)
       this.fileupdone = false
     },
-    downloadfile(rowid, filename) {
+    downloadfile(rowid, filename, fn) {
       this.$router.app.$http
         .post('/p2/s1/p2s1questionnaire1/downAttachFile/' + rowid, {
-          filename: filename
+          filename: filename,
+          collection: fn
         })
         .then(res => {
           console.log(res, '----------')
@@ -930,11 +970,12 @@ export default {
       console.log(rowid, filename, 'del')
       this.$router.app.$http
         .post('/p2/s1/p2s1questionnaire1/deleteAttachFile/' + rowid, {
-          filename: filename
+          filename: filename,
+          collection: 'q_files'
         })
         .then(res => {
           if (res.data.success) {
-            // console.log(res)
+            console.log(res)
             this.gridApi.updateRowData({
               update: [Object.assign(rowdata, res.data.data)]
             })

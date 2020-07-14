@@ -81,8 +81,8 @@
           <th class="text-center">乡（镇）</th>
           <th class="text-center">村</th>
           <th class="text-center">问卷类型</th>
-          <th class="text-center">审核</th>
-          <th class="text-center">正常</th>
+          <th class="text-center">未审核</th>
+          <th class="text-center">审核通过</th>
           <th class="text-center">疑似</th>
           <th class="text-center">排查</th>
           <th class="text-center">小计</th>
@@ -95,8 +95,8 @@
           <td class="text-left">{{ item.town }}</td>
           <td class="text-left">{{ item.village }}</td>
           <td class="text-center">{{ item.qtype }}</td>
-          <td class="text-center">5</td>
-          <td class="text-center">6</td>
+          <td class="text-center">0</td>
+          <td class="text-center">{{ item.nore }}</td>
           <td class="text-center">24</td>
           <td class="text-center">24</td>
           <td class="text-center">4</td>
@@ -280,6 +280,18 @@ export default {
           'qtype'
         ])
       )
+      const tmparray = JSON.parse(JSON.stringify(this.earaArray))
+      const tmpnore = 'nore'
+      for (var i = 0; i < this.earaArray.length; i++) {
+        tmparray[i].re_conclusion = '审核通过'
+        // const filtered = this.result.filter(item =>
+        //   tmparray[i].every(f => f.includes(item))
+        // )
+
+        const tmpb = this.filterData(this.result, tmparray[i])
+        console.log(tmpb, '+++++++', tmpb.length)
+        this.earaArray[i][tmpnore] = filtered.length
+      }
 
       console.log(tmpa.length, '-----------', JSON.stringify(this.earaArray))
     },
