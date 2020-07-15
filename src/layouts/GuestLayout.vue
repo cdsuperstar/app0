@@ -3,9 +3,12 @@
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title class="row">
-          <q-avatar>
-            <img src="../statics/app-logo.jpg" />
-          </q-avatar>
+          <q-btn round style="background: white;">
+            <q-avatar>
+              <img src="../statics/app-logo.jpg" />
+            </q-avatar>
+          </q-btn>
+
           <div style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>

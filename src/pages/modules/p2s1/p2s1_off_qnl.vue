@@ -631,7 +631,7 @@ export default {
     },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
-      alert('删除：' + JSON.stringify(selectedData))
+      // alert('删除：' + JSON.stringify(selectedData))
       if (selectedData.length > 0) {
         this.$q
           .dialog({
@@ -684,35 +684,56 @@ export default {
         )
       }
     },
-    // 上传
+    // 上传全部
     uploadJsondata() {
-      const selectedData = this.gridApi.getSelectedRows()
-      if (this.$auth.check()) {
-        selectedData.forEach(val => {
-          // console.log(val)
-          this.$router.app.$http
-            .post('/p2/s1/p2s1questionnaire1', val)
-            .then(res => {
-              // console.log(res)
-              if (res.data.success) {
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('p2s1.uploadsuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('p2s1.uploadfailed')
-                )
-              }
-            })
+      this.$q
+        .dialog({
+          title: '再次确认',
+          message: '数据已经检查完毕，确定要全部上传吗？（操作不可逆！）',
+          html: true,
+          cancel: true,
+          persistent: true
         })
-      }
+        .onOk(() => {
+          // const selectedData = this.gridApi.getSelectedRows()
+          const selectedData = this.rowData
+          if (this.$auth.check()) {
+            selectedData.forEach(val => {
+              // console.log(val)
+              val.qsource = '离线问卷'
+              this.$router.app.$http
+                .post('/p2/s1/p2s1questionnaire1', val)
+                .then(res => {
+                  if (res.data.success) {
+                    this.rowData = ''
+                    setTimeout(() => {
+                      this.writeToFile('/AIApp/Votedata.json', this.rowData)
+                    }, 500)
+                    this.$zglobal.showMessage(
+                      'positive',
+                      'center',
+                      this.$t('p2s1.uploadsuccess')
+                    )
+                  } else {
+                    this.$zglobal.showMessage(
+                      'red-7',
+                      'center',
+                      this.$t('p2s1.uploadfailed')
+                    )
+                  }
+                })
+            })
+          }
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        })
 
-      alert('上传：' + JSON.stringify(selectedData))
-      this.rowData = []
+      // alert('上传：' + JSON.stringify(selectedData))
+      // this.rowData = []
     },
     // 保存本地
     saveItems() {
@@ -738,9 +759,14 @@ export default {
      * */
     writeToFile(fileName, data) {
       var str = JSON.stringify(data)
-      var strlength = str.length - 2
-      data = str.substr(1, strlength)
-      alert(strlength + 'data:' + data)
+      if (str.length > 0) {
+        var strlength = str.length - 2
+        data = str.substr(1, strlength)
+        // alert(strlength + 'data:' + data)
+      } else {
+        data = ''
+      }
+
       if (process.env.MODE === 'cordova') {
         window.resolveLocalFileSystemURL(
           cordova.file.externalRootDirectory,
@@ -761,7 +787,7 @@ export default {
               fileName,
               { create: true, exclusive: false },
               function(fileEntry) {
-                alert('path:' + JSON.stringify(fileEntry))
+                // alert('path:' + JSON.stringify(fileEntry))
                 fileEntry.createWriter(function(fileWriter) {
                   fileWriter.onwriteend = function(e) {
                     alert('保存成功： "' + fileName)
@@ -771,7 +797,12 @@ export default {
                   }
                   // alert(data + '-' + fileWriter.length)
                   // fileWriter.seek(fileWriter.length)
-                  var blob = new Blob([',' + data], { type: 'text/plain' })
+                  var blob = []
+                  if (data.length > 0) {
+                    blob = new Blob([',' + data], { type: 'text/plain' })
+                  } else {
+                    blob = new Blob([''], { type: 'text/plain' })
+                  }
                   fileWriter.write(blob)
                   fileWriter.close()
                 })

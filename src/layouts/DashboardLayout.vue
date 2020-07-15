@@ -5,9 +5,11 @@
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
         <q-toolbar-title class="row">
-          <q-avatar>
-            <img src="../statics/app-logo.jpg" />
-          </q-avatar>
+          <q-btn round style="background: white;">
+            <q-avatar>
+              <img src="../statics/app-logo.jpg" />
+            </q-avatar>
+          </q-btn>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>

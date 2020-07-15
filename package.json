@@ -60,5 +60,5 @@
     "npm": ">= 5.6.0",
     "yarn": ">= 1.6.0"
   },
-  "productName": "爱_问卷"
+  "productName": "问卷调查"
 }

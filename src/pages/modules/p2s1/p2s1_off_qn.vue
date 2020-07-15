@@ -303,6 +303,7 @@ export default {
     return {
       saving: false,
       username: null,
+      netstate: null,
       vote: {
         province: '四川省',
         city: '成都市',
@@ -410,6 +411,7 @@ export default {
       }
     }
     this.getPosition()
+    this.checkConnection()
     this.username = this.$q.localStorage.getItem('username')
   },
 
@@ -421,6 +423,21 @@ export default {
       console.log(info)
       // this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
+    },
+    // 查询当前网络连接
+    checkConnection() {
+      var networkState = navigator.connection.type
+      const states = {
+        unknown: '未知网络连接',
+        ethernet: '以太网连接',
+        wifi: 'WIFI 网络连接',
+        '2g': '2G 网络连接',
+        '3g': '3G 网络连接',
+        '4g': '4G 网络连接',
+        cell: '蜂窝数据连接',
+        none: '无网络连接'
+      }
+      this.netstate = states[networkState]
     },
     // 1 查询当前位置信息
     getPosition() {
@@ -492,13 +509,14 @@ export default {
       this.vote.auditor = '333333'
       this.vote.au_comments = '该户排查过程中……'
       this.vote.au_conclusion = ''
-      if (process.env.MODE === 'cordova') {
+      if (process.env.MODE === 'cordova' && this.netstate === '无网络连接') {
+        alert('当前【无网络连接】，将采用离线方式保存问卷！')
         this.writeToFile('/AIApp/Votedata.json', this.vote)
       } else {
         this.$router.app.$http
           .post('/p2/s1/p2s1questionnaire1', this.vote)
           .then(res => {
-            // console.log(res)
+            console.log(res, '+++++++')
             if (res.data.success) {
               this.$zglobal.showMessage(
                 'positive',
@@ -516,7 +534,7 @@ export default {
       }
       setTimeout(() => {
         this.saving = false
-        console.log('数据：' + JSON.stringify(this.vote))
+        // console.log('数据：' + JSON.stringify(this.vote))
       }, 2000)
     },
     /* 文件读写
