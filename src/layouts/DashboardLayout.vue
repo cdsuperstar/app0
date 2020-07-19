@@ -109,13 +109,13 @@
     </q-header>
     <q-drawer
       v-model="left"
-      bordered
-      :overlay="!$q.screen.gt.xs ? true : false"
       v-touch-swipe.mouse.left="handleleftSwipe"
+      bordered
       side="left"
       behavior="desktop"
       :width="leftdrawer"
       :mini="!left || miniState"
+      :overlay="!$q.screen.gt.xs ? true : false"
       @click.capture="drawerClick"
     >
       <!-- drawer content -->
@@ -429,10 +429,14 @@ export default {
     setthemecolor(color) {
       this.usercfg.theme = color
 
-      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      if (tmpUsercfg === null) tmpUsercfg = {}
-      tmpUsercfg.theme = color
-      tmpUsercfg.dark = this.usercfg.dark
+      let tmpUsercfg = {}
+      const tmpu = this.$auth.user()
+      if (tmpu.usercfg !== undefined) {
+        tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+        if (tmpUsercfg === null) tmpUsercfg = {}
+        tmpUsercfg.theme = color
+        tmpUsercfg.dark = this.usercfg.dark
+      }
 
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
