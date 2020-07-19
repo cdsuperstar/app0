@@ -5,11 +5,9 @@
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
         <q-toolbar-title class="row">
-          <q-btn round style="background: white;">
-            <q-avatar>
-              <img src="../statics/app-logo.jpg" />
-            </q-avatar>
-          </q-btn>
+          <q-avatar>
+            <img src="../statics/app-logo.jpg" />
+          </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
@@ -111,13 +109,13 @@
     </q-header>
     <q-drawer
       v-model="left"
-      bordered
-      :overlay="!$q.screen.gt.xs ? true : false"
       v-touch-swipe.mouse.left="handleleftSwipe"
+      bordered
       side="left"
       behavior="desktop"
       :width="leftdrawer"
       :mini="!left || miniState"
+      :overlay="!$q.screen.gt.xs ? true : false"
       @click.capture="drawerClick"
     >
       <!-- drawer content -->
@@ -255,9 +253,9 @@
 
     <q-page-container>
       <!--      <transition>-->
-      <!--      <keep-alive>-->
+      <!--        <keep-alive>-->
       <router-view></router-view>
-      <!--      </keep-alive>-->
+      <!--        </keep-alive>-->
       <!--      </transition>-->
     </q-page-container>
 
@@ -429,12 +427,16 @@ export default {
     },
     // 设置主题
     setthemecolor(color) {
-      this.applytheme(color)
       this.usercfg.theme = color
-      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      if (tmpUsercfg === null) tmpUsercfg = {}
-      tmpUsercfg.theme = color
-      tmpUsercfg.dark = this.usercfg.dark
+
+      let tmpUsercfg = {}
+      const tmpu = this.$auth.user()
+      if (tmpu.usercfg !== undefined) {
+        tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+        if (tmpUsercfg === null) tmpUsercfg = {}
+        tmpUsercfg.theme = color
+        tmpUsercfg.dark = this.usercfg.dark
+      }
 
       this.$router.app.$http
         .post('/zero/setMyUsercfg/', {
@@ -444,9 +446,9 @@ export default {
           if (res.data.success) {
             this.$auth.user().usercfg = res.data.data.usercfg
             this.usercfg = JSON.parse(this.$auth.user().usercfg)
+            this.applytheme(color)
           }
         })
-        .catch(e => {})
     },
     applytheme(color) {
       this.$zglobal.colors[color].forEach(item => {
