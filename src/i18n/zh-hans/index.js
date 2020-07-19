@@ -78,7 +78,7 @@ export default {
   getlocationfailed: '获取定位信息失败',
   success: '操作成功',
   system: {
-    name: '综合智能管理系统'
+    name: '交通工程结构和病害智能分析平台'
   },
   operation: {
     addsuccess: '添加成功！',
