@@ -7,14 +7,11 @@
           align="center"
           style="margin-bottom: 0.5em; color: var(--q-color-positive);"
         >
-          <font size="4">2019 年贫困县退出专项评估检查</font><br />
-          <font size="3" style="text-indent: 3em;"
-            >（建档立卡脱贫户调查问卷）</font
-          >
+          <font size="4">2020年云南省相对贫困问题调查问卷</font><br />
         </p>
+        <p>亲爱的朋友:</p>
         <p style="text-indent: 2em;">
-          您好！我们是西藏自治区 2019 年贫困县退出专项评估检查的调查员。
-          您家是我们选取的抽样农户，现需要访谈了解您家庭生产、生活及有关情况。希望您如实提供信息，我们将遵守规定对您所提供的信息严格保密。谢谢您的理解与配合！
+          您好！受云南省扶贫办委托，我们组织开展对云南省相对贫困问题进行调查，非常感谢您的配合。本调查仅仅作为政策咨询建议之用，您所填报的信息我们绝对保密，请根据您及您的家庭真实情况选择和填报，再次感谢您的大力支持和配合！
           <a class="text-weight-bold text-overline text-deep-orange">{{
             username
           }}</a>
@@ -41,150 +38,193 @@
         style="max-width: 8em;"
       />
     </div>
-    <div
-      :class="
-        $q.screen.gt.xs
-          ? 'q-ma-sm row items-start q-gutter-md'
-          : 'q-ma-sm q-mr-sm q-gutter-md'
-      "
-    >
-      <q-select
-        v-model="vote.province"
-        dense
-        standout="bg-secondary text-white"
-        label="省"
-        style="min-width: 10em;"
-        emit-value
-        :options="addressoptions"
-      />
-      <q-select
-        v-model="vote.city"
-        dense
-        standout="bg-secondary text-white"
-        label="市"
-        style="min-width: 10em;"
-        emit-value
-        :options="cityArray"
-      />
-      <q-select
-        v-model="vote.county"
-        dense
-        standout="bg-secondary text-white"
-        label="区（县）"
-        emit-value
-        style="min-width: 10em;"
-        :options="countyArray"
-      />
-      <q-select
-        v-model="vote.town"
-        dense
-        standout="bg-secondary text-white"
-        label="镇（乡）"
-        emit-value
-        style="min-width: 10em;"
-        :options="townArray"
-      />
-    </div>
-    <div
-      :class="
-        $q.screen.gt.xs
-          ? 'q-mx-sm row items-start q-gutter-md'
-          : 'q-mx-sm q-mr-sm q-gutter-md'
-      "
-    >
-      <q-input v-model="vote.village" type="text" label="行政村（社区）" />
-      <q-input v-model="vote.group" type="text" label="自然村（组）" />
-      <q-select
-        v-model="vote.villagetype"
-        label="行政村属性"
-        style="min-width: 10em;"
-        :options="['农区', '牧区', '半农半牧区']"
-      />
-    </div>
-    <div
-      :class="
-        $q.screen.gt.xs
-          ? 'q-mx-sm row items-start q-gutter-md'
-          : 'q-mx-sm q-mr-sm q-gutter-md'
-      "
-    >
-      <q-input v-model="vote.investigator1" type="text" label="调查员1姓名" />
-      <q-input
-        v-model="vote.investigatortel1"
-        type="text"
-        label="调查员1联系方式"
-        mask="### - #### ####"
-      />
-      <q-input v-model="vote.investigator2" type="text" label="调查员2姓名" />
-      <q-input
-        v-model="vote.investigatortel2"
-        type="text"
-        label="调查员2联系方式"
-        mask="### - #### ####"
-      />
-    </div>
     <div class="q-mx-ma">
       <dl>
         <dt class="text-h6 row no-wrap items-center">
-          <div class="doc-card-title">A. 受访者信息</div>
+          <div class="doc-card-title">
+            A. 家庭基本情况（人口、劳动力情况等）
+          </div>
         </dt>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">A1. 被访者姓名？</div>
-          <q-input v-model="vote.a1name" type="text" dense />
-          <div style="padding-top: 10px;">与户主关系？</div>
-          <q-select
-            v-model="vote.a1renation"
-            use-input
-            use-chips
-            dense
-            new-value-mode="add-unique"
-            behavior="menu"
-            style="min-width: 12em;"
-            :options="[
-              '本人',
-              '配偶',
-              '子女',
-              '父母',
-              '兄弟',
-              '姊妹',
-              '爷孙',
-              '其他'
-            ]"
-          ></q-select>
-          <div style="padding-top: 10px;">联系方式：</div>
-          <q-input v-model="vote.a1tel" type="text" dense />
+          <div style="padding-top: 10px;">A1. 您所在的行政区域是？</div>
+          <v-distpicker
+            :province="vote.province"
+            :city="vote.city"
+            :area="vote.county"
+            :placeholders="placeholders"
+            province-disabled
+            @selected="AreaonSelected"
+          ></v-distpicker>
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">A2. 被访者文化程度？</div>
+          <div style="padding-top: 10px;">乡镇：</div>
+          <q-input v-model="vote.town" type="text" dense />
+          <div style="padding-top: 10px;">村：</div>
+          <q-input v-model="vote.village" type="text" dense />
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">A2. 您的家庭情况是？</div>
           <q-select
             v-model="vote.a2"
             dense
             style="min-width: 15em;"
             behavior="menu"
             :options="[
-              '小学及以下',
-              '初中',
-              '高中',
-              '职校、中专',
-              '大专及以上'
+              '建档立卡稳定脱贫户',
+              '建档立卡监测脱贫户',
+              '非建档立卡边缘户',
+              '非建档立卡户'
             ]"
           ></q-select>
         </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">A3. 户主姓名：</div>
+          <q-input v-model="vote.a3" type="text" dense />
+          <div style="padding-top: 10px;">
+            A4. 户主出生年月（示例：197002）：
+          </div>
+          <q-input v-model="vote.a4" type="text" dense mask="######" />
+          <div style="padding-top: 10px;">A5. 户主民族是：</div>
+          <q-select
+            v-model="vote.a5"
+            dense
+            use-input
+            use-chips
+            new-value-mode="add-unique"
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '彝族',
+              '汉族',
+              '回族',
+              '壮族',
+              '瑶族',
+              '佤族',
+              '水族',
+              '傣族',
+              '藏族',
+              '满族',
+              '怒族',
+              '白族',
+              '苗族',
+              '蒙古族',
+              '纳西族',
+              '普米族',
+              '傈僳族',
+              '拉祜族',
+              '景颇族',
+              '基诺族',
+              '哈尼族',
+              '独龙族',
+              '德昂族',
+              '布依族',
+              '布朗族',
+              '阿昌族'
+            ]"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">A6. 被访者姓名：</div>
+          <q-input v-model="vote.a6" type="text" dense />
+          <div style="padding-top: 10px;">A7. 您与户主的关系是？</div>
+          <q-select
+            v-model="vote.a7"
+            dense
+            use-input
+            use-chips
+            new-value-mode="add-unique"
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '户主本人',
+              '户主配偶',
+              '户主父母',
+              '职校、中专',
+              '户主子女'
+            ]"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">A8. 您家庭联系电话：</div>
+          <q-input v-model="vote.a8" type="text" dense />
+          <div style="padding-top: 10px;">A9. 您所在家庭的户籍人口（人）：</div>
+          <q-input v-model="vote.a9" type="text" dense mask="##" />
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            A10.
+            您所在家庭的常住人口（在家居住半年以上/或个人收入直接与家庭挂钩）（人）：
+          </div>
+          <q-input v-model="vote.a10" type="text" dense mask="##" />
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            A10-1 您家16周岁以下人口（人）：
+          </div>
+          <q-input v-model="vote.a101" type="text" dense mask="##" />
+          <div style="padding-top: 10px;">
+            A10-2
+            您家现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括在校学生、现役军人】：
+          </div>
+          <q-input v-model="vote.a102" type="text" dense mask="##" />
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            A10-3 您家无劳动能力人数（人）【16到60周岁，因病因残丧失劳动力】：
+          </div>
+          <q-input v-model="vote.a103" type="text" dense mask="##" />
+          <div style="padding-top: 10px;">
+            A10-4 您家60周岁及以上人口数（人）：
+          </div>
+          <q-input v-model="vote.a104" type="text" dense mask="##" />
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            A10-5
+            未来3年，您家庭劳动力人口数（人）【16-64岁具有劳动能力人口，不包括在校学生，现役军人】：
+          </div>
+          <q-input v-model="vote.a105" type="text" dense mask="##" />
+        </dd>
         <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
-          <div class="doc-card-title">B. 户主基本情况</div>
+          <div class="doc-card-title">
+            B. 家庭所在地区自然条件、生产生活条件等
+          </div>
         </dt>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">B1. 户主姓名：</div>
-          <q-input v-model="vote.b1" type="text" dense />
-          <div style="padding-top: 10px;">B2. 户主性别：</div>
+          <div style="padding-top: 10px;">
+            B1. 您的家庭所在地区（县）是否是少数民族地区？
+          </div>
+          <q-select
+            v-model="vote.b1"
+            dense
+            style="min-width: 15em;"
+            behavior="menu"
+            :options="['是', '不是']"
+          ></q-select>
+          <div style="padding-top: 10px;">
+            B2. 您的家庭所在地区自然条件情况？
+          </div>
           <q-select
             v-model="vote.b2"
             dense
+            multiple
+            use-input
+            use-chips
+            new-value-mode="add-unique"
             style="min-width: 12em;"
             behavior="menu"
-            :options="['男', '女']"
+            :options="[
+              '高山峡谷区',
+              '丘陵多山区',
+              '高原高寒区',
+              '石山荒漠区',
+              '干旱少雨区',
+              '平原平坝区'
+            ]"
           ></q-select>
-          <div style="padding-top: 10px;">B3. 户主民族：</div>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">B3. 您家庭居住地出行条件情况？</div>
           <q-select
             v-model="vote.b3"
             dense
@@ -193,83 +233,238 @@
             new-value-mode="add-unique"
             style="min-width: 12em;"
             behavior="menu"
-            :options="['汉族', '藏族', '土家族']"
+            :options="[
+              '出行便利，道路畅通，主要依靠机动车出行',
+              '出行较为便利，道路基本畅通，多种出行方式',
+              '出行不便，无通车道路，主要依靠步行'
+            ]"
+          ></q-select>
+          <div style="padding-top: 10px;">
+            B4. 您家庭所在地区基本生产生活条件在哪方面还需要改善提升？
+          </div>
+          <q-select
+            v-model="vote.b4"
+            dense
+            multiple
+            use-input
+            use-chips
+            new-value-mode="add-unique"
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="['生产道路', '农田水利设施', '电力通信', '不需要']"
           ></q-select>
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">B4. 户主文化程度：</div>
+          <div style="padding-top: 10px;">B5. 您所在地区自然生态情况？</div>
           <q-select
-            v-model="vote.b4"
+            v-model="vote.b5"
+            dense
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="['很好', '较好', '一般', '较差', '很差']"
+          ></q-select>
+          <div style="padding-top: 10px;">
+            B6.您家庭所在地区土地资源条件情况？
+          </div>
+          <q-select
+            v-model="vote.b6"
             dense
             style="min-width: 12em;"
             behavior="menu"
             :options="[
-              '小学及以下',
-              '初中',
-              '高中',
-              '职校、中专',
-              '大专及以上'
+              '土地资源较为丰富，能够满足生产发展需要',
+              '土地资源一般，基本能满足生产发展需要',
+              '土地资源很少，生产发展困难'
             ]"
           ></q-select>
-          <div style="padding-top: 10px;">B5. 户主身份证号：</div>
-          <q-input
-            v-model="vote.b5"
-            type="text"
-            dense
-            style="min-width: 15em;"
-            mask="X##### ######## ###X X"
-          />
         </dd>
         <dt class="text-h6 row no-wrap items-center" style="margin-top: 5px;">
-          <div class="doc-card-title">C. 农户家庭基本情况</div>
+          <div class="doc-card-title">
+            C. 家庭收入支出情况（收入水平、主要来源、稳定性、低保等）
+          </div>
         </dt>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">C1. 建档立卡人口数（人）：</div>
+          <div style="padding-top: 10px;">
+            C1.近三年来（2018-2020年），您家庭年均可支配总收入（元）：
+          </div>
           <q-input
             v-model="vote.c1"
             type="text"
             dense
             style="min-width: 8em;"
-            mask="##"
-            :rules="[val => val <= 30 || '该项取值范围为0-30 ']"
+            mask="######"
+            :rules="[val => val <= 1000000 || '该项取值范围为0-1000000 ']"
           />
           <div style="padding-top: 10px;">
-            C14.您家哪一年被确定为建档立卡户？
+            C2. 家中是否有人领低保？
           </div>
-          <q-input
-            v-model="vote.c14"
-            type="text"
+          <q-select
+            v-model="vote.c2"
             dense
-            style="min-width: 8em;"
-            mask="####"
-            hint="年（4 位数年份）（取值范围为2014-2019）"
-            :rules="[
-              val => (val >= 2014 && val <= 2019) || '该项取值范围为2014-2019 '
-            ]"
-          />
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="['是', '否']"
+          ></q-select>
         </dd>
-        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+        <dd
+          v-if="vote.c2 === '是'"
+          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+        >
           <div style="padding-top: 10px;">
-            C17.全家 2019 年领取的低保金是多少？ （元）
+            C2-1 近一年来，家中有几个人领了低保？
           </div>
           <q-input
-            v-model="vote.c17"
+            v-model="vote.c201"
             type="number"
             dense
             style="min-width: 8em;"
           />
           <div style="padding-top: 10px;">
-            C19.是哪一年脱贫的？
+            C2-2 全家每月可领低保金合计多少钱？（元）
           </div>
           <q-input
-            v-model="vote.c19"
-            type="text"
+            v-model="vote.c202"
+            type="number"
             dense
             style="min-width: 8em;"
-            hint="年（4 位数年份） "
-            mask="####"
           />
         </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            C3. 家中60岁以上老人有多少人？
+          </div>
+          <q-input v-model="vote.c3" type="text" dense mask="##" />
+          <div
+            v-if="vote.c3 !== '0'"
+            :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+          >
+            <div style="padding-top: 10px;">
+              C4. 每月领养老金多少钱？（元）
+            </div>
+            <q-input v-model="vote.c4" type="text" dense mask="####" />
+          </div>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            C5. 近年来，您的家庭收入主要来源是？
+          </div>
+          <q-select
+            v-model="vote.c5"
+            dense
+            style="min-width: 18em;"
+            behavior="menu"
+            :options="[
+              '外出务工收入，在本乡镇外务工的工资收入',
+              '本地务工收入，在本乡镇内务工以及政府提供的各种公益性岗位的工资收入',
+              '种养殖收入：各类农林牧渔业收入',
+              '经营性收入：家庭各种经营性收入，比如做生意、跑运输、开饭馆、小超市等',
+              '财产性收入：房屋等出租，土地流转，入股分红等收入',
+              '转移性收入：各类政府补贴收入，各类政府补贴，低保，养老金等收入'
+            ]"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            C6. 近年来，您认为您家收入增加最多的是？（多选）
+          </div>
+          <q-select
+            v-model="vote.c6"
+            dense
+            multiple
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '外出务工收入',
+              '本地务工收入',
+              '种养殖收入',
+              '经营性收入',
+              '财产性收入',
+              '各类政府补贴收入',
+              '均没有变化'
+            ]"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            C7. 近年来，您认为您家收入减少最多的是？（多选）
+          </div>
+          <q-select
+            v-model="vote.c7"
+            dense
+            multiple
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '外出务工收入',
+              '本地务工收入',
+              '种养殖收入',
+              '经营性收入',
+              '财产性收入',
+              '各类政府补贴收入',
+              '没有减少'
+            ]"
+          ></q-select>
+        </dd>
+        <dd
+          v-if="
+            typeof vote.c7 == 'object' ? !vote.c7.includes('没有减少') : 'false'
+          "
+          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+        >
+          <div style="padding-top: 10px;">
+            C8. 收入减少的主要原因是？（多选）
+          </div>
+          <q-select
+            v-model="vote.c8"
+            dense
+            multiple
+            use-input
+            use-chips
+            new-value-mode="add-unique"
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '因疫情减少',
+              '因伤病残孕',
+              '因小孩上学',
+              '因自然灾害',
+              '因婚丧嫁娶'
+            ]"
+          ></q-select>
+          <div style="padding-top: 10px;">
+            C9. 近年来，您家各类政府转移性收入主要有？（多选）
+          </div>
+          <q-select
+            v-model="vote.c9"
+            dense
+            multiple
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="[
+              '低保收入',
+              '养老金收入',
+              '残疾人补贴收入',
+              '政府各类长期性补贴（林补、草补、粮食补贴等）收入'
+            ]"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+          <div style="padding-top: 10px;">
+            C10. 近年来，您的家庭收入是否稳定？（单选）
+          </div>
+          <q-select
+            v-model="vote.c10"
+            dense
+            style="min-width: 12em;"
+            behavior="menu"
+            :options="['稳定', '基本稳定', '不稳定']"
+          ></q-select>
+        </dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"></dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"></dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"></dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"></dd>
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"></dd>
       </dl>
     </div>
 
@@ -296,131 +491,51 @@
 </template>
 
 <script>
+import VDistpicker from 'v-distpicker'
+
 export default {
   name: 'P2s1questionnaire',
-  components: {},
+  components: { VDistpicker },
   data() {
     return {
       saving: false,
       username: null,
       netstate: null,
-      vote: {
-        province: '四川省',
-        city: '成都市',
-        county: '成华区',
-        town: '二仙桥',
-        village: 'XX村',
-        group: 'XX组',
-        villagetype: '农区',
-        investigator1: '调查员姓名1',
-        investigatortel1: '138 - 8888 8888',
-        investigator2: '调查员姓名2',
-        investigatortel2: '139 - 9999 9999',
-        a1name: '被访问姓名',
-        a1renation: '本人',
-        a1tel: '1300000000000000',
-        a2: '小学及以下',
-        b1: '户主1',
-        b2: '女',
-        b3: '土家族',
-        b4: '小学及以下',
-        b5: '222222 22222222 2222 2',
-        c1: '7',
-        c14: '2015',
-        c17: '3600',
-        c19: '2019',
-        no: 'D20200712T185555222222 22222222 2222 2',
-        qtype: '建档立卡户问卷',
-        qsource: '扫码问卷',
-        isUpload: true,
-        reviewer: '22222',
-        re_comments: '问卷一切正常',
-        re_conclusion: '审核通过',
-        auditor: '333333',
-        au_comments: '该户排查过程中……',
-        au_conclusion: '正常'
+      placeholders: {
+        province: '------- 省 --------',
+        city: '------- 市 -------',
+        area: '------- 区 -------'
       },
-      addressoptions: this.$t('p2s1.addressArray'),
-      cityArray: [],
-      countyArray: [],
-      townArray: []
+      vote: {
+        province: '云南省',
+
+        au_conclusion: '正常'
+      }
     }
   },
 
   computed: {},
-  watch: {
-    // 获得列表
-    'vote.province'(val, oldval) {
-      for (var i in this.addressoptions) {
-        if (this.addressoptions[i].value === this.vote.province) {
-          this.cityArray = this.addressoptions[i].city
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.city = ''
-      }
-    },
-    'vote.city'(val, oldval) {
-      for (var j in this.cityArray) {
-        if (this.cityArray[j].value === this.vote.city) {
-          this.countyArray = this.cityArray[j].county
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.county = ''
-      }
-    },
-    'vote.county'(val, oldval) {
-      for (var k in this.countyArray) {
-        if (this.countyArray[k].value === this.vote.county) {
-          this.townArray = this.countyArray[k].town
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.town = ''
-      }
-    }
-  },
+  watch: {},
   created() {},
   mounted() {
-    if (this.vote.province) {
-      for (var i in this.addressoptions) {
-        if (this.addressoptions[i].value === this.vote.province) {
-          this.cityArray = this.addressoptions[i].city
-          break
-        }
-      }
-    }
-    if (this.vote.city) {
-      for (var j in this.cityArray) {
-        if (this.cityArray[j].value === this.vote.city) {
-          this.countyArray = this.cityArray[j].county
-          break
-        }
-      }
-    }
-    if (this.vote.county) {
-      for (var k in this.countyArray) {
-        if (this.countyArray[k].value === this.vote.county) {
-          this.townArray = this.countyArray[k].town
-          break
-        }
-      }
-    }
     this.getPosition()
     this.checkConnection()
     this.username = this.$q.localStorage.getItem('username')
   },
 
   methods: {
+    AreaonSelected(data) {
+      // console.log(data, '===========')
+      this.vote.province = data.province.value
+      this.vote.city = data.city.value
+      this.vote.county = data.area.value
+      // console.log(JSON.stringify(this.vote), '===========')
+    },
     checkFileSize(files) {
       return files.filter(file => file.size < 20480000)
     },
     upfilished(info) {
-      console.log(info)
+      // console.log(info)
       // this.data.files.push(info.files[0].name)
       // this.DaddFiles = false
     },
@@ -463,6 +578,7 @@ export default {
       }
     },
     savedata() {
+      console.log(typeof this.vote.c7, '====')
       this.saving = true
       const tmpa = this.$auth.user()
       this.vote.investigator = tmpa.id
@@ -500,7 +616,7 @@ export default {
         seconds
       this.vote.no = currentdate
       // 问卷编号结束
-      this.vote.qtype = '建档立卡户问卷'
+      this.vote.qtype = '相对贫困调查问卷'
       this.vote.qsource = '扫码问卷'
       this.vote.isUpload = true
       this.vote.reviewer = '22222'
@@ -516,7 +632,7 @@ export default {
         this.$router.app.$http
           .post('/p2/s1/p2s1questionnaire1', this.vote)
           .then(res => {
-            console.log(res, '+++++++')
+            // console.log(res, '+++++++')
             if (res.data.success) {
               this.$zglobal.showMessage(
                 'positive',
@@ -534,7 +650,7 @@ export default {
       }
       setTimeout(() => {
         this.saving = false
-        // console.log('数据：' + JSON.stringify(this.vote))
+        console.log('数据：' + JSON.stringify(this.vote))
       }, 2000)
     },
     /* 文件读写
@@ -604,5 +720,8 @@ export default {
   color: #000000;
   position: relative;
   border-radius: 3px 5px 5px 0;
+}
+.divwarp {
+  height: 40px;
 }
 </style>
