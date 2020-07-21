@@ -258,8 +258,11 @@ export default {
   beforeDestroy() {
     // 写入数据库
     if (this.$auth.check()) {
-      let tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
-      if (tmpUsercfg === null) tmpUsercfg = {}
+      let tmpUsercfg = {}
+      const tmpu = this.$auth.user()
+      if (tmpu.usercfg !== undefined) {
+        tmpUsercfg = JSON.parse(this.$auth.user().usercfg)
+      }
       tmpUsercfg.quickapplication = this.modulelist
       if (tmpUsercfg.quickapplication !== null) {
         this.$router.app.$http

@@ -1,6 +1,9 @@
 // This is just an example,
 // so you can safely delete all default props below
 export default {
+  p3s1: {
+    dev_paramname: '设备参数'
+  },
   p1s1techfile: {
     header: '技术文件',
     addfiles: '新增技术文件',
