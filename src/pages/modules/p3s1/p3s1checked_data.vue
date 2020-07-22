@@ -12,8 +12,45 @@
             :title="this.$t('buttons.close')"
           />
           <q-toolbar-title>
-            <span class="text-subtitle1 text-weight-bold"> 编辑已检数据</span>
+            <div class="text-weight-bold">
+              编辑已检数据
+            </div>
           </q-toolbar-title>
+          <div class="col-3">
+            <q-select
+              v-model.trim="signtype"
+              :options="typeoptions"
+              label="设置标记类型"
+              color="#e6eef5"
+              label-color="white"
+              standout="bg-primary text-white"
+              map-options
+              stretch
+              style="min-width:15em;max-width: 15em;"
+              @input="setactivetype"
+            >
+              <template v-slot:option="scope">
+                <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                  <q-item-section>
+                    <q-item-label v-html="scope.opt.label"></q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-toggle
+                      v-model="showtype"
+                      color="green"
+                      checked-icon="check"
+                      unchecked-icon="clear"
+                      :val="scope.opt.value"
+                      @input="showsigntype"
+                    />
+                  </q-item-section>
+                </q-item>
+              </template>
+              <template v-slot:append>
+                <q-icon name="visibility" />
+              </template>
+            </q-select>
+          </div>
           <q-btn
             flat
             icon="save"
@@ -23,7 +60,18 @@
         </q-toolbar>
 
         <q-card-section class="q-pt-none">
-          显示图片.
+          <ui-marker
+            ref="aiPanel-editor"
+            class="ai-observer"
+            width="100%"
+            v-bind:uniqueKey="uuid"
+            :ratio="16 / 9"
+            v-bind:imgUrl="currentImage"
+            @vmarker:onAnnoAdded="onAnnoAdded"
+            @vmarker:onAnnoSelected="onAnnoSelected"
+            @vmarker:onUpdated="onUpdated"
+          >
+          </ui-marker>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -104,14 +152,17 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import { AIMarker } from 'vue-picture-bd-marker'
 
 export default {
   name: 'P3s1checked_data',
   components: {
-    AgGridVue
+    AgGridVue,
+    'ui-marker': AIMarker
   },
   data() {
     return {
+      currecttype: [],
       editwindow: false,
       quickFilter: null,
       gridOptions: null,
@@ -121,19 +172,60 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      uuid: '0da9130',
+      currentImage: '../statics/09.jpg',
+      renderData: null,
+      dataset: {},
+      signtype: null,
+      showtype: [],
+      typeoptions: [
+        {
+          label: '裂缝',
+          value: 1
+        },
+        {
+          label: '空洞',
+          value: 2
+        },
+        {
+          label: 'Twitter',
+          value: 3
+        },
+        {
+          label: 'Apple',
+          value: 4
+        },
+        {
+          label: '其他隐患',
+          value: 5
+        }
+      ]
     }
   },
   created() {
-    this.$router.app.$http
-      .get('/z_unit/')
-      .then(res => {
-        if (res.data.success) {
-          this.rowData = res.data.data
-        } else {
-        }
-      })
-      .catch(e => {})
+    // this.$router.app.$http
+    //   .get('/z_unit/')
+    //   .then(res => {
+    //     if (res.data.success) {
+    //       this.rowData = res.data.data
+    //     } else {
+    //     }
+    //   })
+    //   .catch(e => {})
+    // 行数据
+    this.rowData = [
+      { cl1: 'itxst.com', cl2: 20101, cl3: 23123 },
+      { cl1: 'A', cl2: 20101, cl3: 23123 },
+      { cl1: 'A', cl2: 20101, cl3: 23123 },
+      { cl1: 'B', cl2: 20101, cl3: 23123 },
+      { cl1: 'B', cl2: 20101, cl3: 23123 }
+    ]
+
+    // 多模拟几行数据出来
+    for (var i = 1; i < 5; i++) {
+      this.rowData.push({ cl1: 'YKK11', cl2: 332 * i, cl3: 562 * i })
+    }
   },
   beforeMount() {
     this.initGrid()
@@ -143,6 +235,27 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
+    // 标记
+    onAnnoAdded(data) {
+      if (this.signtype !== null) {
+        this.$refs['aiPanel-editor'].getMarker().setTag({
+          tagName: this.signtype.label,
+          tag: this.signtype.value
+        })
+        console.log(data, '====onAnnoAdded', this.showtype)
+        // 当你想限制标记个数时
+      } else {
+        this.$zglobal.showMessage('red-7', 'center', '先选择标注类型')
+        this.$refs['aiPanel-editor'].getMarker().clearData()
+      }
+    },
+    onAnnoSelected(data) {
+      console.log(data, '+++onAnnoSelected')
+    },
+    onUpdated(data) {
+      console.log(data, '+++onUpdated')
+    },
+    // end
     initGrid() {
       this.gridOptions = {
         rowHeight: 32,
@@ -164,7 +277,17 @@ export default {
         },
         {
           headerName: '项目名称',
-          field: 'title',
+          field: 'cl1',
+          width: 260,
+          minWidth: 260,
+          maxWidth: 360,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: '项目数据',
+          field: 'cl1',
           width: 260,
           minWidth: 260,
           maxWidth: 360,
@@ -174,7 +297,7 @@ export default {
         },
         {
           headerName: '模型',
-          field: 'title',
+          field: 'cl2',
           width: 90,
           minWidth: 90,
           maxWidth: 110,
@@ -189,7 +312,7 @@ export default {
         },
         {
           headerName: '检测结果',
-          field: 'title',
+          field: 'cl3',
           width: 100,
           minWidth: 100,
           maxWidth: 200,
@@ -358,6 +481,22 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    // 处理设置活动类型
+    setactivetype() {
+      console.log(this.signtype, '----------signtype')
+      if (this.showtype.includes(this.signtype.value)) {
+        console.log('ok..')
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          '请注意：选定类型当前被隐藏，不支持编辑！'
+        )
+      }
+    },
+    showsigntype() {
+      console.log(this.showtype, '----------showtype')
     }
   }
 }
