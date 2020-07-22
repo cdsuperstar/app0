@@ -2,7 +2,15 @@
 // so you can safely delete all default props below
 export default {
   p3s1: {
-    dev_paramname: '设备参数'
+    dev_paramname: '设备参数',
+    com_info: '公司信息',
+    com_proj: '项目列表',
+    proj_data: '项目数据',
+    projtypeoptions: {
+      highway: '公路',
+      tunnel: '隧道',
+      bridge: '桥梁'
+    }
   },
   p1s1techfile: {
     header: '技术文件',
@@ -369,7 +377,7 @@ export default {
         male: '男',
         female: '女',
         birthday: '出生日期',
-        address: '家庭地址',
+        address: '通讯地址',
         phone1: '主要电话号码',
         phone2: '备用电话号码',
         position: '职务',

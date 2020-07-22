@@ -213,6 +213,8 @@ export default {
     },
     initGrid() {
       this.gridOptions = {
+        rowHeight: 32,
+        headerHeight: 32,
         allowShowChangeAfterFilter: true
       }
       this.frameworkComponents = {
@@ -609,9 +611,15 @@ export default {
 .Profile-agGrid .ag-header {
   background-color: var(--q-color-secondary);
   color: #ffffff;
+  font-size: 13px;
 }
 .Profile-agGrid .ag-cell {
   padding-left: 1px;
+  font-size: 13px;
+}
+.ag-theme-balham .ag-ltr .ag-cell {
+  padding-left: 1px;
+  border-right: 1px solid rgba(233, 233, 233, 0.96);
 }
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {

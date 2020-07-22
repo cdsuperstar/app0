@@ -1,5 +1,75 @@
 <template>
   <q-page padding class="q-pa-ma">
+    <q-dialog v-model="DaddFiles" seamless>
+      <q-item-section style="max-width:300px;max-height: 50vh" class="scroll">
+        <q-uploader
+          style="max-width: 300px"
+          :url="this.$axios.defaults.baseURL + '/zero/uploadMyTmpFiles'"
+          method="POST"
+          multiple
+          auto-expand
+          :filter="checkFileSize"
+          :label="this.$t('article.attachment')"
+          :headers="[
+            {
+              name: 'enctype',
+              value: 'multipart/form-data'
+            },
+            { name: 'Authorization', value: 'Bearer ' + this.$auth.token() }
+          ]"
+          @uploading="upfileing"
+          @uploaded="upfilished"
+        >
+          <template v-slot:list="scope">
+            <div class="text-right">
+              <q-btn
+                v-close-popup
+                flat
+                round
+                color="primary"
+                size="sm"
+                icon="close"
+                title="关闭此窗口"
+                :disable="fileupdone"
+              />
+            </div>
+            <q-list separator>
+              <q-item v-for="file in scope.files" :key="file.name">
+                <q-item-section>
+                  <q-item-label class="full-width ellipsis">
+                    {{ file.name }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    Status: {{ file.__status }}
+                  </q-item-label>
+
+                  <q-item-label caption>
+                    {{ file.__sizeLabel }} / {{ file.__progressLabel }}
+                  </q-item-label>
+                </q-item-section>
+
+                <q-item-section v-if="file.__img" thumbnail class="gt-xs">
+                  <img :src="file.__img.src" />
+                </q-item-section>
+
+                <q-item-section top side>
+                  <q-btn
+                    class="gt-xs"
+                    size="12px"
+                    flat
+                    dense
+                    round
+                    icon="delete"
+                    @click="scope.removeFile(file)"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </template>
+        </q-uploader>
+      </q-item-section>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p3s1.dev_paramname') }}
     </div>
@@ -85,6 +155,7 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import agAttachmentCellRander from '../../frameworkComponents/agAttachmentCellRander'
 
 export default {
   name: 'P3s1dev_param',
@@ -93,6 +164,9 @@ export default {
   },
   data() {
     return {
+      DaddFiles: false,
+      files: [],
+      fileupdone: false,
       quickFilter: null,
       gridOptions: null,
       gridApi: null,
@@ -125,6 +199,8 @@ export default {
   methods: {
     initGrid() {
       this.gridOptions = {
+        rowHeight: 32,
+        headerHeight: 32,
         allowShowChangeAfterFilter: true
       }
       this.columnDefs = [
@@ -163,9 +239,9 @@ export default {
         {
           headerName: '天线频率',
           field: 'title',
-          width: 80,
-          minWidth: 80,
-          maxWidth: 120,
+          width: 90,
+          minWidth: 90,
+          maxWidth: 100,
           editable: true,
           sortable: true,
           filter: true
@@ -179,6 +255,20 @@ export default {
           editable: true,
           sortable: true,
           filter: true
+        },
+        {
+          headerName: '设备照片',
+          field: 'dev_files',
+          width: 90,
+          minWidth: 90,
+          editable: true,
+          filter: true,
+          cellRendererFramework: agAttachmentCellRander,
+          cellRendererParams: {
+            down: this.downloadfile,
+            del: this.deletefile,
+            add: this.addfile
+          }
         },
         {
           headerName: '设备介绍',
@@ -314,6 +404,9 @@ export default {
             })
             .catch(e => {})
         } else {
+          if (this.files.length) {
+            val.dev_files = this.files
+          }
           this.$router.app.$http
             .put('/z_unit/' + val.id, val)
             .then(res => {
@@ -338,6 +431,62 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    // 文件上传
+    checkFileSize(files) {
+      return files.filter(file => file.size < 20480000)
+    },
+    uploadFile() {
+      this.DaddFiles = true
+      this.files = []
+    },
+    upfileing() {
+      this.fileupdone = true
+    },
+    upfilished(info) {
+      this.files.push(info.files[0].name)
+      this.fileupdone = false
+    },
+    downloadfile(rowid, filename, fn) {
+      this.$router.app.$http
+        .post('/p2/s1/p2s1questionnaire1/downAttachFile/' + rowid, {
+          filename: filename,
+          collection: fn
+        })
+        .then(res => {
+          console.log(res, '----------')
+          if (res.data.success) {
+            window.open(res.data.data, '_blank')
+          }
+        })
+        .catch(e => {})
+      // end
+    },
+    deletefile(rowid, rowdata, filename) {
+      console.log(rowid, filename, 'del')
+      this.$router.app.$http
+        .post('/p2/s1/p2s1questionnaire1/deleteAttachFile/' + rowid, {
+          filename: filename,
+          collection: 'q_files'
+        })
+        .then(res => {
+          if (res.data.success) {
+            console.log(res)
+            this.gridApi.updateRowData({
+              update: [Object.assign(rowdata, res.data.data)]
+            })
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('operation.delsuccess')
+            )
+          }
+        })
+        .catch(e => {})
+    },
+    addfile(rowdata) {
+      this.currentrowdataid = rowdata.data.id
+      this.uploadFile()
     }
   }
 }
@@ -347,9 +496,15 @@ export default {
 .p3s1devparam-agGrid .ag-header {
   background-color: var(--q-color-secondary);
   color: #ffffff;
+  font-size: 13px;
 }
 .p3s1devparam-agGrid .ag-cell {
   padding-left: 1px;
+  font-size: 13px;
+}
+.ag-theme-balham .ag-ltr .ag-cell {
+  padding-left: 1px;
+  border-right: 1px solid rgba(233, 233, 233, 0.96);
 }
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
