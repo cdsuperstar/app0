@@ -6,6 +6,7 @@ export default {
     com_info: '公司信息',
     com_proj: '项目列表',
     proj_data: '项目数据',
+    checked_data: '已检数据',
     projtypeoptions: {
       highway: '公路',
       tunnel: '隧道',
@@ -122,6 +123,7 @@ export default {
     back: '返回',
     submit: '提交',
     add: '添加',
+    edit: '编辑',
     show: '显示',
     update: '更新',
     delete: '删除',

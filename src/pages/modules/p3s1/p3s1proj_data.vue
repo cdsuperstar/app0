@@ -70,8 +70,145 @@
         </q-uploader>
       </q-item-section>
     </q-dialog>
+    <q-dialog v-model="DaddProjdata">
+      <q-card style="width: 1000px; max-width: 80vw;">
+        <q-toolbar class="bg-primary text-white">
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            :title="this.$t('buttons.close')"
+          />
+          <q-toolbar-title>
+            <span class="text-subtitle1 text-weight-bold"> 添加项目数据</span>
+          </q-toolbar-title>
+          <q-btn
+            flat
+            icon="save"
+            :label="this.$t('buttons.confirm')"
+            @click="aDDNewProjdata()"
+          />
+        </q-toolbar>
+        <q-separator />
+        <q-card-section style="max-height: 80vh" class="scroll">
+          <q-input
+            v-model.trim="data.title"
+            type="text"
+            style="max-width: 500px"
+            autofocus
+            label="数据名称"
+            :error="$v.data.title.$error"
+            error-message="请输入数据名称！"
+            @blur="$v.data.title.$touch"
+          />
+          <div class="col-3 row q-gutter-lg items-start">
+            <q-select
+              v-model.trim="data.user_id"
+              style="min-width: 200px;max-width: 200px"
+              :options="useroptions"
+              label="所属项目"
+              emit-value
+              map-options
+            />
+            <q-select
+              v-model.trim="data.user_id"
+              style="min-width: 200px;max-width: 200px"
+              :options="useroptions"
+              label="检测设备"
+              emit-value
+              map-options
+            />
+
+            <q-input
+              v-model.trim="data.title"
+              type="text"
+              style="min-width: 150px;max-width: 200px"
+              autofocus
+              label="里程(Km)"
+              :error="$v.data.title.$error"
+              error-message="请输入里程！"
+              @blur="$v.data.title.$touch"
+            />
+          </div>
+          <div class="col-md-8 q-mt-md">
+            <q-editor
+              v-model="data.content"
+              :definitions="{
+                upload: {
+                  label: '附件',
+                  icon: 'cloud_upload',
+                  tip: '上传附件',
+                  handler: uploadFile
+                }
+              }"
+              :label="this.$t('article.content')"
+              :toolbar="[
+                ['left', 'center', 'right', 'justify'],
+                ['bold', 'italic', 'strike', 'underline'],
+                ['print', 'fullscreen'],
+                ['upload', 'viewsource']
+              ]"
+            />
+          </div>
+        </q-card-section>
+        <q-separator />
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="opDetectionwindow">
+      <q-card class="q-dialog-plugin bg-secondary ">
+        <q-toolbar>
+          <q-icon color="white" size="26px" name="image_search" />
+          <q-toolbar-title>
+            <span class="text-white text-weight-bold">
+              检测数据（模型选择）</span
+            >
+          </q-toolbar-title>
+          <q-btn
+            v-close-popup
+            flat
+            round
+            dense
+            icon="close"
+            color="negative"
+            :title="this.$t('buttons.close')"
+          />
+        </q-toolbar>
+        <q-separator color="secondary" />
+
+        <q-card-section class="q-pt-none">
+          <q-select
+            v-model.trim="data.user_id"
+            class="text-white"
+            color="white"
+            label-color="white"
+            style="min-width: 200px;max-width: 200px"
+            :options="useroptions"
+            label="选择模型"
+            emit-value
+            map-options
+          />
+        </q-card-section>
+        <q-separator color="info" />
+        <q-card-actions align="right" class="text-primary bg-white ">
+          <q-btn flat class="text-weight-bold" label="开始检测" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p3s1.proj_data') }}
+      <q-banner
+        v-if="currentrowdataid"
+        dense
+        rounded
+        class="text-h6 bg-textinfo"
+      >
+        <q-icon name="warning" color="negative" siae="10px" />
+        ID【<font class="text-warning">{{ currentrowdataid }}</font>
+        】 待保存文件：
+        <font class="text-warning">{{ files }}</font>
+      </q-banner>
     </div>
     <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -105,6 +242,14 @@
         color="info"
       />
       <q-btn
+        color="treebtn"
+        text-color="white"
+        class="q-ma-xs"
+        icon="image_search"
+        label="检测"
+        @click="Detectiondata()"
+      />
+      <q-btn
         color="expbtn"
         text-color="white"
         class="q-ma-xs"
@@ -112,7 +257,7 @@
         :label="this.$t('buttons.export')"
         @click="ExportDataAsCVS()"
       />
-      <q-space />
+      <q-space v-if="$q.screen.gt.xs" />
       <q-input
         v-model="quickFilter"
         dense
@@ -156,6 +301,7 @@
 <script>
 import { AgGridVue } from 'ag-grid-vue'
 import agAttachmentCellRander from '../../frameworkComponents/agAttachmentCellRander'
+import { required } from 'vuelidate/lib/validators'
 export default {
   name: 'P3s1proj_data',
   components: {
@@ -165,7 +311,10 @@ export default {
     return {
       DaddFiles: false,
       files: [],
+      currentrowdataid: null,
       fileupdone: false,
+      DaddProjdata: false,
+      opDetectionwindow: false,
       quickFilter: null,
       gridOptions: null,
       gridApi: null,
@@ -174,7 +323,14 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
-      defaultColDef: null
+      defaultColDef: null,
+      data: {
+        title: '',
+        user_id: '',
+        created_date: '',
+        files: [],
+        content: ''
+      }
     }
   },
   created() {
@@ -393,8 +549,7 @@ export default {
       this.changerowcolor = ''
     },
     addItems() {
-      var newItems = [{}]
-      this.gridApi.updateRowData({ add: newItems })
+      this.DaddProjdata = true
     },
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
@@ -449,6 +604,40 @@ export default {
             .catch(e => {})
         }
       })
+    },
+    aDDNewProjdata() {
+      // 文件上传
+      // console.log(this.data)
+      // var formData = new FormData()
+      // for (const key in this.data) {
+      //   formData.append(key, this.data[key])
+      // }
+      // formData.append('files[]', this.$refs.fileuper.files)
+      // // 文件结束
+
+      this.$router.app.$http.post('/article/', this.data).then(res => {
+        console.log(res)
+        if (res.data.success) {
+          this.gridApi.updateRowData({
+            add: [res.data.data]
+          })
+          this.$zglobal.showMessage(
+            'positive',
+            'center',
+            this.$t('operation.addsuccess')
+          )
+        } else {
+          this.$zglobal.showMessage(
+            'red-7',
+            'center',
+            this.$t('auth.errors.adderror')
+          )
+        }
+      })
+      this.DaddArticle = false
+    },
+    Detectiondata() {
+      this.opDetectionwindow = true
     },
     // 文件上传
     checkFileSize(files) {
@@ -505,6 +694,16 @@ export default {
     addfile(rowdata) {
       this.currentrowdataid = rowdata.data.id
       this.uploadFile()
+    }
+  },
+  validations: {
+    data: {
+      title: {
+        required
+      },
+      createddate: {
+        required
+      }
     }
   }
 }

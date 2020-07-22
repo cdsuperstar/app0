@@ -72,6 +72,17 @@
     </q-dialog>
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p3s1.dev_paramname') }}
+      <q-banner
+        v-if="currentrowdataid"
+        dense
+        rounded
+        class="text-h6 bg-textinfo"
+      >
+        <q-icon name="warning" color="negative" siae="10px" />
+        ID【<font class="text-warning">{{ currentrowdataid }}</font>
+        】 待保存文件：
+        <font class="text-warning">{{ files }}</font>
+      </q-banner>
     </div>
     <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px">
@@ -166,6 +177,7 @@ export default {
     return {
       DaddFiles: false,
       files: [],
+      currentrowdataid: null,
       fileupdone: false,
       quickFilter: null,
       gridOptions: null,
