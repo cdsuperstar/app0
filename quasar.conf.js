@@ -177,7 +177,10 @@ module.exports = function(ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: '0app'
+        appId: 'app2',
+        productName: 'pm3tdp',
+        productDescription: '交通工程结构和病害智能分析平台',
+        copyright: 'Copyright © 2020 成都概率统计科技有限公司'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration

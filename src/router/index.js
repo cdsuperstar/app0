@@ -25,11 +25,15 @@ export default function({ store } /* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
   })
 
-  Vue.axios.defaults.baseURL = process.env.BASE_URL
+  Vue.axios.defaults.baseURL = 'http://0apps.test:80/api/v1'
   if (process.env.DEV) {
-    console.log('baseurl:', process.env.BASE_URL)
-    console.log('client id:', process.env.CLIENT_ID)
-    console.log('client secret:', process.env.CLIENT_SECRET)
+    console.log('baseurl:', 'http://0apps.test:80/api/v1')
+    console.log('client id:', 2)
+    console.log('client secret:', 'CC23yZADi2VKPt9ADsO5VqfjjEJ8T1fx6cAoKP7h')
+  }
+
+  if (process.env.PROD) {
+    Vue.axios.defaults.baseURL = 'http://202.115.137.211/api/v1'
   }
 
   Vue.router = Router
@@ -38,7 +42,7 @@ export default function({ store } /* { store, ssrContext } */) {
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
     router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
     rolesVar: 'role',
-    tokenStore: ['localStorage', 'cookie'],
+    tokenStore: ['localStorage'],
     tokenDefaultName: '0apps_token',
     // authRedirect: { path: '/user' },
     // forbiddenRedirect: { path: '/403' },

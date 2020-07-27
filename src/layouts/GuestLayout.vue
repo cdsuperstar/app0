@@ -2,13 +2,17 @@
   <q-layout view="lHh lpR fFf">
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
-        <q-toolbar-title class="row">
+        <q-toolbar-title
+          class="row"
+          style="-webkit-app-region: drag;-webkit-user-select: none;"
+        >
           <q-avatar>
             <img src="../statics/app-logo.jpg" />
           </q-avatar>
           <div style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
+          <q-space />
         </q-toolbar-title>
         <q-btn-dropdown
           stretch
@@ -41,6 +45,31 @@
             </q-item>
           </q-list>
         </q-btn-dropdown>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <q-btn dense flat round icon="remove" @click="setwindow('min')">
+          <q-tooltip content-class="bg-white text-primary">{{
+            $t('p3s1.minwindow')
+          }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          dense
+          flat
+          round
+          :icon="maxflg ? 'flip_to_front' : 'crop_square'"
+          @click="setwindow('max')"
+        >
+          <q-tooltip v-if="maxflg" content-class="bg-white text-primary">{{
+            $t('p3s1.resizewindow')
+          }}</q-tooltip>
+          <q-tooltip v-if="!maxflg" content-class="bg-white text-primary">{{
+            $t('p3s1.maxwindow')
+          }}</q-tooltip>
+        </q-btn>
+        <q-btn dense flat round icon="close" @click="setwindow('close')">
+          <q-tooltip content-class="bg-white text-primary">{{
+            $t('p3s1.closewindow')
+          }}</q-tooltip>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -65,6 +94,7 @@
 export default {
   data() {
     return {
+      maxflg: false,
       langs: [
         {
           label: '中文',
@@ -91,6 +121,28 @@ export default {
     this.lang = this.langs.filter(lan => lan.value === this.lang)[0]
   },
   methods: {
+    // 窗口
+    setwindow(val) {
+      switch (val) {
+        case 'min':
+          this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize()
+          break
+        case 'max':
+          if (this.maxflg) {
+            this.$q.electron.remote.BrowserWindow.getFocusedWindow().unmaximize()
+            this.maxflg = false
+          } else {
+            this.$q.electron.remote.BrowserWindow.getFocusedWindow().maximize()
+            this.maxflg = true
+          }
+          break
+        case 'close':
+          this.$q.electron.remote.BrowserWindow.getFocusedWindow().close()
+          break
+        default:
+          break
+      }
+    },
     setlanguage(lang) {
       this.lang = lang
     }

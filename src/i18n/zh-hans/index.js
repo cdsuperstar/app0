@@ -2,6 +2,10 @@
 // so you can safely delete all default props below
 export default {
   p3s1: {
+    maxwindow: '最大化',
+    resizewindow: '还原',
+    minwindow: '最小化',
+    closewindow: '关闭',
     dev_paramname: '设备参数',
     com_info: '公司信息',
     com_proj: '项目列表',

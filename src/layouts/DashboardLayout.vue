@@ -1,18 +1,21 @@
 <template>
-  <q-layout view="hhh LpR fFf">
+  <q-layout view="hHh LpR fff">
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="left = !left" />
 
-        <q-toolbar-title class="row">
+        <q-toolbar-title
+          class="row"
+          style="-webkit-app-region: drag;-webkit-user-select: none;"
+        >
           <q-avatar>
             <img src="../statics/app-logo.jpg" />
           </q-avatar>
           <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
             &nbsp;&nbsp;{{ $t('system.name') }}
           </div>
+          <q-space />
         </q-toolbar-title>
-        <q-space />
         <q-btn
           flat
           round
@@ -105,6 +108,31 @@
           icon="more_vert"
           @click="right = !right"
         />
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <q-btn dense flat round icon="remove" @click="setwindow('min')">
+          <q-tooltip content-class="bg-white text-info">{{
+            $t('p3s1.minwindow')
+          }}</q-tooltip>
+        </q-btn>
+        <q-btn
+          dense
+          flat
+          round
+          :icon="maxflg ? 'flip_to_front' : 'crop_square'"
+          @click="setwindow('max')"
+        >
+          <q-tooltip v-if="maxflg" content-class="bg-white text-info">{{
+            $t('p3s1.resizewindow')
+          }}</q-tooltip>
+          <q-tooltip v-if="!maxflg" content-class="bg-white text-info">{{
+            $t('p3s1.maxwindow')
+          }}</q-tooltip>
+        </q-btn>
+        <q-btn dense flat round icon="close" @click="setwindow('close')">
+          <q-tooltip content-class="bg-white text-info">{{
+            $t('p3s1.closewindow')
+          }}</q-tooltip>
+        </q-btn>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -322,6 +350,7 @@ export default {
   components: { treemenu, NestedTest },
   data() {
     return {
+      maxflg: false,
       routearr: [],
       MyRoleList: null,
       usercfg: { theme: 'blue', dark: false },
@@ -424,6 +453,28 @@ export default {
     ...mapActions('zero', ['getMyPermissions']),
     setlanguage(lang) {
       this.lang = lang
+    },
+    // 窗口
+    setwindow(val) {
+      switch (val) {
+        case 'min':
+          this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize()
+          break
+        case 'max':
+          if (this.maxflg) {
+            this.$q.electron.remote.BrowserWindow.getFocusedWindow().unmaximize()
+            this.maxflg = false
+          } else {
+            this.$q.electron.remote.BrowserWindow.getFocusedWindow().maximize()
+            this.maxflg = true
+          }
+          break
+        case 'close':
+          this.$q.electron.remote.BrowserWindow.getFocusedWindow().close()
+          break
+        default:
+          break
+      }
     },
     // 设置主题
     setthemecolor(color) {
