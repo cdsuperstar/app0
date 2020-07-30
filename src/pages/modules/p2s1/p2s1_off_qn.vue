@@ -15,15 +15,12 @@
           <p>亲爱的朋友:</p>
           <p style="text-indent: 2em;">
             您好！受云南省扶贫办委托，我们组织开展对云南省相对贫困问题进行调查，非常感谢您的配合。本调查仅仅作为政策咨询建议之用，您所填报的信息完全保密，请根据您及您的家庭真实情况选择和填报，再次感谢您的大力支持和配合！
-            <a class="text-weight-bold text-overline text-deep-orange">{{
-              username
-            }}</a>
           </p>
         </font>
       </q-card-section>
     </q-card>
 
-    <div class="q-ma-sm row items-start q-gutter-md">
+    <div v-if="positionsign" class="q-ma-sm row items-start q-gutter-md">
       <q-icon name="map" class="text-warning" size="sm" />
       <q-input
         v-model="vote.longitude"
@@ -102,7 +99,7 @@
             use-input
             use-chips
             new-value-mode="add-unique"
-            style="max-width: 12em;"
+            style="min-width: 8em;"
             behavior="menu"
             :options="[
               '彝族',
@@ -1626,7 +1623,7 @@
             use-input
             use-chips
             new-value-mode="add-unique"
-            style="min-width: 12em;"
+            style="min-width: 18em;"
             behavior="menu"
             :options="[
               '体育活动（广场舞、羽毛球、乒乓球、篮球等）',
@@ -1740,6 +1737,7 @@ export default {
   data() {
     return {
       saving: false,
+      positionsign: false,
       username: null,
       netstate: null,
       placeholders: {
@@ -1758,7 +1756,10 @@ export default {
   watch: {},
   created() {},
   mounted() {
-    this.getPosition()
+    if (process.env.MODE === 'cordova') {
+      this.getPosition()
+      this.positionsign = true
+    }
     this.checkConnection()
     this.username = this.$q.localStorage.getItem('username')
   },

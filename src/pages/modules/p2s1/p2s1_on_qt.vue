@@ -11,43 +11,14 @@
           : 'q-my-sm q-gutter-md'
       "
     >
-      <q-select
-        v-model="vote.province"
-        dense
-        standout="bg-secondary text-white"
-        label="省"
-        style="min-width: 10em;"
-        emit-value
-        :options="addressoptions"
-      />
-      <q-select
-        v-model="vote.city"
-        dense
-        standout="bg-secondary text-white"
-        label="市"
-        style="min-width: 10em;"
-        emit-value
-        :options="cityArray"
-      />
-      <q-select
-        v-model="vote.county"
-        dense
-        standout="bg-secondary text-white"
-        label="区（县）"
-        emit-value
-        style="min-width: 10em;"
-        :options="countyArray"
-      />
-      <q-select
-        v-model="vote.town"
-        dense
-        clearable
-        standout="bg-secondary text-white"
-        label="镇（乡）"
-        emit-value
-        style="min-width: 10em;"
-        :options="townArray"
-      />
+      <v-distpicker
+        :province="vote.province"
+        :city="vote.city"
+        :area="vote.county"
+        :placeholders="placeholders"
+        province-disabled
+        @selected="AreaonSelected"
+      ></v-distpicker>
       <q-select
         v-model="vote.qtype"
         clearable
@@ -56,13 +27,7 @@
         label="问卷类型"
         emit-value
         style="min-width: 10em"
-        :options="[
-          '建档立卡户问卷',
-          '非建档立卡户问卷',
-          '县领导问卷',
-          '县人大问卷',
-          '县级行业部门问卷'
-        ]"
+        :options="['相对贫困调查问卷', '其他问卷']"
       />
       <q-btn
         color="warning"
@@ -115,108 +80,26 @@
 </template>
 
 <script>
+import VDistpicker from 'v-distpicker'
+
 export default {
   name: 'P2s1OnQt',
+  components: { VDistpicker },
   data() {
     return {
-      vote: {
-        province: '四川省',
-        city: '成都市',
-        county: '成华区'
-      },
+      vote: { province: '云南省', qtype: '相对贫困调查问卷' },
       rowData: null,
       result: [],
       earaArray: [],
-      tmp: [
-        {
-          id: 9,
-          investigator: 1,
-          no: 'D20200713T214218',
-          qtype: '建档立卡户问卷',
-          province: '四川省',
-          city: '成都市',
-          county: '成华区',
-          town: '八里庄',
-          village: 'XX村44',
-          group: 'XX组',
-          longitude: null,
-          latitude: null,
-          q_files: '问卷附件',
-          qsource: '扫码问卷',
-          files: '""',
-          isUpload: true,
-          reviewer: 22222,
-          re_comments: '问卷一切正常',
-          re_conclusion: '审核通过',
-          auditor: 333333,
-          au_comments: '该户排查过程中……',
-          au_conclusion: '正常',
-          au_files: '排查附件',
-          villagetype: '农区',
-          investigator1: '调查员姓名1',
-          investigatortel1: '138 - 8888 8888',
-          investigator2: '调查员姓名2',
-          investigatortel2: '139 - 9999 9999',
-          a1name: '被访问姓名',
-          a1relation: null,
-          a1tel: '1300000000000000',
-          a2: '小学及以下',
-          b1: '户主1',
-          b2: '女',
-          b3: '土家族',
-          b4: '小学及以下',
-          b5: '222222 22222222 2222 2',
-          c1: '7',
-          c14: '2015',
-          c17: '3600',
-          c19: '2019',
-          created_at: '2020-07-13 13:42:18',
-          updated_at: '2020-07-13 13:42:18'
-        }
-      ],
-      addressoptions: this.$t('p2s1.addressArray'),
-      cityArray: [],
-      countyArray: [],
-      townArray: []
+      placeholders: {
+        province: '------- 省 --------',
+        city: '------- 市 -------',
+        area: '------- 区 -------'
+      }
     }
   },
   computed: {},
-  watch: {
-    // 获得列表
-    'vote.province'(val, oldval) {
-      for (var i in this.addressoptions) {
-        if (this.addressoptions[i].value === this.vote.province) {
-          this.cityArray = this.addressoptions[i].city
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.city = ''
-      }
-    },
-    'vote.city'(val, oldval) {
-      for (var j in this.cityArray) {
-        if (this.cityArray[j].value === this.vote.city) {
-          this.countyArray = this.cityArray[j].county
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.county = ''
-      }
-    },
-    'vote.county'(val, oldval) {
-      for (var k in this.countyArray) {
-        if (this.countyArray[k].value === this.vote.county) {
-          this.townArray = this.countyArray[k].town
-          break
-        }
-      }
-      if (oldval !== val) {
-        this.vote.town = ''
-      }
-    }
-  },
+  watch: {},
   created() {
     this.$router.app.$http
       .get('/p2/s1/p2s1questionnaire1/')
@@ -235,33 +118,15 @@ export default {
       this.vote.county
     )
   },
-  mounted() {
-    if (this.vote.province) {
-      for (var i in this.addressoptions) {
-        if (this.addressoptions[i].value === this.vote.province) {
-          this.cityArray = this.addressoptions[i].city
-          break
-        }
-      }
-    }
-    if (this.vote.city) {
-      for (var j in this.cityArray) {
-        if (this.cityArray[j].value === this.vote.city) {
-          this.countyArray = this.cityArray[j].county
-          break
-        }
-      }
-    }
-    if (this.vote.county) {
-      for (var k in this.countyArray) {
-        if (this.countyArray[k].value === this.vote.county) {
-          this.townArray = this.countyArray[k].town
-          break
-        }
-      }
-    }
-  },
+  mounted() {},
   methods: {
+    AreaonSelected(data) {
+      // console.log(data, '===========')
+      this.vote.province = data.province.value
+      this.vote.city = data.city.value
+      this.vote.county = data.area.value
+      // console.log(JSON.stringify(this.vote), '===========')
+    },
     searchItems() {
       this.result = this.filterData(this.rowData, this.vote)
       const tmpa = this.Jsonduplicate(
