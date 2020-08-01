@@ -34,6 +34,17 @@ const routes = [
     ]
   },
   {
+    path: '/p2s1offquestionnaire',
+    meta: { auth: false },
+    component: () => import('layouts/MyLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/modules/p2s1/p2s1_off_qn.vue')
+      }
+    ]
+  },
+  {
     path: '/p2s1questionnaire',
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),

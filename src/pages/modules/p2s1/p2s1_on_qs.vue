@@ -1035,7 +1035,7 @@
                 D3. 您所在地区（村/乡/镇）地质灾害主要有哪些？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d2"
+                v-model="vote.d3"
                 dense
                 multiple
                 use-input
@@ -1993,8 +1993,8 @@ export default {
           headerName: this.$t('p2s1.no'),
           field: 'no',
           width: 110,
-          minWidth: 110,
-          maxWidth: 170,
+          minWidth: 170,
+          maxWidth: 260,
           sortable: true,
           filter: true
         },
@@ -2008,17 +2008,17 @@ export default {
           filter: true
         },
         {
-          headerName: this.$t('p2s1.created_at'),
-          field: 'created_at',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 180,
+          headerName: this.$t('p2s1.qsource'),
+          field: 'qsource',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
           sortable: true,
           filter: true
         },
         {
-          headerName: this.$t('p2s1.conclusion'),
-          field: 'c19',
+          headerName: this.$t('p2s1.created_at'),
+          field: 'created_at',
           width: 120,
           minWidth: 120,
           maxWidth: 180,
@@ -2049,15 +2049,6 @@ export default {
           width: 120,
           minWidth: 120,
           maxWidth: 260,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.created_at'),
-          field: 'a3',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 180,
           sortable: true,
           filter: true
         },

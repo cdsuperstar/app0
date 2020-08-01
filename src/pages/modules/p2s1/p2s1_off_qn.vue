@@ -1004,7 +1004,7 @@
             D3. 您所在地区（村/乡/镇）地质灾害主要有哪些？（多选）【可输入】
           </div>
           <q-select
-            v-model="vote.d2"
+            v-model="vote.d3"
             dense
             multiple
             use-input
@@ -1734,12 +1734,14 @@ import VDistpicker from 'v-distpicker'
 export default {
   name: 'P2s1questionnaire',
   components: { VDistpicker },
+  // http://0apps.test:8080/#/p2s1questionnaire?qsource=code
   data() {
     return {
       saving: false,
       positionsign: false,
       username: null,
       netstate: null,
+      qsource: null,
       placeholders: {
         province: '------- 省 --------',
         city: '------- 市 -------',
@@ -1762,6 +1764,8 @@ export default {
     }
     this.checkConnection()
     this.username = this.$q.localStorage.getItem('username')
+    this.qsource = this.$route.query.qsource
+    // console.log(this.qsource, '+++++++')
   },
 
   methods: {
@@ -1770,6 +1774,7 @@ export default {
       this.vote.province = data.province.value
       this.vote.city = data.city.value
       this.vote.county = data.area.value
+      this.vote.areacode = data.area.code
       // console.log(JSON.stringify(this.vote), '===========')
     },
     checkFileSize(files) {
@@ -1846,6 +1851,7 @@ export default {
         seconds = '0' + seconds
       }
       var currentdate =
+        this.vote.areacode +
         seperator1 +
         date.getFullYear() +
         month +
@@ -1856,21 +1862,53 @@ export default {
         seconds
       this.vote.no = currentdate
       // 问卷编号结束
+      // 预置数据
       this.vote.qtype = '相对贫困调查问卷'
-      this.vote.qsource = '扫码问卷'
-      this.vote.isUpload = true
-      this.vote.reviewer = '22222'
-      this.vote.re_comments = '问卷一切正常'
-      this.vote.re_conclusion = '审核通过'
-      this.vote.auditor = '333333'
-      this.vote.au_comments = '该户排查过程中……'
-      this.vote.au_conclusion = '排查结论'
-      if (process.env.MODE === 'cordova' && this.netstate === '无网络连接') {
-        alert('当前【无网络连接】，将采用离线方式保存问卷！')
-        this.writeToFile('/AIApp/Votedata.json', this.vote)
+      // 文件来源
+      if (this.$auth.check()) {
+        if (process.env.MODE === 'cordova') this.vote.qsource = '移动端在线问卷'
+        else this.vote.qsource = '浏览器在线问卷'
       } else {
+        if (process.env.MODE === 'cordova') {
+          this.vote.qsource = '移动端离线问卷'
+        } else {
+          if (this.qsource === 'code') {
+            this.vote.qsource = '扫码离线问卷'
+          } else {
+            this.vote.qsource = '浏览器离线问卷'
+          }
+        }
+      }
+      // 是否在线
+      if (this.$auth.check()) {
+        console.log('ON-----')
+        if (process.env.MODE === 'cordova' && this.netstate === '无网络连接') {
+          alert('当前【无网络连接】，将采用离线方式保存问卷！')
+          this.writeToFile('/AIApp/Votedata.json', this.vote)
+        } else {
+          this.$router.app.$http
+            .post('/p2/s1/p2s1questionnaire1', this.vote)
+            .then(res => {
+              // console.log(res, '+++++++')
+              if (res.data.success) {
+                this.$zglobal.showMessage(
+                  'positive',
+                  'center',
+                  this.$t('p2s1.savesuccess')
+                )
+              } else {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('p2s1.savefailed')
+                )
+              }
+            })
+        }
+      } else {
+        console.log('OFF-----')
         this.$router.app.$http
-          .post('/p2/s1/p2s1questionnaire1', this.vote)
+          .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
           .then(res => {
             // console.log(res, '+++++++')
             if (res.data.success) {
@@ -1888,10 +1926,11 @@ export default {
             }
           })
       }
+
       setTimeout(() => {
         this.saving = false
-        console.log('数据：' + JSON.stringify(this.vote))
-      }, 2000)
+        // console.log('数据：' + JSON.stringify(this.vote))
+      }, 5000)
     },
     /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容
