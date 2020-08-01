@@ -38,7 +38,8 @@ export default {
       gridApi: null,
       columnApi: null,
       columnDefs: null,
-      rowData: null
+      rowData: null,
+      BottomRows: null
     }
   },
   computed: {},
@@ -48,14 +49,36 @@ export default {
       .get('/p2/s1/p2s1questionnaire1/onqt')
       .then(res => {
         if (res.data.success) {
-          console.log(res.data.data)
+          // console.log(res.data.data)
           this.rowData = res.data.data
+          // 去重统计
+          var countyArr = this.FilterByName(this.rowData, 'county')
+          // 去重统计
+          var townArr = this.FilterByName(this.rowData, 'town')
+          // 去重统计
+          var villageArr = this.FilterByName(this.rowData, 'village')
+          // 去重统计
+          var qsourceArr = this.FilterByName(this.rowData, 'qsource')
+          // 相加
+          var pvCount = 0
+          for (var i = 0; i < this.rowData.length; i++) {
+            pvCount = pvCount + this.rowData[i].cnt
+          }
+          this.BottomRows = [
+            {
+              city: '统计',
+              county: '共' + countyArr.length + '个县',
+              town: '共' + townArr.length + '个乡（镇）',
+              village: '共' + villageArr.length + '个村',
+              qsource: '共' + qsourceArr.length + '种类型',
+              cnt: '合计：' + pvCount
+            }
+          ]
+          this.count()
         } else {
         }
       })
       .catch(e => {})
-    // 得到Array的值
-    console.log(this.rowData, '----------')
   },
   beforeMount() {
     this.initGrid()
@@ -64,14 +87,27 @@ export default {
   methods: {
     initGrid() {
       this.gridOptions = {
-        allowShowChangeAfterFilter: true
+        rowHeight: 32,
+        headerHeight: 32,
+        allowShowChangeAfterFilter: true,
+        getRowStyle: function(params) {
+          // ********************置顶行样式设置*********************/
+          if (params.node.rowPinned) {
+            return { 'font-weight': 'bold', color: 'red' }
+          }
+        }
       }
       this.columnDefs = [
         {
           editable: false,
           headerName: '序',
           cellRenderer: function(params) {
-            return parseInt(params.node.id) + 1
+            // console.log(params, '++++++++++++++++++')
+            if (params.node.id === 'b-0') {
+              return ''
+            } else {
+              return parseInt(params.node.id) + 1
+            }
           },
           cellStyle: {
             // 设置本栏的CSS样式
@@ -140,11 +176,36 @@ export default {
       ]
       this.defaultColDef = {
         editable: false,
-        resizable: true
+        resizable: true,
+        enableRowGroup: true,
+        enablePivot: true,
+        enableValue: true,
+        sortable: true
       }
     },
     onGridReady(params) {
       params.api.sizeColumnsToFit()
+    },
+    count() {
+      this.gridOptions.api.setPinnedBottomRowData(this.BottomRows)
+    },
+    FilterByName(data, Name) {
+      // data是json对象，Name是根据什么字段去重
+      var dest = []
+      for (var i = 0; i < data.length; i++) {
+        var ai = data[i]
+        if (i === 0) {
+          dest.push(ai)
+        } else {
+          var filterData = dest.filter(function(e) {
+            return e[Name] === ai[Name]
+          })
+          if (filterData.length === 0) {
+            dest.push(ai)
+          }
+        }
+      }
+      return dest
     }
   }
 }
@@ -155,9 +216,11 @@ export default {
 .P2s1onqt-agGrid .ag-header {
   background-color: var(--q-color-secondary);
   color: #ffffff;
+  font-size: 13px;
 }
 .P2s1onqt-agGrid .ag-cell {
   padding-left: 1px;
+  font-size: 14px;
 }
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {

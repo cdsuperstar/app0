@@ -1802,6 +1802,8 @@ export default {
   methods: {
     initGrid() {
       this.gridOptions = {
+        rowHeight: 32,
+        headerHeight: 32,
         allowShowChangeAfterFilter: true
       }
       this.columnDefs = [
@@ -2164,9 +2166,11 @@ export default {
 .User-agGrid .ag-header {
   background-color: var(--q-color-secondary);
   color: #ffffff;
+  font-size: 13px;
 }
 .User-agGrid .ag-cell {
   padding-left: 1px;
+  font-size: 13px;
 }
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {

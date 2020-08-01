@@ -1973,6 +1973,8 @@ export default {
   methods: {
     initGrid() {
       this.gridOptions = {
+        rowHeight: 32,
+        headerHeight: 32,
         allowShowChangeAfterFilter: true
       }
       this.frameworkComponents = {
@@ -1993,7 +1995,7 @@ export default {
           headerName: this.$t('p2s1.no'),
           field: 'no',
           width: 110,
-          minWidth: 170,
+          minWidth: 180,
           maxWidth: 260,
           sortable: true,
           filter: true
@@ -2002,7 +2004,7 @@ export default {
           headerName: this.$t('p2s1.qpname'),
           field: 'qtype',
           width: 110,
-          minWidth: 110,
+          minWidth: 130,
           maxWidth: 170,
           sortable: true,
           filter: true
@@ -2339,9 +2341,11 @@ export default {
 .p2sonqs-agGrid .ag-header {
   background-color: var(--q-color-secondary);
   color: #ffffff;
+  font-size: 13px;
 }
 .p2sonqs-agGrid .ag-cell {
   padding-left: 1px;
+  font-size: 13px;
 }
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
