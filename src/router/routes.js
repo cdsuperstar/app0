@@ -34,6 +34,18 @@ const routes = [
     meta: { auth: false },
     component: () => import('layouts/GuestLayout.vue'),
     children: [{ path: '', component: () => import('pages/About.vue') }]
+  },
+  {
+    path: '/user',
+    meta: { auth: true },
+    component: () => import('layouts/GuestLayout.vue'),
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('pages/Error404.vue')
+      }
+    ]
   }
 ]
 // Always leave this as last one
