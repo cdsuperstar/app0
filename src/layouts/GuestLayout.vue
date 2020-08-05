@@ -73,13 +73,11 @@
       v-model="left"
       v-touch-swipe.mouse.left="handleleftSwipe"
       overlay
-      show-if-above
-      side="left"
       behavior="desktop"
       :width="leftdrawer"
     >
       <!-- drawer content -->
-      <div class="row absolute-top bg-brown-2" style="height: 60px;">
+      <div class="row absolute-top search-img" style="height: 60px;">
         <q-input
           v-model="searchcontenet"
           dark
@@ -233,6 +231,10 @@ export default {
 }
 .background-img {
   background: url(../statics/webimages/footer.jpg) no-repeat;
+  background-size: cover;
+}
+.search-img {
+  background: url(../statics/webimages/search.jpg) no-repeat;
   background-size: cover;
 }
 </style>
