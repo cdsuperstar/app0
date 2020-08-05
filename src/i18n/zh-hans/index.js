@@ -9,7 +9,7 @@ export default {
     product: '技术产品',
     service: '技术服务',
     case: '案例',
-    about: '关于我们'
+    about: '联系我们'
   },
   p1s1techfile: {
     header: '技术文件',

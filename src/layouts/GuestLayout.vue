@@ -1,17 +1,24 @@
 <template>
-  <q-layout view="hHh lpR lFf">
-    <q-header reveal class="bg-grey-7">
+  <q-layout view="hHh lpR lff">
+    <q-header reveal class="bg-blue-7">
       <q-toolbar style="height: 60px;">
-        <q-btn flat round dense icon="menu" @click="left = !left" />
-        <q-toolbar-title class="row col-5">
+        <!--        <q-btn flat round dense icon="menu" @click="left = !left" />-->
+        <q-toolbar-title class="row col-6">
           <q-img
-            src="../statics/app-logo1.png"
+            src="../statics/app-logo.jpg"
             spinner-color="white"
             style="height: 38px; max-width: 38px"
+            class="cursor-pointer"
+            @click="left = !left"
+          />&nbsp;
+          <img
+            v-if="$q.screen.gt.xs"
+            src="../statics/webimages/cpname.png"
+            style="height:30px;max-width: 550px;margin-top: 5px;"
           />
-          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
-            &nbsp;&nbsp;<font face="黑体">{{ $t('webtxt.companyname') }}</font>
-          </div>
+          <!--          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">-->
+          <!--            &nbsp;&nbsp;<font face="黑体">{{ $t('webtxt.companyname') }}</font>-->
+          <!--          </div>-->
         </q-toolbar-title>
         <q-space />
         <q-btn
@@ -20,14 +27,6 @@
           stretch
           flat
           to="/"
-          :label="$t('webtxt.index')"
-        />
-        <q-btn
-          v-if="$q.screen.gt.xs"
-          v-ripple
-          stretch
-          flat
-          to="/profile"
           :label="$t('webtxt.profile')"
         />
         <q-btn
@@ -80,7 +79,7 @@
       :width="leftdrawer"
     >
       <!-- drawer content -->
-      <div class="row absolute-top bg-green-5" style="height: 60px;">
+      <div class="row absolute-top bg-brown-2" style="height: 60px;">
         <q-input
           v-model="searchcontenet"
           dark
@@ -100,42 +99,35 @@
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="home" />
             </q-item-section>
-            <q-item-section>首页</q-item-section>
-          </q-item>
-          <q-separator />
-          <q-item v-ripple clickable to="/profile">
-            <q-item-section avatar class="text-weight-bold">
-              <q-icon name="assignment" />
-            </q-item-section>
-            <q-item-section>公司简介</q-item-section>
+            <q-item-section>{{ $t('webtxt.profile') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/product">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dns" />
             </q-item-section>
-            <q-item-section>技术产品</q-item-section>
+            <q-item-section>{{ $t('webtxt.product') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/service">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="card_travel" />
             </q-item-section>
-            <q-item-section>技术服务</q-item-section>
+            <q-item-section>{{ $t('webtxt.service') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/case">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dashboard" />
             </q-item-section>
-            <q-item-section>案例</q-item-section>
+            <q-item-section>{{ $t('webtxt.case') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/about">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="share" />
             </q-item-section>
-            <q-item-section>关于我们</q-item-section>
+            <q-item-section>{{ $t('webtxt.about') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable @click="handleleftSwipe">
@@ -151,11 +143,11 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer class="bg-grey-1 text-black">
+    <q-footer class="background-img text-white">
       <q-list class="col-6">
         <q-item>
           <q-item-section>
-            <div class="row text-grey-7" style="margin-left:5%; ">
+            <div class="row" style="margin-left:5%; ">
               <font size="4">关注我们</font>
               &nbsp;&nbsp;&nbsp;&nbsp;
               <a href="#">
@@ -181,7 +173,7 @@
         <q-item
           style="border-top: 1px solid rgba(229,229,229,0.75);width:90%;margin-left:5%; "
         >
-          <q-item-section class="text-grey-7 text-center">
+          <q-item-section class="text-center">
             Copyright © 2020 - 2050 All Rights Reserved.
             成都概率矩阵科技有限公司 版权所有
           </q-item-section>
@@ -210,10 +202,11 @@ export default {
       })
     }
   },
-  mounted() {},
+  mounted() {
+    console.log(this.left, '+++++++++++++++++++')
+  },
   methods: {
     setlanguage(lang) {
-      console.log(lang, '----')
       this.lang = lang
     },
     // 左滑关闭菜单列表
@@ -237,5 +230,9 @@ export default {
 }
 .icon-avi:hover {
   -webkit-filter: grayscale(0%);
+}
+.background-img {
+  background: url(../statics/webimages/footer.jpg) no-repeat;
+  background-size: cover;
 }
 </style>

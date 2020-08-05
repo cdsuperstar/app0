@@ -7,8 +7,8 @@
     <q-btn
       color="secondary"
       style="width:200px;"
-      to="/logout"
-      label="Go back"
+      @click="$auth.logout()"
+      label="Logout"
     />
   </div>
 </template>
