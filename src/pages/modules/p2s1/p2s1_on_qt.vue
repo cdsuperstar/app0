@@ -46,39 +46,98 @@ export default {
   watch: {},
   created() {
     this.$router.app.$http
-      .get('/p2/s1/p2s1questionnaire1/onqt')
+      .post('/p2/s1/p2s1questionnaire1/onqt', {
+        cntField: ['province', 'city', 'county', 'town', 'village', 'qsource'],
+        qDate: '',
+        qCnt: 'qsource'
+      })
       .then(res => {
         if (res.data.success) {
           // console.log(res.data.data)
-          this.rowData = res.data.data
-          // 去重统计
-          var countyArr = this.FilterByName(this.rowData, 'county')
-          // 去重统计
-          var townArr = this.FilterByName(this.rowData, 'town')
-          // 去重统计
-          var villageArr = this.FilterByName(this.rowData, 'village')
-          // 去重统计
-          var qsourceArr = this.FilterByName(this.rowData, 'qsource')
-          // 相加
-          var pvCount = 0
-          for (var i = 0; i < this.rowData.length; i++) {
-            pvCount = pvCount + this.rowData[i].cnt
-          }
-          this.BottomRows = [
-            {
-              city: '统计',
-              county: '共' + countyArr.length + '个县',
-              town: '共' + townArr.length + '个乡（镇）',
-              village: '共' + villageArr.length + '个村',
-              qsource: '共' + qsourceArr.length + '种类型',
-              cnt: '合计：' + pvCount
-            }
-          ]
-          this.count()
-        } else {
+          var allcountdata = res.data.data
+          // 当前日期
+          var date = new Date()
+          var month = date.getMonth() + 1
+          var strDate = date.getDate()
+          var currentdate = date.getFullYear() + '-' + month + '-' + strDate
+          // 日期获取结束
+          // 获取当日新增数据
+          this.$router.app.$http
+            .post('/p2/s1/p2s1questionnaire1/onqt/', {
+              cntField: [
+                'province',
+                'city',
+                'county',
+                'town',
+                'village',
+                'qsource'
+              ],
+              qDate: currentdate,
+              qCnt: 'qsource'
+            })
+            .then(res => {
+              // console.log(res)
+              if (res.data.success) {
+                // console.log('aaa', res.data.data, '--------')
+                var currentdata = res.data.data
+                for (const allitem of allcountdata) {
+                  for (const currentitem of currentdata) {
+                    if (
+                      allitem.province === currentitem.province &&
+                      allitem.city === currentitem.city &&
+                      allitem.county === currentitem.county &&
+                      allitem.town === currentitem.town &&
+                      allitem.village === currentitem.village &&
+                      allitem.qsource === currentitem.qsource
+                    ) {
+                      allitem.todaycnt = currentitem.cnt
+                      break
+                    } else {
+                      allitem.todaycnt = 0
+                    }
+                  }
+                }
+                this.rowData = allcountdata
+                // out
+                // console.log(this.rowData, '=================1111111111')
+                // 去重统计
+                var countyArr = this.FilterByName(this.rowData, 'county')
+                // 去重统计
+                var townArr = this.FilterByName(this.rowData, 'town')
+                // 去重统计
+                var villageArr = this.FilterByName(this.rowData, 'village')
+                // 去重统计
+                var qsourceArr = this.FilterByName(this.rowData, 'qsource')
+                // 相加cnt
+                var pvCount = 0
+                for (var i = 0; i < this.rowData.length; i++) {
+                  pvCount = pvCount + this.rowData[i].cnt
+                }
+                // 相加todaycnt
+                var pJCount = 0
+                for (var j = 0; j < this.rowData.length; j++) {
+                  pJCount = pJCount + this.rowData[j].todaycnt
+                }
+                this.BottomRows = [
+                  {
+                    city: '统计',
+                    county: '共' + countyArr.length + '个县',
+                    town: '共' + townArr.length + '个乡（镇）',
+                    village: '共' + villageArr.length + '个村',
+                    qsource: '共' + qsourceArr.length + '种类型',
+                    cnt: '合计：' + pvCount,
+                    todaycnt: '新增：' + pJCount
+                  }
+                ]
+                this.count()
+              } else {
+              }
+            })
+            .catch(e => {})
         }
       })
       .catch(e => {})
+    // end
   },
   beforeMount() {
     this.initGrid()
@@ -167,8 +226,17 @@ export default {
         {
           headerName: '小计',
           field: 'cnt',
-          width: 130,
-          minWidth: 130,
+          width: 100,
+          minWidth: 100,
+          maxWidth: 220,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: '当日新增',
+          field: 'todaycnt',
+          width: 100,
+          minWidth: 100,
           maxWidth: 220,
           sortable: true,
           filter: true

@@ -1,5 +1,6 @@
 <template>
   <q-page class="q-pa-lg row items-start q-gutter-md">
+    <!--    <q-btn @click="test">aaaaa</q-btn>-->
     <q-card flat bordered :class="$q.screen.gt.xs ? 'col-4' : 'col-12'">
       <q-card-section>
         <ve-map :data="MapchartData" :settings="MapchartSettings"></ve-map>
@@ -108,66 +109,206 @@ export default {
   },
   computed: {},
   created() {
-    this.HistogramchartSettings = {
-      axisSite: { right: ['下单率'] },
-      yAxisType: ['KMB', 'percent'],
-      yAxisName: ['数值', '比率']
-    }
-    this.HistogramchartData = {
-      columns: ['日期', '访问用户', '下单用户', '下单率'],
-      rows: [
-        { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
-        { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
-        { 日期: '1/3', 访问用户: 2923, 下单用户: 2623, 下单率: 0.76 },
-        { 日期: '1/4', 访问用户: 1723, 下单用户: 1423, 下单率: 0.49 },
-        { 日期: '1/5', 访问用户: 3792, 下单用户: 3492, 下单率: 0.323 },
-        { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
-      ]
-    }
-    this.PiechartSettings = {
-      title: { show: true, text: '主标题', x: 'center' },
-      dimension: '问卷类型',
-      metrics: '合计'
-    }
-    this.PiechartData = {
-      columns: ['问卷类型', '合计'],
-      rows: [
-        { 问卷类型: '扫码离线问卷', 合计: 1393, 当天新增: 999 },
-        { 问卷类型: '移动设备在线问卷', 合计: 3530, 当天新增: 88 },
-        { 问卷类型: '移动设备离线问卷', 合计: 1723, 当天新增: 99 },
-        { 问卷类型: '网页在线问卷', 合计: 2923, 当天新增: 999 }
-      ]
-    }
-    this.MapchartSettings = {
-      position: 'province/yunnan',
-      mapURLProfix: 'statics/mapjson/',
-      dimension: '位置',
-      metrics: ['总计', '当天新增'],
-      dataType: {
-        总计: 'normal',
-        当天新增: 'normal'
-      }
-    }
-    this.MapchartData = {
-      columns: ['位置', '总计', '当天新增'],
-      rows: [
-        { 位置: '云南省', 总计: 666, 当天新增: 999 },
-        { 位置: '普洱市', 总计: 123, 当天新增: 92134 },
-        { 位置: '临沧市', 总计: 2123, 当天新增: 29234 },
-        {
-          位置: '红河哈尼族彝族自治州',
-          总计: 1243,
-          当天新增: 94234
-        },
-        { 位置: '阆中县', 总计: 1243, 当天新增: 94234 },
-        { 位置: '上海', 总计: 1243, 当天新增: 94234 },
-        { 位置: '浙江', 总计: 5123, 当天新增: 29234 }
-      ]
-    }
+    // 条状图
+    this.$router.app.$http
+      .post('/p2/s1/p2s1questionnaire1/onqt/', {
+        cntField: ['province', 'city', 'county'],
+        qDate: '',
+        qCnt: 'county'
+      })
+      .then(res => {
+        // console.log(res)
+        if (res.data.success) {
+          var allcountdata = res.data.data
+          // 当前日期
+          var date = new Date()
+          var month = date.getMonth() + 1
+          var strDate = date.getDate()
+          var currentdate = date.getFullYear() + '-' + month + '-' + strDate
+          // 日期获取结束
+          // 获取当日新增数据
+          this.$router.app.$http
+            .post('/p2/s1/p2s1questionnaire1/onqt/', {
+              cntField: ['province', 'city', 'county'],
+              qDate: currentdate,
+              qCnt: 'county'
+            })
+            .then(res => {
+              console.log(res)
+              if (res.data.success) {
+                // console.log('aaa', res.data.data, '--------')
+                var currentdata = res.data.data
+                for (const allitem of allcountdata) {
+                  for (const currentitem of currentdata) {
+                    if (
+                      allitem.province === currentitem.province &&
+                      allitem.city === currentitem.city &&
+                      allitem.county === currentitem.county &&
+                      allitem.town === currentitem.town &&
+                      allitem.village === currentitem.village &&
+                      allitem.qsource === currentitem.qsource
+                    ) {
+                      allitem.新增 = currentitem.cnt
+                      allitem.合计 = allitem.cnt
+                      break
+                    } else {
+                      allitem.新增 = 0
+                      allitem.合计 = allitem.cnt
+                    }
+                  }
+                }
+                // out
+                this.HistogramchartSettings = {
+                  axisSite: { right: ['问卷数量'] },
+                  yAxisType: ['KMB', 'normal'],
+                  yAxisName: ['数量', '县'],
+                  dataOrder: { label: '新增', order: 'asc' }
+                }
+                this.HistogramchartData = {
+                  columns: ['county', '合计', '新增'],
+                  rows: allcountdata
+                  // rows: [
+                  //   { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
+                  //   { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
+                  //   { 日期: '1/6', 访问用户: 4593, 下单用户: 4293, 下单率: 0.78 }
+                  // ]
+                }
+              } else {
+              }
+            })
+            .catch(e => {})
+        } else {
+        }
+      })
+      .catch(e => {})
+
+    // 饼图
+    this.$router.app.$http
+      .post('/p2/s1/p2s1questionnaire1/onqt/', {
+        cntField: ['province', 'qsource'],
+        qDate: '',
+        qCnt: 'qsource'
+      })
+      .then(res => {
+        console.log(res)
+        // 饼图
+        this.PiechartSettings = {
+          dimension: 'qsource',
+          metrics: 'cnt'
+        }
+        // this.PiechartData = {
+        //   columns: ['问卷类型', '合计'],
+        //   rows: [
+        //     { 问卷类型: '扫码离线问卷', 合计: 1393, 当天新增: 999 },
+        //     { 问卷类型: '移动设备在线问卷', 合计: 3530, 当天新增: 88 },
+        //     { 问卷类型: '移动设备离线问卷', 合计: 1723, 当天新增: 99 },
+        //     { 问卷类型: '网页在线问卷', 合计: 2923, 当天新增: 999 }
+        //   ]
+        // }
+        if (res.data.success) {
+          this.PiechartData = {
+            columns: ['qsource', 'cnt'],
+            rows: res.data.data
+          }
+        } else {
+        }
+      })
+      .catch(e => {})
+    // 数据
+
+    // 地图
+    this.$router.app.$http
+      .post('/p2/s1/p2s1questionnaire1/onqt/', {
+        cntField: ['province', 'city'],
+        qDate: '',
+        qCnt: 'city'
+      })
+      .then(res => {
+        console.log(res)
+        if (res.data.success) {
+          // console.log('aaa', res.data.data, '--------')
+          var allcountdata = res.data.data
+          // 当前日期
+          var date = new Date()
+          var month = date.getMonth() + 1
+          var strDate = date.getDate()
+          var currentdate = date.getFullYear() + '-' + month + '-' + strDate
+          // 日期获取结束
+          // 获取当日新增数据
+          this.$router.app.$http
+            .post('/p2/s1/p2s1questionnaire1/onqt/', {
+              cntField: ['province', 'city'],
+              qDate: currentdate,
+              qCnt: 'city'
+            })
+            .then(res => {
+              console.log(res)
+              if (res.data.success) {
+                // console.log('aaa', res.data.data, '--------')
+                var currentdata = res.data.data
+                for (const allitem of allcountdata) {
+                  for (const currentitem of currentdata) {
+                    if (
+                      allitem.province === currentitem.province &&
+                      allitem.city === currentitem.city &&
+                      allitem.county === currentitem.county &&
+                      allitem.town === currentitem.town &&
+                      allitem.village === currentitem.village &&
+                      allitem.qsource === currentitem.qsource
+                    ) {
+                      allitem.新增 = currentitem.cnt
+                      allitem.合计 = allitem.cnt
+                      break
+                    } else {
+                      allitem.新增 = 0
+                      allitem.合计 = allitem.cnt
+                    }
+                  }
+                }
+                // end
+                this.MapchartSettings = {
+                  position: 'province/yunnan',
+                  mapURLProfix: 'statics/mapjson/',
+                  dimension: 'city',
+                  metrics: ['合计', '新增']
+                }
+                this.MapchartData = {
+                  columns: ['city', '合计', '新增'],
+                  rows: allcountdata
+                  // rows: [
+                  //   { 位置: '云南省', 总计: 666, 当天新增: 999 },
+                  //   { 位置: '普洱市', 总计: 123, 当天新增: 92134 },
+                  // ]
+                }
+              } else {
+              }
+            })
+            .catch(e => {})
+        } else {
+        }
+      })
+      .catch(e => {})
   },
   mounted() {},
   beforeDestroy() {},
   methods: {
+    test() {
+      this.$router.app.$http
+        .post('/p2/s1/p2s1questionnaire1/onqt/', {
+          cntField: ['province', 'city', 'county'],
+          qDate: '',
+          qCnt: 'county'
+        })
+        .then(res => {
+          console.log(res)
+          if (res.data.success) {
+            console.log('aaa', res.data.data, '--------')
+            // this.rowData = res.data.data
+          } else {
+          }
+        })
+        .catch(e => {})
+    },
     linktoURL(url) {
       location.href = url
     }
