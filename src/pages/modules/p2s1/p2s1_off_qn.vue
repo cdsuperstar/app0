@@ -1879,15 +1879,64 @@ export default {
           }
         }
       }
-      // 是否在线
-      if (this.$auth.check()) {
-        console.log('ON-----')
-        if (process.env.MODE === 'cordova' && this.netstate === '无网络连接') {
-          alert('当前【无网络连接】，将采用离线方式保存问卷！')
-          this.writeToFile('/AIApp/Votedata.json', this.vote)
+      // 检测字段是否完整
+      var requireditem = [
+        'no',
+        'province',
+        'city',
+        'county',
+        'town',
+        'village',
+        'a2',
+        'a3'
+      ]
+      var missitem = []
+      var submitsign = true
+      if (!this.vote.areacode) {
+        this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
+        submitsign = false
+      }
+      for (var item in requireditem) {
+        console.log(requireditem[item], '----------')
+        if (!(requireditem[item] in this.vote)) {
+          missitem.push(requireditem[item])
+          submitsign = false
+        }
+      }
+      if (submitsign) {
+        // 是否在线
+        if (this.$auth.check()) {
+          console.log('ON-----')
+          if (
+            process.env.MODE === 'cordova' &&
+            this.netstate === '无网络连接'
+          ) {
+            alert('当前【无网络连接】，将采用离线方式保存问卷！')
+            this.writeToFile('/AIApp/Votedata.json', this.vote)
+          } else {
+            this.$router.app.$http
+              .post('/p2/s1/p2s1questionnaire1', this.vote)
+              .then(res => {
+                // console.log(res, '+++++++')
+                if (res.data.success) {
+                  this.$zglobal.showMessage(
+                    'positive',
+                    'center',
+                    this.$t('p2s1.savesuccess')
+                  )
+                } else {
+                  this.$zglobal.showMessage(
+                    'red-7',
+                    'center',
+                    this.$t('p2s1.savefailed')
+                  )
+                }
+              })
+          }
         } else {
+          console.log('OFF-----')
           this.$router.app.$http
-            .post('/p2/s1/p2s1questionnaire1', this.vote)
+            .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
             .then(res => {
               // console.log(res, '+++++++')
               if (res.data.success) {
@@ -1905,32 +1954,23 @@ export default {
               }
             })
         }
+        setTimeout(() => {
+          this.saving = false
+          // console.log('数据：' + JSON.stringify(this.vote))
+        }, 5000)
       } else {
-        console.log('OFF-----')
-        this.$router.app.$http
-          .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
-          .then(res => {
-            // console.log(res, '+++++++')
-            if (res.data.success) {
-              this.$zglobal.showMessage(
-                'positive',
-                'center',
-                this.$t('p2s1.savesuccess')
-              )
-            } else {
-              this.$zglobal.showMessage(
-                'red-7',
-                'center',
-                this.$t('p2s1.savefailed')
-              )
-            }
-          })
-      }
+        // console.log(JSON.stringify(missitem), '+++++++++')
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          '保存失败！以下数据项未填写：' + JSON.stringify(missitem)
+        )
 
-      setTimeout(() => {
-        this.saving = false
-        // console.log('数据：' + JSON.stringify(this.vote))
-      }, 5000)
+        setTimeout(() => {
+          this.saving = false
+          // console.log('数据：' + JSON.stringify(this.vote))
+        }, 500)
+      }
     },
     /* 文件读写
      * 打开或创建文件夹,创建文件并写入内容

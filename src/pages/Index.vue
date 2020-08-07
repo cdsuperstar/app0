@@ -119,7 +119,7 @@ export default {
       .then(res => {
         // console.log(res)
         if (res.data.success) {
-          var allcountdata = res.data.data
+          var Histogramallcountdata = res.data.data
           // 当前日期
           var date = new Date()
           var month = date.getMonth() + 1
@@ -134,11 +134,11 @@ export default {
               qCnt: 'county'
             })
             .then(res => {
-              console.log(res)
+              // console.log(res)
               if (res.data.success) {
                 // console.log('aaa', res.data.data, '--------')
                 var currentdata = res.data.data
-                for (const allitem of allcountdata) {
+                for (const allitem of Histogramallcountdata) {
                   for (const currentitem of currentdata) {
                     if (
                       allitem.province === currentitem.province &&
@@ -148,12 +148,10 @@ export default {
                       allitem.village === currentitem.village &&
                       allitem.qsource === currentitem.qsource
                     ) {
-                      allitem.新增 = currentitem.cnt
-                      allitem.合计 = allitem.cnt
+                      allitem.Newtoday = currentitem.cnt
                       break
                     } else {
-                      allitem.新增 = 0
-                      allitem.合计 = allitem.cnt
+                      allitem.Newtoday = 0
                     }
                   }
                 }
@@ -162,11 +160,11 @@ export default {
                   axisSite: { right: ['问卷数量'] },
                   yAxisType: ['KMB', 'normal'],
                   yAxisName: ['数量', '县'],
-                  dataOrder: { label: '新增', order: 'asc' }
+                  dataOrder: { label: 'Newtoday', order: 'asc' }
                 }
                 this.HistogramchartData = {
-                  columns: ['county', '合计', '新增'],
-                  rows: allcountdata
+                  columns: ['county', 'cnt', 'Newtoday'],
+                  rows: Histogramallcountdata
                   // rows: [
                   //   { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
                   //   { 日期: '1/2', 访问用户: 3530, 下单用户: 3230, 下单率: 0.26 },
@@ -190,7 +188,7 @@ export default {
         qCnt: 'qsource'
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         // 饼图
         this.PiechartSettings = {
           dimension: 'qsource',
@@ -224,10 +222,10 @@ export default {
         qCnt: 'city'
       })
       .then(res => {
-        console.log(res)
+        // console.log(res)
         if (res.data.success) {
           // console.log('aaa', res.data.data, '--------')
-          var allcountdata = res.data.data
+          var Mapallcountdata = res.data.data
           // 当前日期
           var date = new Date()
           var month = date.getMonth() + 1
@@ -242,11 +240,11 @@ export default {
               qCnt: 'city'
             })
             .then(res => {
-              console.log(res)
+              // console.log(res)
               if (res.data.success) {
                 // console.log('aaa', res.data.data, '--------')
                 var currentdata = res.data.data
-                for (const allitem of allcountdata) {
+                for (const allitem of Mapallcountdata) {
                   for (const currentitem of currentdata) {
                     if (
                       allitem.province === currentitem.province &&
@@ -256,12 +254,10 @@ export default {
                       allitem.village === currentitem.village &&
                       allitem.qsource === currentitem.qsource
                     ) {
-                      allitem.新增 = currentitem.cnt
-                      allitem.合计 = allitem.cnt
+                      allitem.Newtoday = currentitem.cnt
                       break
                     } else {
-                      allitem.新增 = 0
-                      allitem.合计 = allitem.cnt
+                      allitem.Newtoday = 0
                     }
                   }
                 }
@@ -270,11 +266,11 @@ export default {
                   position: 'province/yunnan',
                   mapURLProfix: 'statics/mapjson/',
                   dimension: 'city',
-                  metrics: ['合计', '新增']
+                  metrics: ['cnt', 'Newtoday']
                 }
                 this.MapchartData = {
-                  columns: ['city', '合计', '新增'],
-                  rows: allcountdata
+                  columns: ['city', 'cnt', 'Newtoday'],
+                  rows: Mapallcountdata
                   // rows: [
                   //   { 位置: '云南省', 总计: 666, 当天新增: 999 },
                   //   { 位置: '普洱市', 总计: 123, 当天新增: 92134 },
@@ -300,9 +296,9 @@ export default {
           qCnt: 'county'
         })
         .then(res => {
-          console.log(res)
+          // console.log(res)
           if (res.data.success) {
-            console.log('aaa', res.data.data, '--------')
+            // console.log('aaa', res.data.data, '--------')
             // this.rowData = res.data.data
           } else {
           }
