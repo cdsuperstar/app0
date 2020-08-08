@@ -1935,24 +1935,32 @@ export default {
           }
         } else {
           console.log('OFF-----')
-          this.$router.app.$http
-            .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
-            .then(res => {
-              // console.log(res, '+++++++')
-              if (res.data.success) {
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('p2s1.savesuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('p2s1.savefailed')
-                )
-              }
-            })
+          if (
+            process.env.MODE === 'cordova' &&
+            this.netstate === '无网络连接'
+          ) {
+            alert('当前【无网络连接】，将采用离线方式保存问卷！')
+            this.writeToFile('/AIApp/Votedata.json', this.vote)
+          } else {
+            this.$router.app.$http
+              .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
+              .then(res => {
+                // console.log(res, '+++++++')
+                if (res.data.success) {
+                  this.$zglobal.showMessage(
+                    'positive',
+                    'center',
+                    this.$t('p2s1.savesuccess')
+                  )
+                } else {
+                  this.$zglobal.showMessage(
+                    'red-7',
+                    'center',
+                    this.$t('p2s1.savefailed')
+                  )
+                }
+              })
+          }
         }
         setTimeout(() => {
           this.saving = false
