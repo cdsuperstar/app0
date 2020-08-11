@@ -163,7 +163,7 @@ export default {
                   dataOrder: { label: 'Newtoday', order: 'asc' }
                 }
                 this.HistogramchartData = {
-                  columns: ['county', 'cnt', 'Newtoday'],
+                  columns: ['county', 'total', 'Newtoday'],
                   rows: Histogramallcountdata
                   // rows: [
                   //   { 日期: '1/1', 访问用户: 1393, 下单用户: 1093, 下单率: 0.32 },
@@ -192,7 +192,7 @@ export default {
         // 饼图
         this.PiechartSettings = {
           dimension: 'qsource',
-          metrics: 'cnt'
+          metrics: 'total'
         }
         // this.PiechartData = {
         //   columns: ['问卷类型', '合计'],
@@ -205,7 +205,7 @@ export default {
         // }
         if (res.data.success) {
           this.PiechartData = {
-            columns: ['qsource', 'cnt'],
+            columns: ['qsource', 'total'],
             rows: res.data.data
           }
         } else {
@@ -254,7 +254,7 @@ export default {
                       allitem.village === currentitem.village &&
                       allitem.qsource === currentitem.qsource
                     ) {
-                      allitem.Newtoday = currentitem.cnt
+                      allitem.Newtoday = currentitem.total
                       break
                     } else {
                       allitem.Newtoday = 0
@@ -266,10 +266,10 @@ export default {
                   position: 'province/yunnan',
                   mapURLProfix: 'statics/mapjson/',
                   dimension: 'city',
-                  metrics: ['cnt', 'Newtoday']
+                  metrics: ['total', 'Newtoday']
                 }
                 this.MapchartData = {
-                  columns: ['city', 'cnt', 'Newtoday'],
+                  columns: ['city', 'total', 'Newtoday'],
                   rows: Mapallcountdata
                   // rows: [
                   //   { 位置: '云南省', 总计: 666, 当天新增: 999 },

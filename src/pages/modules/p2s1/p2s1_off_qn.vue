@@ -1897,13 +1897,22 @@ export default {
         submitsign = false
       }
       for (var item in requireditem) {
-        console.log(requireditem[item], '----------')
+        // console.log(requireditem[item], '----------')
+        // 检测所有必须的key是否包含
         if (!(requireditem[item] in this.vote)) {
           missitem.push(requireditem[item])
           submitsign = false
         }
       }
       if (submitsign) {
+        // 检测是否vote里所有项是否有q-select多选的Array，如果有则toString
+        for (var votekey in this.vote) {
+          if (typeof this.vote[votekey] === 'object') {
+            this.vote[votekey] = JSON.stringify(this.vote[votekey])
+            // .replace(']', '}')
+            // this.vote[votekey] = encodeURIComponent(this.vote[votekey])
+          }
+        }
         // 是否在线
         if (this.$auth.check()) {
           console.log('ON-----')
@@ -1914,6 +1923,7 @@ export default {
             alert('当前【无网络连接】，将采用离线方式保存问卷！')
             this.writeToFile('/AIApp/Votedata.json', this.vote)
           } else {
+            // console.log(this.vote, '==========')
             this.$router.app.$http
               .post('/p2/s1/p2s1questionnaire1', this.vote)
               .then(res => {

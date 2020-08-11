@@ -1945,8 +1945,26 @@ export default {
     modifyItems() {
       var selectedData = this.gridApi.getSelectedRows()
       if (selectedData.length === 1) {
-        this.editItem = true
         this.vote = selectedData[0]
+        this.$nextTick(() => {
+          // 检测是否vote里所有子项是否有[]符号，有则parse
+          for (var votekey in this.vote) {
+            if (
+              this.vote[votekey] !== null &&
+              typeof this.vote[votekey] === 'string'
+            ) {
+              console.log(votekey, '-----')
+              if (
+                this.vote[votekey].substring(0, 1) === '[' &&
+                this.vote[votekey].substring(this.vote[votekey].length - 1) ===
+                  ']'
+              ) {
+                this.vote[votekey] = JSON.parse(this.vote[votekey])
+              }
+            }
+          }
+          this.editItem = true
+        })
       } else {
         this.$zglobal.showMessage(
           'red-7',
@@ -1970,6 +1988,12 @@ export default {
           const selectedData = this.rowData
           if (this.$auth.check()) {
             selectedData.forEach(val => {
+              // 检测是否vote里所有项是否有多选Array，如果有则toJson
+              for (var votekey in val) {
+                if (typeof val[votekey] === 'object' && val[votekey] !== null) {
+                  val[votekey] = JSON.stringify(val[votekey])
+                }
+              }
               // console.log(val)
               val.qsource = '离线问卷'
               this.$router.app.$http
@@ -2009,6 +2033,15 @@ export default {
     // 保存本地
     saveItems() {
       // alert(JSON.stringify(this.vote) + '1+++')
+      // 检测是否vote里所有项是否有q-select多选的Array，如果有则toString
+      for (var votekey in this.vote) {
+        if (typeof this.vote[votekey] === 'object') {
+          this.vote[votekey] = JSON.stringify(this.vote[votekey])
+          // .replace(']', '}')
+          // this.vote[votekey] = encodeURIComponent(this.vote[votekey])
+        }
+      }
+      // end
       this.gridApi.updateRowData({
         update: [this.vote]
       })
