@@ -2,7 +2,7 @@
   "name": "app2",
   "version": "0.0.1",
   "private": true,
-  "description": "AILizer Questionnaire.",
+  "description": "交通工程结构和病害智能分析平台",
   "author": "Luke Lin",
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
