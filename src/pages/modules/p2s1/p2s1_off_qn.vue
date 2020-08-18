@@ -1749,6 +1749,8 @@ export default {
       },
       vote: {
         province: '云南省',
+        latitude: null,
+        longitude: null,
         au_conclusion: '正常'
       }
     }
@@ -1756,13 +1758,14 @@ export default {
 
   computed: {},
   watch: {},
-  created() {},
-  mounted() {
+  created() {
     if (process.env.MODE === 'cordova') {
       this.getPosition()
       this.positionsign = true
     }
     this.checkConnection()
+  },
+  mounted() {
     this.username = this.$q.localStorage.getItem('username')
     this.qsource = this.$route.query.qsource
     // console.log(this.qsource, '+++++++')
@@ -1812,6 +1815,7 @@ export default {
     getPositionSuccess(position) {
       this.vote.latitude = String(position.coords.latitude.toFixed(2))
       this.vote.longitude = String(position.coords.longitude.toFixed(2))
+      // alert('获取位置成功:' + JSON.stringify(this.vote))
     },
     // 1-2 查询当前位置信息失败
     getPositionError(error) {
