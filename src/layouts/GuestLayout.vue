@@ -27,7 +27,7 @@
           stretch
           flat
           to="/"
-          :label="$t('webtxt.profile')"
+          :label="$t('webtxt.index')"
         />
         <q-btn
           v-if="$q.screen.gt.xs"
@@ -97,7 +97,7 @@
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="home" />
             </q-item-section>
-            <q-item-section>{{ $t('webtxt.profile') }}</q-item-section>
+            <q-item-section>{{ $t('webtxt.index') }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/product">
