@@ -64,9 +64,10 @@
             ref="aiPanel-editor"
             class="ai-observer"
             width="100%"
-            v-bind:uniqueKey="uuid"
+            :uniqueKey="uuid"
             :ratio="16 / 9"
-            v-bind:imgUrl="currentImage"
+            :imgUrl="currentImage"
+            @vmarker:onImageLoad="onImageLoad(index)"
             @vmarker:onAnnoAdded="onAnnoAdded"
             @vmarker:onAnnoSelected="onAnnoSelected"
             @vmarker:onUpdated="onUpdated"
@@ -175,10 +176,9 @@ export default {
       defaultColDef: null,
       uuid: '0da9130',
       currentImage: '../statics/09.jpg',
-      renderData: null,
       dataset: {},
       signtype: null,
-      showtype: [],
+      showtype: [1, 2, 3, 4, 5],
       typeoptions: [
         {
           label: '裂缝',
@@ -199,6 +199,124 @@ export default {
         {
           label: '其他隐患',
           value: 5
+        }
+      ],
+      rendData: [
+        {
+          tag: 1,
+          tagName: '裂缝',
+          position: { x: '49.424%', y: '20.657%', x1: '58.99%', y1: '30.105%' },
+          uuid: 'E82D0D6822CCC9AF'
+        },
+        {
+          tag: 1,
+          tagName: '裂缝',
+          position: {
+            x: '65.988%',
+            y: '20.815%',
+            x1: '76.085%',
+            y1: '31.995%'
+          },
+          uuid: 'ACAB50D7A056004B'
+        },
+        {
+          tag: 3,
+          tagName: 'Twitter',
+          position: {
+            x: '33.304%',
+            y: '47.741%',
+            x1: '48.539%',
+            y1: '59.551%'
+          },
+          uuid: 'F4040EC41F15822A'
+        },
+        {
+          tag: 3,
+          tagName: 'Twitter',
+          position: {
+            x: '55.004%',
+            y: '57.819%',
+            x1: '66.253%',
+            y1: '65.062%'
+          },
+          uuid: 'F10B9993FC7E6AE7'
+        },
+        {
+          tag: 2,
+          tagName: '空洞',
+          position: {
+            x: '14.438%',
+            y: '27.586%',
+            x1: '23.207%',
+            y1: '37.349%'
+          },
+          uuid: '69507DF085E19689'
+        },
+        {
+          tag: 2,
+          tagName: '空洞',
+          position: {
+            x: '29.495%',
+            y: '22.075%',
+            x1: '38.087%',
+            y1: '31.523%'
+          },
+          uuid: '589FE98CF55D095D'
+        },
+        {
+          tag: 2,
+          tagName: '空洞',
+          position: {
+            x: '17.626%',
+            y: '53.095%',
+            x1: '26.838%',
+            y1: '64.432%'
+          },
+          uuid: '6AB638E8198FE9B9'
+        },
+        {
+          tag: 2,
+          tagName: '空洞',
+          position: {
+            x: '66.608%',
+            y: '40.026%',
+            x1: '74.403%',
+            y1: '46.010000000000005%'
+          },
+          uuid: '8E0B6D91F9717C3F'
+        },
+        {
+          tag: 5,
+          tagName: '其他隐患',
+          position: {
+            x: '48.007%',
+            y: '38.293%',
+            x1: '60.762%',
+            y1: '47.111%'
+          },
+          uuid: '648DA71E9D7B1927'
+        },
+        {
+          tag: 5,
+          tagName: '其他隐患',
+          position: {
+            x: '73.074%',
+            y: '56.402%',
+            x1: '82.286%',
+            y1: '66.795%'
+          },
+          uuid: 'AA919670E78A214F'
+        },
+        {
+          tag: 5,
+          tagName: '其他隐患',
+          position: {
+            x: '26.129%',
+            y: '35.302%',
+            x1: '34.632000000000005%',
+            y1: '42.388%'
+          },
+          uuid: 'B7AB08A5436699BD'
         }
       ]
     }
@@ -235,25 +353,40 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi
   },
   methods: {
+    // 当图片加载完成后，vmarker会发送一个onImageLoad 的事件
+    onImageLoad(data) {
+      console.log(JSON.stringify(data), 'pic.....')
+      // 加载渲染数据
+      this.$refs['aiPanel-editor'].getMarker().renderData(this.rendData)
+    },
     // 标记
     onAnnoAdded(data) {
+      // console.log(data, '====onAnnoAdded', JSON.stringify(this.signtype))
       if (this.signtype !== null) {
         this.$refs['aiPanel-editor'].getMarker().setTag({
           tagName: this.signtype.label,
           tag: this.signtype.value
         })
-        console.log(data, '====onAnnoAdded', this.showtype)
+        // console.log(data, '====onAnnoAdded', JSON.stringify(this.showtype))
         // 当你想限制标记个数时
-      } else {
-        this.$zglobal.showMessage('red-7', 'center', '先选择标注类型')
-        this.$refs['aiPanel-editor'].getMarker().clearData()
       }
+      // if (this.signtype !== null) {
+      //   this.$refs['aiPanel-editor'].getMarker().setTag({
+      //     tagName: this.signtype.label,
+      //     tag: this.signtype.value
+      //   })
+      //   console.log(data, '====onAnnoAdded', this.showtype)
+      //   // 当你想限制标记个数时
+      // } else {
+      //   this.$zglobal.showMessage('red-7', 'center', '先选择标注类型')
+      //   this.$refs['aiPanel-editor'].getMarker().clearData()
+      // }
     },
     onAnnoSelected(data) {
       console.log(data, '+++onAnnoSelected')
     },
     onUpdated(data) {
-      console.log(data, '+++onUpdated')
+      // console.log(JSON.stringify(data), '+++onUpdated')
     },
     // end
     initGrid() {
@@ -496,7 +629,15 @@ export default {
       }
     },
     showsigntype() {
-      console.log(this.showtype, '----------showtype')
+      if (this.showtype.length > 0) {
+        var typarr = this.showtype.toArray()
+        console.log(typarr, '+======')
+        this.rendData = this.rendData.filter(function(item) {
+          return typarr.indexof(item.tag) > -1 // 过滤符合要求的item数组
+        })
+      }
+
+      console.log(this.showtype, '----------showtype2', this.rendData)
     }
   }
 }
