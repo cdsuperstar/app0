@@ -1,13 +1,7 @@
 <template>
   <q-page>
     <q-img src="../statics/webimages/case1.jpg"></q-img>
-    <div
-      :class="
-        $q.screen.gt.xs
-          ? 'q-pa-xl row justify-center q-gutter-lg'
-          : 'q-pa-xs row justify-center q-gutter-md'
-      "
-    >
+    <div class="q-py-xl row justify-center q-gutter-lg">
       <q-card class="case-list">
         <q-img src="../statics/webimages/case-card5.jpg">
           <div class="text-subtitle2 absolute-bottom text-center">
