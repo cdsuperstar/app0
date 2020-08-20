@@ -3,6 +3,7 @@
 export default {
   webtxt: {
     companyname: '成都概率矩阵科技有限公司',
+    abbcompanyname: '概率矩阵科技',
     search: '搜索',
     index: '首页',
     profile: '公司简介',

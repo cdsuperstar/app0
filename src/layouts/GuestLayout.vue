@@ -3,7 +3,7 @@
     <q-header reveal class="bg-blue-7">
       <q-toolbar style="height: 60px;">
         <!--        <q-btn flat round dense icon="menu" @click="left = !left" />-->
-        <q-toolbar-title class="row col-6">
+        <q-toolbar-title :class="$q.screen.gt.xs ? 'row col-6' : 'row col-10'">
           <q-img
             src="../statics/app-logo.jpg"
             spinner-color="white"
@@ -11,14 +11,19 @@
             class="cursor-pointer"
             @click="left = !left"
           />&nbsp;
-          <img
-            v-if="$q.screen.gt.xs"
-            src="../statics/webimages/cpname.png"
-            style="height:30px;max-width: 550px;margin-top: 5px;"
-          />
-          <!--          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">-->
-          <!--            &nbsp;&nbsp;<font face="黑体">{{ $t('webtxt.companyname') }}</font>-->
-          <!--          </div>-->
+          <!--          <img-->
+          <!--            v-if="$q.screen.gt.xs"-->
+          <!--            src="../statics/webimages/cpname.png"-->
+          <!--            style="height:30px;max-width: 550px;margin-top: 5px;"-->
+          <!--          />-->
+          <div v-if="$q.screen.gt.xs" style="margin-top: 5px;">
+            &nbsp;&nbsp;<font face="黑体">{{ $t('webtxt.companyname') }}</font>
+          </div>
+          <div v-if="!$q.screen.gt.xs" style="margin-top: 5px;">
+            &nbsp;&nbsp;<font face="黑体">{{
+              $t('webtxt.abbcompanyname')
+            }}</font>
+          </div>
         </q-toolbar-title>
         <q-space />
         <q-btn
@@ -37,14 +42,14 @@
           to="/product"
           :label="$t('webtxt.product')"
         />
-        <q-btn
-          v-if="$q.screen.gt.xs"
-          v-ripple
-          stretch
-          flat
-          to="/service"
-          :label="$t('webtxt.service')"
-        />
+        <!--        <q-btn-->
+        <!--          v-if="$q.screen.gt.xs"-->
+        <!--          v-ripple-->
+        <!--          stretch-->
+        <!--          flat-->
+        <!--          to="/service"-->
+        <!--          :label="$t('webtxt.service')"-->
+        <!--        />-->
         <q-btn
           v-if="$q.screen.gt.xs"
           v-ripple
@@ -107,13 +112,13 @@
             <q-item-section>{{ $t('webtxt.product') }}</q-item-section>
           </q-item>
           <q-separator />
-          <q-item v-ripple clickable to="/service">
-            <q-item-section avatar class="text-weight-bold">
-              <q-icon name="card_travel" />
-            </q-item-section>
-            <q-item-section>{{ $t('webtxt.service') }}</q-item-section>
-          </q-item>
-          <q-separator />
+          <!--          <q-item v-ripple clickable to="/service">-->
+          <!--            <q-item-section avatar class="text-weight-bold">-->
+          <!--              <q-icon name="card_travel" />-->
+          <!--            </q-item-section>-->
+          <!--            <q-item-section>{{ $t('webtxt.service') }}</q-item-section>-->
+          <!--          </q-item>-->
+          <!--          <q-separator />-->
           <q-item v-ripple clickable to="/case">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dashboard" />
@@ -148,23 +153,35 @@
             <div class="row" style="margin-left:5%; ">
               <font size="4">关注我们</font>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="#">
+              <a
+                href="tencent://message/?uin=10835142&Site=wwww.cdut.edu.cn&Menu=yes"
+              >
                 <div class="icon-avi">
                   <img src="../statics/share/qq.png" height="24" />
                 </div>
               </a>
               &nbsp;&nbsp;
+              <img
+                v-if="wechat"
+                class="wechat-code"
+                src="../statics/webimages/webchat.png"
+              />
+
               <a href="#">
                 <div class="icon-avi">
-                  <img src="../statics/share/icon_wechat.png" height="24" />
+                  <img
+                    src="../statics/share/icon_wechat.png"
+                    height="24"
+                    @mouseover="showwechat"
+                    @mouseout="hidewechat"
+                  />
                 </div>
               </a>
-              &nbsp;&nbsp;
-              <a href="#">
-                <div class="icon-avi">
-                  <img src="../statics/share/sinaweibo.png" height="24" />
-                </div>
-              </a>
+              <!--              <a href="#">-->
+              <!--                <div class="icon-avi">-->
+              <!--                  <img src="../statics/share/sinaweibo.png" height="24" />-->
+              <!--                </div>-->
+              <!--              </a>-->
             </div>
           </q-item-section>
         </q-item>
@@ -188,6 +205,7 @@ export default {
       searchcontenet: '',
       left: false,
       leftdrawer: 210,
+      wechat: false,
       lang: this.$i18n.locale
     }
   },
@@ -210,6 +228,12 @@ export default {
     // 左滑关闭菜单列表
     handleleftSwipe() {
       this.left = false
+    },
+    showwechat() {
+      this.wechat = true
+    },
+    hidewechat() {
+      this.wechat = false
     },
     searchtxt() {
       console.log(this.searchcontenet, '++++++')
@@ -236,5 +260,12 @@ export default {
 .search-img {
   background: url(../statics/webimages/search.jpg) no-repeat;
   background-size: cover;
+}
+.wechat-code {
+  width: 156px;
+  position: absolute;
+  left: 100px;
+  top: -156px;
+  z-index: 2;
 }
 </style>
