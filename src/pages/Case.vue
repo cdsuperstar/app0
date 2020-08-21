@@ -42,7 +42,7 @@
           </div>
         </q-img>
         <q-card-section class="text-subtitle1">
-          某大型图书馆信息化建设需要，实现了图书分类、编目、读者服务、借阅登记、统计查询等功能。.
+          某大型图书馆信息化建设需要，定制研发一套图书管理系统，实现了图书分类、编目、读者服务、借阅登记、统计查询等功能。.
         </q-card-section>
       </q-card>
       <q-card class="case-list">
