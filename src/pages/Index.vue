@@ -4,7 +4,7 @@
     <div align="center">
       <q-carousel
         animated
-        v-model="slide"
+        v-model="slidesign"
         swipeable
         infinite
         :autoplay="10000"
@@ -82,7 +82,7 @@ export default {
   components: {},
   data() {
     return {
-      slide: 1
+      slidesign: 1
     }
   },
   created() {},
