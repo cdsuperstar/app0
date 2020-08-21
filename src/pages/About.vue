@@ -15,11 +15,11 @@
           </div>
         </q-img>
         <q-card-section class="q-ma-ma">
-          <div class="q-my-md text-subtitle1">电话：028-8XXX XXXX</div>
-          <div class="q-my-md text-subtitle1">传真：028-8XXX XXXX</div>
-          <div class="q-my-md text-subtitle1">邮编：610051</div>
+          <div class="q-my-md text-subtitle1">电话：136 8013 8105</div>
+          <div class="q-my-md text-subtitle1">邮箱：81234150@qq.com</div>
+          <div class="q-my-md text-subtitle1">邮编：610041</div>
           <div class="q-my-md text-subtitle1">
-            地址：四川省成都市高新区
+            地址：四川省成都市高新区益州大道北段388号8栋16层1607号
           </div>
         </q-card-section>
       </q-card>
