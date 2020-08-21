@@ -201,6 +201,7 @@ export default {
           value: 5
         }
       ],
+      currentrendData: [],
       rendData: [
         {
           tag: 1,
@@ -357,7 +358,14 @@ export default {
     onImageLoad(data) {
       console.log(JSON.stringify(data), 'pic.....')
       // 加载渲染数据
-      this.$refs['aiPanel-editor'].getMarker().renderData(this.rendData)
+      this.$refs['aiPanel-editor'].getMarker().clearData()
+      if (this.currentrendData.length > 0) {
+        this.$refs['aiPanel-editor']
+          .getMarker()
+          .renderData(this.currentrendData)
+      } else {
+        this.$refs['aiPanel-editor'].getMarker().renderData(this.rendData)
+      }
     },
     // 标记
     onAnnoAdded(data) {
@@ -562,6 +570,7 @@ export default {
       this.changerowcolor = ''
     },
     editItems() {
+      this.signtype = null
       this.editwindow = true
     },
     saveItems() {
@@ -629,15 +638,16 @@ export default {
       }
     },
     showsigntype() {
+      this.signtype = null
       if (this.showtype.length > 0) {
-        var typarr = this.showtype.toArray()
-        console.log(typarr, '+======')
-        this.rendData = this.rendData.filter(function(item) {
-          return typarr.indexof(item.tag) > -1 // 过滤符合要求的item数组
+        const typarr = this.showtype
+        this.currentrendData = this.rendData.filter(function(item) {
+          if (item.tag) {
+            return typarr.includes(item.tag) === true // 过滤符合要求的item数组
+          }
         })
       }
-
-      console.log(this.showtype, '----------showtype2', this.rendData)
+      this.onImageLoad()
     }
   }
 }
