@@ -19,12 +19,17 @@
     </div>
 
     <!--    <q-img src="../statics/webimages/index1.jpg"></q-img>-->
-    <div align="center" class="q-my-lg text-h6">
+    <div v-if="$q.screen.gt.xs" align="center" class="q-my-lg text-h6">
       <p>
         成都概率矩阵科技有限公司是一家专注于人工智能领域的科技公司
       </p>
       <p>
         主要致力于人工智能技术的道路检测、航空电磁系统及计算机软件研发，通过技术推动经济发展，助力企业自动化升级。
+      </p>
+    </div>
+    <div v-if="!$q.screen.gt.xs" align="left" class="q-my-lg text-h6">
+      <p style="text-indent: 2em;">
+        成都概率矩阵科技有限公司是一家专注于人工智能领域的科技公司，主要致力于人工智能技术的道路检测、航空电磁系统及计算机软件研发，通过技术推动经济发展，助力企业自动化升级。
       </p>
     </div>
     <div
