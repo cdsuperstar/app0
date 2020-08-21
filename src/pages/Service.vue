@@ -1,6 +1,9 @@
 <template>
   <q-page>
-    <q-img src="../statics/webimages/service1.jpg"></q-img>
+    <q-img
+      src="../statics/webimages/service1.jpg"
+      :height="$q.screen.gt.xs ? '' : '130px'"
+    ></q-img>
     <div align="center" class="q-my-lg row justify-center text-h6">
       <!--      <div class="text-h4">类别</div>-->
       &nbsp;&nbsp; 道路检测 | 航空电磁系统研发 | 管理信息系统研发 | 人工智能 | |

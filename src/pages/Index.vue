@@ -1,20 +1,24 @@
 <template>
   <q-page>
     <!--    <div class="background-img"></div>-->
-    <q-carousel
-      animated
-      v-model="slide"
-      navigation
-      infinite
-      :autoplay="10000"
-      transition-prev="slide-right"
-      transition-next="slide-left"
-    >
-      <q-carousel-slide :name="1" img-src="../statics/webimages/index1.jpg" />
-      <q-carousel-slide :name="2" img-src="../statics/webimages/index2.jpg" />
-      <q-carousel-slide :name="3" img-src="../statics/webimages/index3.jpg" />
-      <q-carousel-slide :name="4" img-src="../statics/webimages/index4.jpg" />
-    </q-carousel>
+    <div align="center">
+      <q-carousel
+        animated
+        v-model="slide"
+        swipeable
+        infinite
+        :autoplay="10000"
+        :height="$q.screen.gt.xs ? '' : '130px'"
+        :navigation="$q.screen.gt.xs ? true : false"
+        :arrows="$q.screen.gt.xs ? false : true"
+      >
+        <q-carousel-slide :name="1" img-src="../statics/webimages/index1.jpg" />
+        <q-carousel-slide :name="2" img-src="../statics/webimages/index2.jpg" />
+        <q-carousel-slide :name="3" img-src="../statics/webimages/index3.jpg" />
+        <q-carousel-slide :name="4" img-src="../statics/webimages/index4.jpg" />
+      </q-carousel>
+    </div>
+
     <!--    <q-img src="../statics/webimages/index1.jpg"></q-img>-->
     <div align="center" class="q-my-lg text-h6">
       <p>
@@ -84,7 +88,7 @@ export default {
 <style scoped>
 .background-img {
   width: 100%;
-  height: 350px;
+  height: 450px;
   overflow: hidden;
   background: url(../statics/webimages/index1.jpg) no-repeat top;
   background-size: cover;

@@ -1,9 +1,12 @@
 <template>
   <q-page>
-    <q-img src="../statics/webimages/service1.jpg"></q-img>
+    <q-img
+      src="../statics/webimages/service1.jpg"
+      :height="$q.screen.gt.xs ? '' : '130px'"
+    ></q-img>
     <div align="center" class="q-my-lg row justify-center text-h6">
       <!--      <div class="text-h4">类别</div>-->
-      &nbsp;&nbsp; 道路检测 | 航空电磁系统研发 | 管理信息系统研发 | 人工智能 | |
+      &nbsp;&nbsp; 道路检测 | 航空电磁系统研发 | 管理信息系统研发 | 人工智能 |
       移动技术
     </div>
     <div
@@ -13,7 +16,7 @@
           : 'q-pa-xs row justify-center'
       "
     >
-      <q-list class="col-11">
+      <q-list class="col-12">
         <q-item style="border-bottom:2px solid #DADADA;margin-bottom: 10px;">
           <q-item-section>
             <q-item-label class="q-mb-lg text-h5">
@@ -32,11 +35,11 @@
               "
             >
               <img
-                src="../statics/webimages/index-card3.jpg"
+                src="../statics/webimages/index-card5.jpg"
                 :class="$q.screen.gt.xs ? 'col-5' : 'col-12'"
               />
               <img
-                src="../statics/webimages/index-card3.jpg"
+                src="../statics/webimages/index-card7.jpg"
                 :class="$q.screen.gt.xs ? 'col-5' : 'col-12'"
               />
             </q-item-label>
@@ -60,7 +63,7 @@
               "
             >
               <img
-                src="../statics/webimages/index-card2.jpg"
+                src="../statics/webimages/index-card8.jpg"
                 :class="$q.screen.gt.xs ? 'col-5' : 'col-12'"
               />
               <img
@@ -92,7 +95,7 @@
                 :class="$q.screen.gt.xs ? 'col-5' : 'col-12'"
               />
               <img
-                src="../statics/webimages/index-card4.jpg"
+                src="../statics/webimages/index-card6.jpg"
                 :class="$q.screen.gt.xs ? 'col-5' : 'col-12'"
               />
             </q-item-label>

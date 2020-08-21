@@ -1,7 +1,10 @@
 <template>
   <q-page>
-    <q-img src="../statics/webimages/case1.jpg"></q-img>
-    <div class="q-py-xl row justify-center q-gutter-lg">
+    <q-img
+      src="../statics/webimages/case1.jpg"
+      :height="$q.screen.gt.xs ? '' : '130px'"
+    ></q-img>
+    <div class="q-px-xs q-py-xl row justify-center q-gutter-lg">
       <q-card class="case-list">
         <q-img src="../statics/webimages/case-card5.jpg">
           <div class="text-subtitle2 absolute-bottom text-center">
@@ -75,6 +78,6 @@ export default {
 <style scoped>
 .case-list {
   width: 100%;
-  max-width: 300px;
+  max-width: 450px;
 }
 </style>
