@@ -10,7 +10,6 @@
         :autoplay="10000"
         :height="$q.screen.gt.xs ? '' : '130px'"
         :navigation="$q.screen.gt.xs ? true : false"
-        :arrows="$q.screen.gt.xs ? false : true"
       >
         <q-carousel-slide :name="1" img-src="../statics/webimages/index1.jpg" />
         <q-carousel-slide :name="2" img-src="../statics/webimages/index2.jpg" />
