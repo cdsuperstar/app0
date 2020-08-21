@@ -10,7 +10,11 @@ export default {
     product: 'Product',
     service: 'Service',
     case: 'Case',
-    about: 'About'
+    about: 'About',
+    abbcompanyname: 'probability matrix Technology',
+    closewindow: 'Close Menu',
+    focusus: 'Focus on Us',
+    companyco: 'Chengdu probability matrix Technology Co., Ltd.'
   },
   failed: 'Action failed',
   success: 'Action was successful',

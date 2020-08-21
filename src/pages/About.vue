@@ -15,10 +15,10 @@
           </div>
         </q-img>
         <q-card-section class="q-ma-ma">
-          <div class="q-my-md text-h7">电话：028-8XXX XXXX</div>
-          <div class="q-my-md text-h7">传真：028-8XXX XXXX</div>
-          <div class="q-my-md text-h7">邮编：610051</div>
-          <div class="q-my-md text-h7">
+          <div class="q-my-md text-subtitle1">电话：028-8XXX XXXX</div>
+          <div class="q-my-md text-subtitle1">传真：028-8XXX XXXX</div>
+          <div class="q-my-md text-subtitle1">邮编：610051</div>
+          <div class="q-my-md text-subtitle1">
             地址：四川省成都市高新区
           </div>
         </q-card-section>

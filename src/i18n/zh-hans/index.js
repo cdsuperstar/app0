@@ -9,7 +9,10 @@ export default {
     profile: '公司简介',
     product: '技术产品',
     service: '技术服务',
+    closewindow: '关闭菜单',
     case: '案例',
+    focusus: '关注我们',
+    companyco: '成都概率矩阵科技有限公司 版权所有',
     about: '联系我们'
   },
   p1s1techfile: {

@@ -32,6 +32,7 @@
           stretch
           flat
           to="/"
+          class="text-subtitle1"
           :label="$t('webtxt.index')"
         />
         <q-btn
@@ -40,6 +41,7 @@
           stretch
           flat
           to="/product"
+          class="text-subtitle1"
           :label="$t('webtxt.product')"
         />
         <!--        <q-btn-->
@@ -56,6 +58,7 @@
           stretch
           flat
           to="/case"
+          class="text-subtitle1"
           :label="$t('webtxt.case')"
         />
         <q-btn
@@ -64,13 +67,26 @@
           stretch
           flat
           to="/about"
+          class="text-subtitle1"
           :label="$t('webtxt.about')"
         />
 
         <q-space />
-        <div style="cursor: pointer;" @click="setlanguage('zh-hans')">简</div>
-        <div class="text-grey-1">&nbsp;/&nbsp;</div>
-        <div style="cursor: pointer;" @click="setlanguage('en-us')">EN</div>
+        <div
+          class="text-subtitle1"
+          style="cursor: pointer;"
+          @click="setlanguage('zh-hans')"
+        >
+          简
+        </div>
+        <div class="text-grey-1 text-subtitle1">&nbsp;/&nbsp;</div>
+        <div
+          class="text-subtitle1"
+          style="cursor: pointer;"
+          @click="setlanguage('en-us')"
+        >
+          EN
+        </div>
         &nbsp;&nbsp;&nbsp;&nbsp;
       </q-toolbar>
     </q-header>
@@ -102,42 +118,52 @@
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="home" />
             </q-item-section>
-            <q-item-section>{{ $t('webtxt.index') }}</q-item-section>
+            <q-item-section class="text-subtitle1">{{
+              $t('webtxt.index')
+            }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/product">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dns" />
             </q-item-section>
-            <q-item-section>{{ $t('webtxt.product') }}</q-item-section>
+            <q-item-section class="text-subtitle1">{{
+              $t('webtxt.product')
+            }}</q-item-section>
           </q-item>
           <q-separator />
           <!--          <q-item v-ripple clickable to="/service">-->
           <!--            <q-item-section avatar class="text-weight-bold">-->
           <!--              <q-icon name="card_travel" />-->
           <!--            </q-item-section>-->
-          <!--            <q-item-section>{{ $t('webtxt.service') }}</q-item-section>-->
+          <!--            <q-item-section class="text-subtitle1">{{ $t('webtxt.service') }}</q-item-section>-->
           <!--          </q-item>-->
           <!--          <q-separator />-->
           <q-item v-ripple clickable to="/case">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="dashboard" />
             </q-item-section>
-            <q-item-section>{{ $t('webtxt.case') }}</q-item-section>
+            <q-item-section class="text-subtitle1">{{
+              $t('webtxt.case')
+            }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable to="/about">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="share" />
             </q-item-section>
-            <q-item-section>{{ $t('webtxt.about') }}</q-item-section>
+            <q-item-section class="text-subtitle1">{{
+              $t('webtxt.about')
+            }}</q-item-section>
           </q-item>
           <q-separator />
           <q-item v-ripple clickable @click="handleleftSwipe">
             <q-item-section avatar class="text-weight-bold">
               <q-icon name="call_missed" />
             </q-item-section>
-            <q-item-section>关闭菜单</q-item-section>
+            <q-item-section class="text-subtitle1">{{
+              $t('webtxt.closewindow')
+            }}</q-item-section>
           </q-item>
           <q-separator />
         </q-list>
@@ -150,8 +176,8 @@
       <q-list class="col-6">
         <q-item>
           <q-item-section>
-            <div class="row" style="margin-left:5%; ">
-              <font size="4">关注我们</font>
+            <div class="row text-h6" style="margin-left:5%; ">
+              {{ $t('webtxt.focusus') }}
               &nbsp;&nbsp;&nbsp;&nbsp;
               <a
                 href="tencent://message/?uin=10835142&Site=wwww.cdut.edu.cn&Menu=yes"
@@ -188,9 +214,9 @@
         <q-item
           style="border-top: 1px solid rgba(229,229,229,0.75);width:90%;margin-left:5%; "
         >
-          <q-item-section class="text-center">
+          <q-item-section class="text-center text-subtitle1">
             Copyright © 2020 - 2050 All Rights Reserved.
-            成都概率矩阵科技有限公司 版权所有
+            {{ $t('webtxt.companyco') }}
           </q-item-section>
         </q-item>
       </q-list>
