@@ -192,7 +192,7 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_unit/')
+      .get('/p3/s1/p3s1device/')
       .then(res => {
         if (res.data.success) {
           this.rowData = res.data.data
@@ -230,7 +230,7 @@ export default {
         },
         {
           headerName: '设备名称',
-          field: 'title',
+          field: 'name',
           width: 120,
           minWidth: 120,
           maxWidth: 260,
@@ -240,7 +240,7 @@ export default {
         },
         {
           headerName: '设备型号',
-          field: 'title',
+          field: 'type',
           width: 100,
           minWidth: 100,
           maxWidth: 200,
@@ -250,7 +250,7 @@ export default {
         },
         {
           headerName: '天线频率',
-          field: 'title',
+          field: 'freq',
           width: 90,
           minWidth: 90,
           maxWidth: 100,
@@ -260,7 +260,7 @@ export default {
         },
         {
           headerName: '生产厂商',
-          field: 'title',
+          field: 'manuf',
           width: 100,
           minWidth: 100,
           maxWidth: 200,
@@ -270,10 +270,10 @@ export default {
         },
         {
           headerName: '设备照片',
-          field: 'dev_files',
+          field: 'files',
           width: 90,
           minWidth: 90,
-          editable: true,
+          editable: false,
           filter: true,
           cellRendererFramework: agAttachmentCellRander,
           cellRendererParams: {
@@ -284,7 +284,7 @@ export default {
         },
         {
           headerName: '设备介绍',
-          field: 'brief',
+          field: 'memo',
           colId: 'date',
           width: 200,
           minWidth: 200,
@@ -337,7 +337,7 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_unit/' + val.id)
+                .delete('/p3/s1/p3s1device/' + val.id)
                 .then(res => {
                   if (res.data.success) {
                     // console.log(res.data.data)
@@ -395,7 +395,7 @@ export default {
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http
-            .post('/z_unit/', val)
+            .post('/p3/s1/p3s1device/', val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -420,7 +420,7 @@ export default {
             val.dev_files = this.files
           }
           this.$router.app.$http
-            .put('/z_unit/' + val.id, val)
+            .put('/p3/s1/p3s1device/' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -461,7 +461,7 @@ export default {
     },
     downloadfile(rowid, filename, fn) {
       this.$router.app.$http
-        .post('/p2/s1/p2s1questionnaire1/downAttachFile/' + rowid, {
+        .post('p3/s1/p3s1device/downAttachFile/' + rowid, {
           filename: filename,
           collection: fn
         })
@@ -477,9 +477,9 @@ export default {
     deletefile(rowid, rowdata, filename) {
       console.log(rowid, filename, 'del')
       this.$router.app.$http
-        .post('/p2/s1/p2s1questionnaire1/deleteAttachFile/' + rowid, {
+        .post('p3/s1/p3s1device/deleteAttachFile/' + rowid, {
           filename: filename,
-          collection: 'q_files'
+          collection: 'files'
         })
         .then(res => {
           if (res.data.success) {
