@@ -11,7 +11,7 @@ export default {
     service: 'Service',
     case: 'Case',
     about: 'About',
-    abbcompanyname: 'probability matrix Technology',
+    abbcompanyname: 'P-Matrix Tech',
     closewindow: 'Close Menu',
     focusus: 'Focus on Us',
     companyco: 'Chengdu probability matrix Technology Co., Ltd.'

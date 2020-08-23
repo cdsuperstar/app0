@@ -47,18 +47,18 @@
           <div class="text-h6">道路检测</div>
         </q-card-section>
         <q-card-section class="text-subtitle1">
-          基于计算机技术开发的人工智能道路检测系统，为企业提供技术性支撑，实现工程检测的自动化、智能化。
+          基于人工智能技术的公路结构分析及隐伏病害智能检测软件平台，大大提高了解译效率而且解译精度，降低了检测成本，具有非常广阔的市场前景。
         </q-card-section>
       </q-card>
       <q-card flat bordered style="width: 100%;max-width: 350px;">
-        <img src="../statics/webimages/index-card2.jpg" />
+        <img src="../statics/webimages/index-card8.jpg" />
         <q-card-section
           style="border-bottom: #6c757d 2px solid;max-width: 200px;"
         >
           <div class="text-h6">航空电磁系统研发</div>
         </q-card-section>
         <q-card-section class="text-subtitle1">
-          基于航空瞬变电磁仪在复杂地表地形实施地面勘探、探测，获得地下介质的电性结构分布，从而在矿产资源勘探、地下水资源调查、工程勘查等许多领域得到广泛应用。
+          基于航空瞬变电磁仪在复杂地表地形实施地面勘探、探测，获得地下介质的电性结构分布，为地下探测提供基础资料和依据，从而在矿产资源勘探、地下水资源调查、工程勘查等许多领域得到广泛应用。
         </q-card-section>
       </q-card>
       <q-card flat bordered style="width: 100%;max-width: 350px;">
@@ -69,7 +69,7 @@
           <div class="text-h6">管理信息系统研发</div>
         </q-card-section>
         <q-card-section class="text-subtitle1">
-          拥有专业的软件开发团队，基于专业的研发水平，可根据客户的需求，量身定制一系列符合客户实际应用的软件，帮助解决企业管理难题。
+          针对企业的具体情况，个性化定制软件研发，可将管理者的最新的管理思路和管理模型融入到软件中，从而大大提高了软件的科学价值，带给企业巨大的经济效益。
         </q-card-section>
       </q-card>
     </div>
