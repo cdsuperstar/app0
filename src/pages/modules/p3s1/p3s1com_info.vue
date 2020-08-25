@@ -45,7 +45,6 @@
         :pagination="true"
         :pagination-page-size="50"
         :get-row-style="getRowStyle"
-        :framework-components="frameworkComponents"
         :locale-text="this.$t('aggrid')"
         @cellValueChanged="oncellValueChanged"
         @grid-ready="onGridReady"
@@ -57,7 +56,6 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
-import agDateCellRender from '../../frameworkComponents/agDateCellRender'
 
 export default {
   name: 'P3s1com_info',
@@ -109,9 +107,6 @@ export default {
         headerHeight: 32,
         allowShowChangeAfterFilter: true
       }
-      this.frameworkComponents = {
-        agDateCellRender: agDateCellRender
-      }
       this.columnDefs = [
         {
           headerName: 'ID',
@@ -126,8 +121,8 @@ export default {
           checkboxSelection: true
         },
         {
-          headerName: '公司名称',
-          field: 'no',
+          headerName: this.$t('p3s1.com_companyname'),
+          field: 'companyname',
           width: 130,
           minWidth: 130,
           maxWidth: 180,
@@ -232,52 +227,29 @@ export default {
     saveItems() {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
-        if (val.id === undefined) {
-          this.$router.app.$http
-            .post('/profile/', val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.addsuccess')
-                )
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.addfailed')
-                )
-              }
-            })
-            .catch(e => {})
-        } else {
-          this.$router.app.$http
-            .put('/profile/' + val.id, val)
-            .then(res => {
-              if (res.data.success) {
-                this.gridApi.updateRowData({
-                  update: [Object.assign(val, res.data.data)]
-                })
-                this.$zglobal.showMessage(
-                  'positive',
-                  'center',
-                  this.$t('operation.updatesuccess')
-                )
-                // console.log(res.data.data)
-              } else {
-                this.$zglobal.showMessage(
-                  'red-7',
-                  'center',
-                  this.$t('operation.updatefailed')
-                )
-              }
-            })
-            .catch(e => {})
-        }
+        console.log(val, '==========')
+        this.$router.app.$http
+          .put('/profile/' + val.id, val)
+          .then(res => {
+            if (res.data.success) {
+              this.gridApi.updateRowData({
+                update: [Object.assign(val, res.data.data)]
+              })
+              this.$zglobal.showMessage(
+                'positive',
+                'center',
+                this.$t('operation.updatesuccess')
+              )
+              // console.log(res.data.data)
+            } else {
+              this.$zglobal.showMessage(
+                'red-7',
+                'center',
+                this.$t('operation.updatefailed')
+              )
+            }
+          })
+          .catch(e => {})
       })
     }
   }

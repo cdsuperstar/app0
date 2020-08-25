@@ -106,7 +106,7 @@ export default {
   },
   created() {
     this.$router.app.$http
-      .get('/z_unit/')
+      .get('/p3/s1/p3s1project/')
       .then(res => {
         if (res.data.success) {
           this.rowData = res.data.data
@@ -143,8 +143,8 @@ export default {
           checkboxSelection: true
         },
         {
-          headerName: '项目类型',
-          field: 'title',
+          headerName: this.$t('p3s1.proj_type'),
+          field: 'type',
           width: 90,
           minWidth: 90,
           maxWidth: 110,
@@ -158,8 +158,8 @@ export default {
           valueFormatter: this.gettypeSelector
         },
         {
-          headerName: '项目名称',
-          field: 'title',
+          headerName: this.$t('p3s1.proj_name'),
+          field: 'name',
           width: 260,
           minWidth: 260,
           maxWidth: 360,
@@ -168,9 +168,8 @@ export default {
           filter: true
         },
         {
-          headerName: '备注',
-          field: 'brief',
-          colId: 'date',
+          headerName: this.$t('modules.memo'),
+          field: 'memo',
           width: 150,
           minWidth: 150,
           maxWidth: 260,
@@ -226,7 +225,7 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_unit/' + val.id)
+                .delete('/p3/s1/p3s1project/' + val.id)
                 .then(res => {
                   if (res.data.success) {
                     // console.log(res.data.data)
@@ -276,7 +275,12 @@ export default {
       this.changerowcolor = ''
     },
     addItems() {
-      var newItems = [{}]
+      var newItems = [
+        {
+          name: this.$t('p3s1.Required'),
+          type: 'highway'
+        }
+      ]
       this.gridApi.updateRowData({ add: newItems })
     },
     saveItems() {
@@ -284,7 +288,7 @@ export default {
       selectedData.forEach(val => {
         if (val.id === undefined) {
           this.$router.app.$http
-            .post('/z_unit/', val)
+            .post('/p3/s1/p3s1project/', val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -306,7 +310,7 @@ export default {
             .catch(e => {})
         } else {
           this.$router.app.$http
-            .put('/z_unit/' + val.id, val)
+            .put('/p3/s1/p3s1project/' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({

@@ -29,7 +29,7 @@
                 color="primary"
                 size="sm"
                 icon="close"
-                title="关闭此窗口"
+                :title="$t('buttons.closethiswindow')"
                 :disable="fileupdone"
               />
             </div>
@@ -70,6 +70,7 @@
         </q-uploader>
       </q-item-section>
     </q-dialog>
+
     <div class="text-h5 q-ma-md text-secondary">
       {{ $t('p3s1.dev_paramname') }}
       <q-banner
@@ -79,8 +80,8 @@
         class="text-h6 bg-textinfo"
       >
         <q-icon name="warning" color="negative" siae="10px" />
-        ID【<font class="text-warning">{{ currentrowdataid }}</font>
-        】 待保存文件：
+        ID【<font class="text-warning">{{ currentrowdataid }}</font> 】
+        {{ $t('p3s1.besavedfiles') }}：
         <font class="text-warning">{{ files }}</font>
       </q-banner>
     </div>
@@ -229,7 +230,7 @@ export default {
           checkboxSelection: true
         },
         {
-          headerName: '设备名称',
+          headerName: this.$t('p3s1.dev_name'),
           field: 'name',
           width: 120,
           minWidth: 120,
@@ -239,7 +240,7 @@ export default {
           filter: true
         },
         {
-          headerName: '设备型号',
+          headerName: this.$t('p3s1.dev_type'),
           field: 'type',
           width: 100,
           minWidth: 100,
@@ -249,7 +250,7 @@ export default {
           filter: true
         },
         {
-          headerName: '天线频率',
+          headerName: this.$t('p3s1.dev_freq'),
           field: 'freq',
           width: 90,
           minWidth: 90,
@@ -259,7 +260,7 @@ export default {
           filter: true
         },
         {
-          headerName: '生产厂商',
+          headerName: this.$t('p3s1.dev_manuf'),
           field: 'manuf',
           width: 100,
           minWidth: 100,
@@ -269,7 +270,7 @@ export default {
           filter: true
         },
         {
-          headerName: '设备照片',
+          headerName: this.$t('p3s1.dev_files'),
           field: 'files',
           width: 90,
           minWidth: 90,
@@ -283,9 +284,8 @@ export default {
           }
         },
         {
-          headerName: '设备介绍',
+          headerName: this.$t('p3s1.dev_memo'),
           field: 'memo',
-          colId: 'date',
           width: 200,
           minWidth: 200,
           maxWidth: 450,
@@ -387,7 +387,15 @@ export default {
       this.changerowcolor = ''
     },
     addItems() {
-      var newItems = [{}]
+      var newItems = [
+        {
+          name: this.$t('p3s1.Required'),
+          type: this.$t('p3s1.Required'),
+          freq: this.$t('p3s1.Required'),
+          manuf: this.$t('p3s1.Required'),
+          files: []
+        }
+      ]
       this.gridApi.updateRowData({ add: newItems })
     },
     saveItems() {
@@ -417,7 +425,7 @@ export default {
             .catch(e => {})
         } else {
           if (this.files.length) {
-            val.dev_files = this.files
+            val.files = this.files
           }
           this.$router.app.$http
             .put('/p3/s1/p3s1device/' + val.id, val)
