@@ -1,24 +1,23 @@
 <template>
-  <div
-    class="ag-cell ag-cell-not-inline-editing ag-cell-with-height ag-cell-value cursor-pointer"
-  >
+  <div class="ag-cell-with-height ag-cell-value cursor-pointer">
     <q-icon
       dense
-      name="folder_shared"
+      name="folder_open"
       class="text-grey-8"
-      size="18px"
-      style="padding-bottom: 7px"
+      size="28px"
+      style="padding-bottom: 3px"
     />
     <q-badge outline class="q-ml-xs" align="top" color="primary">
       {{
-        typeof params.data.files === 'string'
-          ? JSON.parse(params.data.files).length
-          : params.data.files.length
+        typeof params.data[params.colDef.field] === 'string'
+          ? JSON.parse(params.data[params.colDef.field]).length
+          : 0
       }}
     </q-badge>
     <q-popup-proxy dense>
       <q-list dense class="bg-white">
         <q-item-label
+          v-if="typeof params.add === 'function'"
           header
           style="border-bottom: 1px dashed #ebebeb;padding:8px;"
           @click="addattach(params)"
@@ -28,9 +27,9 @@
             &nbsp; ADDFILES &nbsp;
           </q-badge>
         </q-item-label>
-        <div v-if="typeof params.data.files === 'string'">
+        <div v-if="typeof params.data[params.colDef.field] === 'string'">
           <q-item
-            v-for="f in JSON.parse(params.data.files)"
+            v-for="f in JSON.parse(params.data[params.colDef.field])"
             :key="f.id"
             v-ripple
             clickable
@@ -45,17 +44,21 @@
                 style="margin-top: 3px;"
               />
             </q-item-section>
-            <q-item-section @click="downfile(params.data.id, f)">
+            <q-item-section
+              @click="downfile(params.data.id, f)"
+              style="min-width: 100px;"
+            >
               <q-item-label lines="1" class="text-black">{{ f }}</q-item-label>
-              <q-item-label caption class="text-black">{{
-                params.data.issue
-              }}</q-item-label>
             </q-item-section>
-            <q-item-section side style="cursor: pointer">
+            <q-item-section
+              v-if="typeof params.del === 'function'"
+              side
+              style="cursor: pointer"
+            >
               <q-icon
                 name="cancel"
                 color="grey-5"
-                title="del"
+                title="Del…"
                 @click="deletefile(params.data.id, params.data, f)"
               />
             </q-item-section>
@@ -73,12 +76,17 @@ export default Vue.extend({
   name: 'AGattachmentCellRandervue',
   data() {},
   created() {
+    // console.log(typeof this.params.del, '+++++++', this.params)
     // end
   },
   mounted() {},
   methods: {
     downfile(id, filename) {
-      this.params.colDef.cellRendererParams.down(id, filename)
+      this.params.colDef.cellRendererParams.down(
+        id,
+        filename,
+        this.params.colDef.field
+      )
     },
     deletefile(id, data, filename) {
       this.params.colDef.cellRendererParams.del(id, data, filename)

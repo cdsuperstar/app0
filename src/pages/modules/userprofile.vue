@@ -284,7 +284,9 @@
                 <q-icon color="primary" name="double_arrow" />
               </q-item-section>
               <q-item-section>
-                {{ $t('auth.users.profile.department') }}：{{ department }}
+                {{ $t('auth.users.profile.department') }}：{{
+                  department
+                }}&nbsp;{{ data.companyname }}
               </q-item-section>
             </q-item>
             <q-separator
