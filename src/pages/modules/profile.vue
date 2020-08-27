@@ -57,7 +57,7 @@
         @click="saveItems()"
       />
       <q-btn
-        color="treebtn"
+        color="warning"
         text-color="white"
         class="q-ma-xs"
         icon="cloud_download"
@@ -78,6 +78,15 @@
         :label="this.$t('buttons.setuit')"
         @click="Showunittree()"
       />
+      <q-btn
+        v-print="printObj"
+        color="treebtn"
+        text-color="white"
+        class="q-ma-xs"
+        icon="print"
+        :label="this.$t('buttons.print')"
+        @click="printItems()"
+      />
       <q-space v-if="$q.screen.gt.xs" />
       <q-input
         v-model="quickFilter"
@@ -97,8 +106,9 @@
         color="info"
       />
     </div>
-    <div class="shadow-1">
+    <div id="printMe" class="shadow-1">
       <ag-grid-vue
+        id="myGrid"
         style="width: 100%; height: 500px;"
         class="ag-theme-balham Profile-agGrid"
         row-selection="multiple"
@@ -146,7 +156,12 @@ export default {
       changerowcolor: null,
       defaultColDef: null,
       unitMap: {},
-      mPermissions: []
+      mPermissions: [],
+      printObj: {
+        id: 'printMe',
+        popTitle: '这里是标题区域，添加页眉和页脚才能看见！',
+        extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>'
+      }
     }
   },
   computed: {
@@ -440,6 +455,15 @@ export default {
     },
     getUnitmap(params) {
       return this.unitMap[params.value]
+    },
+    // 打印aggrid标题必须选项
+    printItems() {
+      this.gridApi.setDomLayout('print')
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.gridApi.setDomLayout(null)
+        }, 5000)
+      })
     },
     ExportDataAsCVS() {
       var params = {
