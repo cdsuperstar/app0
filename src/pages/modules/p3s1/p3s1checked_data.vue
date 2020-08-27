@@ -11,48 +11,62 @@
             icon="close"
             :title="this.$t('buttons.close')"
           />
+          <q-btn
+            flat
+            round
+            dense
+            icon="cached"
+            :title="this.$t('buttons.refresh')"
+            @click="refreshdata"
+          />
           <q-toolbar-title>
-            <div class="text-weight-bold">
+            <div v-if="$q.screen.gt.xs" class="text-weight-bold">
               编辑已检数据
             </div>
           </q-toolbar-title>
-          <div class="col-3">
-            <q-select
-              v-model.trim="signtype"
-              :options="typeoptions"
-              label="设置标记类型"
-              color="#e6eef5"
-              label-color="white"
-              standout="bg-primary text-white"
-              map-options
-              stretch
-              style="min-width:15em;max-width: 15em;"
-              @input="setactivetype"
-            >
-              <template v-slot:option="scope">
-                <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
-                  <q-item-section>
-                    <q-item-label v-html="scope.opt.label"></q-item-label>
-                  </q-item-section>
-                  <q-item-section side>
-                    <q-toggle
-                      v-model="showtype"
-                      color="green"
-                      checked-icon="check"
-                      unchecked-icon="clear"
-                      :val="scope.opt.value"
-                      @input="showsigntype"
-                    />
-                  </q-item-section>
-                </q-item>
-              </template>
-              <template v-slot:append>
-                <q-icon name="visibility" />
-              </template>
-            </q-select>
-          </div>
+
+          <q-select
+            v-model.trim="signtype"
+            :options="typeoptions"
+            label="设置标记类型"
+            dark
+            label-color="white"
+            options-selected-class="text-orange"
+            popup-content-class="bg-positive"
+            map-options
+            stretch
+            :style="
+              $q.screen.gt.xs
+                ? 'min-width:15em;max-width: 15em;'
+                : 'min-width:8em;max-width: 8em;'
+            "
+            @input="setactivetype"
+          >
+            <template v-slot:option="scope">
+              <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+                <q-item-section>
+                  <q-item-label v-html="scope.opt.label"></q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <q-toggle
+                    v-model="showtype"
+                    color="green"
+                    checked-icon="check"
+                    unchecked-icon="clear"
+                    :val="scope.opt.value"
+                    @input="showsigntype"
+                  />
+                </q-item-section>
+              </q-item>
+            </template>
+            <template v-slot:append>
+              <q-icon name="visibility" />
+            </template>
+          </q-select>
+
           <q-btn
             flat
+            stretch
             icon="save"
             :label="this.$t('buttons.confirm')"
             @click="aDDNewProjdata()"
@@ -67,7 +81,7 @@
             :uniqueKey="uuid"
             :ratio="16 / 9"
             :imgUrl="currentImage"
-            @vmarker:onImageLoad="onImageLoad(index)"
+            @vmarker:onImageLoad="onImageLoad"
             @vmarker:onAnnoAdded="onAnnoAdded"
             @vmarker:onAnnoSelected="onAnnoSelected"
             @vmarker:onUpdated="onUpdated"
@@ -133,8 +147,7 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham p3s1checked-dataGrid"
-        row-selection="multiple"
-        row-multi-select-with-click="true"
+        row-selection="single"
         :grid-options="gridOptions"
         :column-defs="columnDefs"
         :row-data="rowData"
@@ -377,6 +390,12 @@ export default {
         })
         // console.log(data, '====onAnnoAdded', JSON.stringify(this.showtype))
         // 当你想限制标记个数时
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          '无效标记：先选择标注类型！'
+        )
       }
       // if (this.signtype !== null) {
       //   this.$refs['aiPanel-editor'].getMarker().setTag({
@@ -407,13 +426,11 @@ export default {
         {
           headerName: 'ID',
           field: 'id',
-          width: 70,
-          minWidth: 70,
-          maxWidth: 70,
+          width: 50,
+          minWidth: 50,
+          maxWidth: 50,
           sortable: true,
           editable: false,
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true
         },
         {
@@ -626,15 +643,19 @@ export default {
     },
     // 处理设置活动类型
     setactivetype() {
-      console.log(this.signtype, '----------signtype')
-      if (this.showtype.includes(this.signtype.value)) {
-        console.log('ok..')
+      console.log(JSON.stringify(this.signtype), '----------signtype')
+      if (this.showtype) {
+        if (this.showtype.includes(this.signtype.value)) {
+          console.log('ok..')
+        } else {
+          this.$zglobal.showMessage(
+            'red-7',
+            'center',
+            '请注意：选定类型当前被隐藏，不支持编辑！'
+          )
+        }
       } else {
-        this.$zglobal.showMessage(
-          'red-7',
-          'center',
-          '请注意：选定类型当前被隐藏，不支持编辑！'
-        )
+        this.$zglobal.showMessage('red-7', 'center', '请注意：请选定标记种类！')
       }
     },
     showsigntype() {
@@ -648,6 +669,9 @@ export default {
         })
       }
       this.onImageLoad()
+    },
+    refreshdata() {
+      console.log('刷新数据中………………')
     }
   }
 }

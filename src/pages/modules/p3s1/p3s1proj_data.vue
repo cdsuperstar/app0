@@ -29,7 +29,7 @@
                 color="primary"
                 size="sm"
                 icon="close"
-                title="关闭此窗口"
+                :title="$t('buttons.closethiswindow')"
                 :disable="fileupdone"
               />
             </div>
@@ -94,47 +94,50 @@
         <q-separator />
         <q-card-section style="max-height: 80vh" class="scroll">
           <q-input
-            v-model.trim="data.title"
+            v-model.trim="data.name"
             type="text"
             style="max-width: 500px"
             autofocus
             label="数据名称"
-            :error="$v.data.title.$error"
+            :error="$v.data.name.$error"
             error-message="请输入数据名称！"
-            @blur="$v.data.title.$touch"
+            @blur="$v.data.name.$touch"
           />
-          <div class="col-3 row q-gutter-lg items-start">
+          <div class="row q-gutter-lg items-start">
             <q-select
-              v-model.trim="data.user_id"
-              style="min-width: 200px;max-width: 200px"
-              :options="useroptions"
+              v-model.trim="data.project_id"
+              class="col-11"
+              style="max-width: 246px"
+              :options="projarroption"
               label="所属项目"
               emit-value
               map-options
             />
             <q-select
-              v-model.trim="data.user_id"
-              style="min-width: 200px;max-width: 200px"
-              :options="useroptions"
+              v-model.trim="data.device_id"
+              class="col-11"
+              style="max-width: 246px"
+              :options="devarroption"
               label="检测设备"
               emit-value
               map-options
             />
 
             <q-input
-              v-model.trim="data.title"
+              v-model.trim="data.miles"
               type="text"
-              style="min-width: 150px;max-width: 200px"
+              class="col-11"
+              style="max-width: 246px"
               autofocus
               label="里程(Km)"
-              :error="$v.data.title.$error"
+              :error="$v.data.miles.$error"
               error-message="请输入里程！"
-              @blur="$v.data.title.$touch"
+              @blur="$v.data.miles.$touch"
             />
           </div>
           <div class="col-md-8 q-mt-md">
             <q-editor
-              v-model="data.content"
+              v-model="data.memo"
               :definitions="{
                 upload: {
                   label: '附件',
@@ -179,20 +182,25 @@
 
         <q-card-section class="q-pt-none">
           <q-select
-            v-model.trim="data.user_id"
-            class="text-white"
-            color="white"
-            label-color="white"
+            v-model.trim="data.modeltype"
             style="min-width: 200px;max-width: 200px"
-            :options="useroptions"
             label="选择模型"
+            dark
+            options-selected-class="text-orange"
+            popup-content-class="bg-positive"
             emit-value
             map-options
+            :options="modeloption"
           />
         </q-card-section>
         <q-separator color="info" />
         <q-card-actions align="right" class="text-primary bg-white ">
-          <q-btn flat class="text-weight-bold" label="开始检测" />
+          <q-btn
+            flat
+            class="text-weight-bold"
+            label="开始检测"
+            @click="Detection"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -205,8 +213,8 @@
         class="text-h6 bg-textinfo"
       >
         <q-icon name="warning" color="negative" siae="10px" />
-        ID【<font class="text-warning">{{ currentrowdataid }}</font>
-        】 待保存文件：
+        ID【<font class="text-warning">{{ currentrowdataid }}</font> 】
+        {{ $t('p3s1.besavedfiles') }}：
         <font class="text-warning">{{ files }}</font>
       </q-banner>
     </div>
@@ -246,7 +254,7 @@
         text-color="white"
         class="q-ma-xs"
         icon="image_search"
-        label="检测"
+        :label="this.$t('p3s1.detection')"
         @click="Detectiondata()"
       />
       <q-btn
@@ -280,8 +288,7 @@
       <ag-grid-vue
         style="width: 100%; height: 500px;"
         class="ag-theme-balham p3s1proj-dataGrid"
-        row-selection="multiple"
-        row-multi-select-with-click="true"
+        row-selection="single"
         :grid-options="gridOptions"
         :column-defs="columnDefs"
         :row-data="rowData"
@@ -323,26 +330,84 @@ export default {
       rowData: null,
       getRowStyle: null,
       changerowcolor: null,
+      modeloption: this.$t('p3s1.checkmodeloptions'),
       defaultColDef: null,
+      projarroption: [],
+      devarroption: [],
       data: {
-        title: '',
-        user_id: '',
-        created_date: '',
+        name: '',
+        modeltype: '',
+        device_id: '',
+        project_id: '',
+        miles: '',
         files: [],
-        content: ''
+        memo: ''
       }
     }
   },
   created() {
+    // 取项目数据
     this.$router.app.$http
-      .get('/z_unit/')
+      .get('/p3/s1/p3s1project/')
       .then(res => {
         if (res.data.success) {
-          this.rowData = res.data.data
+          var projarr = []
+          for (const item in res.data.data) {
+            var tmpproj = {}
+            if (res.data.data[item].id) {
+              tmpproj.value = res.data.data[item].id
+              if (res.data.data[item].type) {
+                for (const ittype in this.$t('p3s1.projtypeoptions')) {
+                  if (ittype === res.data.data[item].type) {
+                    tmpproj.label =
+                      '【' +
+                      this.$t('p3s1.projtypeoptions')[ittype] +
+                      '】' +
+                      res.data.data[item].name
+                    break
+                  }
+                }
+              }
+              projarr[tmpproj.value] = tmpproj.label
+              // projarr.push(tmpproj)
+            }
+          }
+          this.projarroption = projarr
+          this.columnDefs[5].cellEditorParams.values = projarr
+          // console.log(this.projarroption, '-----------')
         } else {
         }
       })
       .catch(e => {})
+    // 取设备数据
+    this.$router.app.$http
+      .get('/p3/s1/p3s1device/')
+      .then(res => {
+        if (res.data.success) {
+          var devarr = []
+          for (const item in res.data.data) {
+            var tmpdev = {}
+            if (res.data.data[item].id) {
+              tmpdev.value = res.data.data[item].id
+              tmpdev.label =
+                '【' +
+                res.data.data[item].type +
+                '-' +
+                res.data.data[item].freq +
+                '】' +
+                res.data.data[item].name
+              devarr[tmpdev.value] = tmpdev.label
+              // devarr.push(tmpdev)
+            }
+          }
+          this.devarroption = devarr
+          this.columnDefs[2].cellEditorParams.values = devarr
+          this.getProjData()
+        } else {
+        }
+      })
+      .catch(e => {})
+    // end
   },
   beforeMount() {
     this.initGrid()
@@ -362,18 +427,16 @@ export default {
         {
           headerName: 'ID',
           field: 'id',
-          width: 70,
-          minWidth: 70,
-          maxWidth: 70,
+          width: 50,
+          minWidth: 50,
+          maxWidth: 50,
           sortable: true,
           editable: false,
-          headerCheckboxSelection: true,
-          headerCheckboxSelectionFilteredOnly: true,
           checkboxSelection: true
         },
         {
-          headerName: '数据名称',
-          field: 'title',
+          headerName: this.$t('p3s1.data_name'),
+          field: 'name',
           width: 260,
           minWidth: 260,
           maxWidth: 360,
@@ -382,28 +445,33 @@ export default {
           filter: true
         },
         {
-          headerName: '检测设备',
-          field: 'title',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 200,
+          headerName: this.$t('p3s1.data_dev'),
+          field: 'device_id',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 260,
           editable: true,
           sortable: true,
-          filter: true
+          filter: true,
+          cellEditor: 'agSelectCellEditor',
+          cellEditorParams: {
+            values: {}
+          },
+          valueFormatter: this.getdevSelector
         },
         {
-          headerName: '里程(Km)',
-          field: 'title',
+          headerName: this.$t('p3s1.data_miles'),
+          field: 'miles',
           width: 100,
           minWidth: 100,
-          maxWidth: 200,
+          maxWidth: 100,
           editable: true,
           sortable: true,
           filter: true
         },
         {
-          headerName: '附件',
-          field: 'pro_files',
+          headerName: this.$t('p3s1.data_attachment'),
+          field: 'files',
           width: 90,
           minWidth: 90,
           editable: true,
@@ -416,37 +484,26 @@ export default {
           }
         },
         {
-          headerName: '项目类型',
-          field: 'title',
-          width: 95,
-          minWidth: 95,
-          maxWidth: 110,
+          headerName: this.$t('p3s1.data_protype'),
+          field: 'project_id',
+          width: 150,
+          minWidth: 150,
+          maxWidth: 260,
           editable: true,
           sortable: true,
           filter: true,
           cellEditor: 'agSelectCellEditor',
           cellEditorParams: {
-            values: Object.keys(this.$t('p3s1.projtypeoptions'))
+            values: {}
           },
-          valueFormatter: this.gettypeSelector
+          valueFormatter: this.getprojSelector
         },
         {
-          headerName: '项目名称',
-          field: 'title',
-          width: 260,
-          minWidth: 260,
-          maxWidth: 360,
-          editable: true,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: '备注',
-          field: 'brief',
-          colId: 'date',
-          width: 150,
-          minWidth: 150,
-          maxWidth: 260,
+          headerName: this.$t('modules.memo'),
+          field: 'memo',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 100,
           editable: true,
           sortable: true,
           cellEditor: 'agLargeTextCellEditor',
@@ -479,9 +536,24 @@ export default {
     onQuickFilterChanged() {
       this.gridApi.setQuickFilter(this.quickFilter)
     },
-    gettypeSelector(params) {
-      const mapMenu = this.$t('p3s1.projtypeoptions')
-      return mapMenu[params.value]
+    getprojSelector(params) {
+      const ProMenu = this.projarroption
+      return ProMenu[params.value]
+    },
+    getdevSelector(params) {
+      const DevMenu = this.devarroption
+      return DevMenu[params.value]
+    },
+    getProjData() {
+      this.$router.app.$http
+        .get('/p3/s1/p3s1projectdata/')
+        .then(res => {
+          if (res.data.success) {
+            this.rowData = res.data.data
+          } else {
+          }
+        })
+        .catch(e => {})
     },
     delItems() {
       var selectedData = this.gridApi.getSelectedRows()
@@ -499,10 +571,10 @@ export default {
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http
-                .delete('/z_unit/' + val.id)
+                .delete('/p3/s1/p3s1projectdata/' + val.id)
                 .then(res => {
+                  console.log(res, '---------')
                   if (res.data.success) {
-                    // console.log(res.data.data)
                     this.$zglobal.showMessage(
                       'positive',
                       'center',
@@ -530,10 +602,41 @@ export default {
     ExportDataAsCVS() {
       var params = {
         fileName: 'p3s1projdata.xls',
-        suppressQuotes: true,
-        columnSeparator: ','
+        suppressQuotes: false, // 是否转换特殊字符
+        columnSeparator: ',', // 分隔符号
+        columnGroups: true, // 导出标题列
+        columnKeys: [
+          'ID',
+          'name',
+          'device_id',
+          'project_id',
+          'miles',
+          'memo',
+          'created_at'
+        ],
+        // allColumns: true, // 导出所有列
+        // customHeader: '', // 页面标题
+        // customFooter: '', // 页面底部
+        // onlySelected: false, // 导出选定行
+        // select的转换
+        processCellCallback: this.myCellCallback
       }
       this.gridApi.exportDataAsCsv(params)
+    },
+    myCellCallback(params) {
+      let tmpd = ''
+      switch (params.column.colId) {
+        case 'device_id':
+          tmpd = this.devarroption[params.node.data.device_id]
+          break
+        case 'project_id':
+          tmpd = this.projarroption[params.node.data.project_id]
+          break
+        default:
+          break
+      }
+      if (tmpd) params.value = tmpd
+      return params.value
     },
     onchangerowcolor() {
       return { backgroundColor: this.changerowcolor }
@@ -555,8 +658,11 @@ export default {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         if (val.id === undefined) {
+          if (this.files.length) {
+            val.files = this.files
+          }
           this.$router.app.$http
-            .post('/z_unit/', val)
+            .post('/p3/s1/p3s1projectdata/', val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -581,7 +687,7 @@ export default {
             val.pro_files = this.files
           }
           this.$router.app.$http
-            .put('/z_unit/' + val.id, val)
+            .put('/p3/s1/p3s1projectdata/' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
@@ -606,38 +712,53 @@ export default {
       })
     },
     aDDNewProjdata() {
-      // 文件上传
-      // console.log(this.data)
-      // var formData = new FormData()
-      // for (const key in this.data) {
-      //   formData.append(key, this.data[key])
-      // }
-      // formData.append('files[]', this.$refs.fileuper.files)
-      // // 文件结束
-
-      this.$router.app.$http.post('/article/', this.data).then(res => {
-        console.log(res)
-        if (res.data.success) {
-          this.gridApi.updateRowData({
-            add: [res.data.data]
-          })
-          this.$zglobal.showMessage(
-            'positive',
-            'center',
-            this.$t('operation.addsuccess')
-          )
-        } else {
-          this.$zglobal.showMessage(
-            'red-7',
-            'center',
-            this.$t('auth.errors.adderror')
-          )
-        }
-      })
-      this.DaddArticle = false
+      if (this.files.length) {
+        this.data.files = this.files
+      }
+      console.log(this.data, '++++++++++++++')
+      this.$router.app.$http
+        .post('/p3/s1/p3s1projectdata/', this.data)
+        .then(res => {
+          if (res.data.success) {
+            console.log(res.data.data, '=====res.data.data=========')
+            this.gridApi.updateRowData({
+              add: [res.data.data]
+            })
+            this.$zglobal.showMessage(
+              'positive',
+              'center',
+              this.$t('operation.addsuccess')
+            )
+          } else {
+            this.$zglobal.showMessage(
+              'red-7',
+              'center',
+              this.$t('operation.addfailed')
+            )
+          }
+        })
+        .catch(e => {})
+      this.DaddProjdata = false
     },
     Detectiondata() {
-      this.opDetectionwindow = true
+      var selectedData = this.gridApi.getSelectedRows()
+      if (selectedData.length === 1) {
+        // 选定模型传入数据做那些处理
+        // this.vote = selectedData[0]
+        this.$nextTick(() => {
+          this.opDetectionwindow = true
+        })
+      } else {
+        this.$zglobal.showMessage(
+          'red-7',
+          'center',
+          this.$t('operation.rowserror')
+        )
+      }
+    },
+    Detection() {
+      console.log('检测中……,检测模型为：', this.data.modeltype)
+      this.opDetectionwindow = false
     },
     // 文件上传
     checkFileSize(files) {
@@ -698,7 +819,10 @@ export default {
   },
   validations: {
     data: {
-      title: {
+      name: {
+        required
+      },
+      miles: {
         required
       },
       createddate: {

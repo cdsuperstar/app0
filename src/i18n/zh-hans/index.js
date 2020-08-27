@@ -2,6 +2,7 @@
 // so you can safely delete all default props below
 export default {
   p3s1: {
+    detection: '检测',
     Required: '必填项',
     dev_paramname: '设备参数',
     dev_name: '设备名称',
@@ -16,12 +17,47 @@ export default {
     proj_name: '项目名称',
     proj_type: '项目类型',
     proj_data: '项目数据',
+    data_name: '数据名称',
+    data_dev: '检测设备',
+    data_miles: '里程(Km)',
+    data_attachment: '附件',
+    data_protype: '项目类型',
     checked_data: '已检数据',
     projtypeoptions: {
       highway: '公路',
       tunnel: '隧道',
       bridge: '桥梁'
     },
+    checkmodeloptions: [
+      {
+        label: '高速公路',
+        value: 'highway'
+      },
+      {
+        label: '省道 - 山区',
+        value: 'mprovinceroad'
+      },
+      {
+        label: '省道 - 平原',
+        value: 'pprovinceroad'
+      },
+      {
+        label: '国道 - 山区',
+        value: 'mnationalroad'
+      },
+      {
+        label: '国道 - 平原',
+        value: 'pnationalroad'
+      },
+      {
+        label: '隧道',
+        value: 'tunnel'
+      },
+      {
+        label: '桥梁',
+        value: 'bridge'
+      }
+    ],
     besavedfiles: '待保存文件'
   },
   failed: '操作失败',
@@ -43,6 +79,8 @@ export default {
   buttons: {
     home: '主页',
     close: '关闭',
+    refresh: '刷新',
+    print: '打印',
     closethiswindow: '关闭此窗口',
     comfirmtitle: '确认操作',
     comfirmdialog:

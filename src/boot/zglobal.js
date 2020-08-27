@@ -9,7 +9,7 @@ const zglobal = {
       { name: 'primary', value: '#027BE3' },
       { name: 'secondary', value: '#26A69A' },
       { name: 'accent', value: '#9C27B0' },
-      { name: 'positive', value: '#21BA45' },
+      { name: 'positive', value: '#90bdaf' },
       { name: 'negative', value: '#C10015' },
       { name: 'info', value: '#aceee6' },
       { name: 'warning', value: '#F2C037' },
