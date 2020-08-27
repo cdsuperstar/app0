@@ -93,6 +93,8 @@ export default {
   buttons: {
     home: '主页',
     close: '关闭',
+    refresh: '刷新',
+    print: '打印',
     closethiswindow: '关闭此窗口',
     comfirmtitle: '确认操作',
     comfirmdialog:
