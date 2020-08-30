@@ -1,13 +1,11 @@
 <template>
-  <div
-    class="ag-cell ag-cell-not-inline-editing ag-cell-with-height ag-cell-value cursor-pointer"
-  >
+  <div class="ag-cell-with-height ag-cell-value cursor-pointer">
     <q-icon
       dense
-      name="folder_shared"
+      name="folder_open"
       class="text-grey-8"
-      size="18px"
-      style="padding-bottom: 7px"
+      size="28px"
+      style="padding-bottom: 3px"
     />
     <q-badge outline class="q-ml-xs" align="top" color="primary">
       {{
@@ -60,7 +58,7 @@
               <q-icon
                 name="cancel"
                 color="grey-5"
-                title="del"
+                title="Del…"
                 @click="deletefile(params.data.id, params.data, f)"
               />
             </q-item-section>
