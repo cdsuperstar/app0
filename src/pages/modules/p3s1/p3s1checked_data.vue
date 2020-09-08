@@ -393,7 +393,7 @@ export default {
       } else {
         this.$zglobal.showMessage(
           'red-7',
-          'center',
+          'bottom-left',
           '无效标记：先选择标注类型！'
         )
       }

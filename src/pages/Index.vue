@@ -103,6 +103,7 @@
         <ve-histogram
           :data="HistogramchartData"
           :settings="HistogramchartSettings"
+          :option="histopton"
         ></ve-histogram>
       </q-card-section>
     </q-card>
@@ -124,6 +125,16 @@ export default {
   components: { VeHistogram, VePie, VeMap, VeLine, VeRadar, draggable },
   data() {
     return {
+      histopton: {
+        backgroundColor: {
+          type: 'pattern',
+          repeat: 'repeat',
+          image: { src: '../statics/09.jpg' } // 赋值
+        },
+        title: {
+          text: 'Awesome Chart'
+        }
+      },
       usercfg: { quickapplication: [] },
       modlist: [],
       droplist: [],
