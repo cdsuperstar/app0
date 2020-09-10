@@ -19,7 +19,7 @@
     >
       <q-toolbar style="border-bottom: 1px dashed #ebebeb;">
         <q-toolbar-title>
-          <span class="text-subtitle1 text-weight-bold"> 离线应用</span>
+          <span class="text-subtitle1 text-weight-bold"> 快捷应用</span>
         </q-toolbar-title>
       </q-toolbar>
       <q-card-section
@@ -29,7 +29,7 @@
         <q-card
           flat
           class="col-3"
-          style="cursor: pointer;"
+          style="cursor: pointer;margin-left: 5px;"
           @click="linktoURL('#/user/p2s1/p2s1_off_qn')"
         >
           <q-card-section horizontal align="center">
@@ -41,7 +41,7 @@
                 <q-icon
                   name="queue"
                   color="white"
-                  style="font-size: 2rem;padding: 5px;"
+                  style="font-size: 2rem;padding: 5px; margin-left: 5px;"
                 ></q-icon>
               </q-item-section>
               <q-item-section style="margin-left: 1px;font-size: xx-small">
@@ -65,7 +65,7 @@
                 <q-icon
                   name="format_list_bulleted"
                   color="white"
-                  style="font-size: 2rem;padding: 5px;"
+                  style="font-size: 2rem;padding: 5px;margin-left: 5px;"
                 ></q-icon>
               </q-item-section>
               <q-item-section style="margin-left: 1px;font-size: xx-small">

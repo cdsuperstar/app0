@@ -62,13 +62,16 @@ const zglobal = {
       { name: 'expbtn', value: '#FF33CC' }
     ]
   },
-  showMessage(color, position, msgval) {
+  showMessage(color, position, msgval, multiLine, avatar) {
     this.self.$q.notify({
       message: msgval,
       color: color,
       textColor: 'white',
       position: position,
-      timeout: 2500,
+      multiLine: multiLine,
+      timeout: 3000,
+      html: true,
+      avatar: avatar,
       actions: [{ icon: 'close', color: 'white' }]
     })
   },

@@ -135,7 +135,7 @@
             <q-card
               flat
               class="col-4"
-              style="cursor: pointer;"
+              style="cursor: pointer;margin-left: 5px;"
               @click="linktoURL('#/p2s1questionnaire')"
             >
               <q-card-section horizontal align="center">
@@ -147,7 +147,7 @@
                     <q-icon
                       name="queue"
                       color="white"
-                      style="font-size: 3rem; padding: 5px;"
+                      style="font-size: 3rem; padding: 5px;margin-left: 5px;"
                     ></q-icon>
                   </q-item-section>
                   <q-item-section style="margin-left: 1px; font-size: 1em;">
@@ -171,7 +171,7 @@
                     <q-icon
                       name="format_list_bulleted"
                       color="white"
-                      style="font-size: 3rem; padding: 5px;"
+                      style="font-size: 3rem; padding: 5px;margin-left: 5px;"
                     ></q-icon>
                   </q-item-section>
                   <q-item-section style="margin-left: 1px; font-size: 1em;">
