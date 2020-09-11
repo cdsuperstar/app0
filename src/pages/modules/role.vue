@@ -367,7 +367,7 @@ export default {
             .catch(e => {})
         } else {
           this.$router.app.$http
-            .put('/z_role' + val.id, val)
+            .put('/z_role/' + val.id, val)
             .then(res => {
               if (res.data.success) {
                 this.gridApi.updateRowData({
