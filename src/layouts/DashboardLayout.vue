@@ -27,7 +27,7 @@
           stretch
           flat
           :label="
-            currectRole === undefined
+            currectRole === undefined || currectRole === null
               ? this.$t('roles.rolelist')
               : currectRole.title
           "
@@ -51,7 +51,7 @@
                 <q-icon name="person" size="25px" />
               </q-item-section>
               <q-item-section>
-                <q-item-label>{{ ro.title }} </q-item-label>
+                <q-item-label>{{ ro.title }}</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -191,12 +191,12 @@
             :label="this.$t('theme.title')"
           >
             <q-item>
-              <q-item-section
-                ><q-toggle
+              <q-item-section>
+                <q-toggle
                   v-model="usercfg.dark"
                   :label="this.$t('theme.shieldeye')"
-                ></q-toggle
-              ></q-item-section>
+                ></q-toggle>
+              </q-item-section>
             </q-item>
             <q-item
               v-for="n in themeoptions"
@@ -261,7 +261,7 @@
 
     <q-footer reveal bordered class="bg-white text-primary">
       <q-toolbar>
-        <q-toolbar-title> </q-toolbar-title>
+        <q-toolbar-title></q-toolbar-title>
         <q-btn-dropdown
           stretch
           flat
@@ -506,18 +506,22 @@ export default {
   -webkit-box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
   background-color: #c1c1c1;
 }
+
 /*定义aggrid的css*/
 .ag-theme-balham .ag-icon,
 .ag-header-icon .ag-sort-ascending-icon {
   color: #ffffff;
 }
+
 .ag-theme-balham .ag-paging-page-summary-panel .ag-icon,
 .ag-theme-balham .ag-paging-panel {
   color: #000000;
 }
+
 .ag-theme-balham .ag-icon-checkbox-unchecked {
   color: #cccccc;
 }
+
 .ag-theme-balham .ag-icon-checkbox-checked {
   color: var(--q-color-secondary);
 }
