@@ -2432,6 +2432,23 @@ export default {
         console.log(JSON.stringify(selectedData[0]))
         this.vote = selectedData[0]
         this.$nextTick(() => {
+          // 检测是否vote里所有子项是否有[]符号，有则parse
+          for (var votekey in this.vote) {
+            // console.log(typeof this.vote[votekey], '++++++++', votekey)
+            if (
+              this.vote[votekey] !== null &&
+              typeof this.vote[votekey] === 'string'
+            ) {
+              // console.log(votekey, '-----')
+              if (
+                this.vote[votekey].substring(0, 1) === '[' &&
+                this.vote[votekey].substring(this.vote[votekey].length - 1) ===
+                  ']'
+              ) {
+                this.vote[votekey] = JSON.parse(this.vote[votekey])
+              }
+            }
+          }
           this.editItem = true
         })
       } else {
@@ -2446,6 +2463,21 @@ export default {
       const selectedData = this.gridApi.getSelectedRows()
       selectedData.forEach(val => {
         // console.log(val)
+        // 检测是否vote里所有项是否有q-select多选Array，如果有则toJson
+        for (var votekey in val) {
+          if (typeof val[votekey] === 'object' && val[votekey] !== null) {
+            val[votekey] = JSON.stringify(val[votekey])
+          }
+        }
+        // console.log(val, '-------')
+        if (val.re_conclusion !== null) {
+          this.$zglobal.showMessage(
+            'red-7',
+            'center',
+            this.$t('p2s1.re_failed')
+          )
+          return
+        }
         if (val.id) {
           if (this.files.length) {
             val.au_files = this.files

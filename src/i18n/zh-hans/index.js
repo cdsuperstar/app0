@@ -30,7 +30,12 @@ export default {
     savesuccess: '保存问卷成功！',
     savefailed: '保存问卷失败！',
     uploadsuccess: '上传问卷成功！',
-    uploadfailed: '上传问卷失败！'
+    uploadfailed: '上传问卷失败！',
+    bmodify: '[管理问卷]是否有修改权限？',
+    bDelete: '[管理问卷]是否有删除权限？',
+    saveFiles: '[管理问卷]是否有保存权限？',
+    reviewData: '[管理问卷]是否有审核问卷权限？',
+    bexport: '[管理问卷]是否有导出权限？'
   },
   p1s1techfile: {
     header: '技术文件',
@@ -409,6 +414,9 @@ export default {
         department: '单位',
         title: '职称',
         jobs: '岗位',
+        province: '省份',
+        city: '地区（市）',
+        area: '市（县）',
         remark: '备注',
         success: '用户资料更改成功！',
         bsetunit: '[用户信息]是否有设置用户单位功能',

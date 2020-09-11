@@ -2034,6 +2034,7 @@
     <q-separator color="accent" />
     <div class="row q-ma-md" style="margin: 16px 1px;">
       <q-btn
+        v-if="mPermissions['p2s1_on_qs.bmodify']"
         color="addbtn"
         text-color="white"
         class="q-ma-xs"
@@ -2042,6 +2043,7 @@
         @click="modifyItems()"
       />
       <q-btn
+        v-if="mPermissions['p2s1_on_qs.bDelete']"
         color="deldbtn"
         text-color="white"
         class="q-ma-xs"
@@ -2050,6 +2052,7 @@
         @click="delItems()"
       />
       <q-btn
+        v-if="mPermissions['p2s1_on_qs.saveFiles']"
         color="savebtn"
         text-color="white"
         class="q-ma-xs"
@@ -2063,6 +2066,7 @@
         color="info"
       />
       <q-btn
+        v-if="mPermissions['p2s1_on_qs.reviewData']"
         color="treebtn"
         text-color="white"
         class="q-ma-xs"
@@ -2071,6 +2075,7 @@
         @click="reviewdata()"
       />
       <q-btn
+        v-if="mPermissions['p2s1_on_qs.bexport']"
         color="expbtn"
         text-color="white"
         class="q-ma-xs"
@@ -2122,6 +2127,7 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import { mapActions, mapState } from 'vuex'
 import agAttachmentCellRander from '../../frameworkComponents/agAttachmentCellRander'
 
 export default {
@@ -2154,10 +2160,13 @@ export default {
       getRowStyle: null,
       changerowcolor: null,
       frameworkComponents: null,
-      defaultColDef: null
+      defaultColDef: null,
+      mPermissions: []
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('zero', ['ZPermissions'])
+  },
   watch: {
     // 获得列表
   },
@@ -2180,6 +2189,7 @@ export default {
     // console.log(this.ZModules)
     this.gridApi = this.gridOptions.api
     this.gridColumnApi = this.gridOptions.columnApi
+    this.initPermissions()
   },
   methods: {
     // 计算问卷内子项
@@ -2191,6 +2201,70 @@ export default {
         Number(this.vote.a1004)
     },
     // 结束
+    // 权限
+    ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
+    initPermissions() {
+      const preq = [
+        {
+          module: 'p2s1_on_qs',
+          name: 'p2s1_on_qs.bmodify',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('p2s1.bmodify')
+        },
+        {
+          module: 'p2s1_on_qs',
+          name: 'p2s1_on_qs.bDelete',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('p2s1.bDelete')
+        },
+        {
+          module: 'p2s1_on_qs',
+          name: 'p2s1_on_qs.saveFiles',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('p2s1.saveFiles')
+        },
+        {
+          module: 'p2s1_on_qs',
+          name: 'p2s1_on_qs.reviewData',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('p2s1.reviewData')
+        },
+        {
+          module: 'p2s1_on_qs',
+          name: 'p2s1_on_qs.bexport',
+          syscfg: {
+            required: false,
+            type: 'Boolean',
+            default: null
+          },
+          title: this.$t('p2s1.bexport')
+        }
+      ]
+
+      this.reqThePermission(preq)
+        .then(res => {
+          this.mPermissions = res
+        })
+        .catch(e => {
+          // console.log(e)
+        })
+    },
     initGrid() {
       this.gridOptions = {
         rowHeight: 32,
@@ -2414,12 +2488,12 @@ export default {
         this.$nextTick(() => {
           // 检测是否vote里所有子项是否有[]符号，有则parse
           for (var votekey in this.vote) {
-            console.log(typeof this.vote[votekey], '++++++++', votekey)
+            // console.log(typeof this.vote[votekey], '++++++++', votekey)
             if (
               this.vote[votekey] !== null &&
               typeof this.vote[votekey] === 'string'
             ) {
-              console.log(votekey, '-----')
+              // console.log(votekey, '-----')
               if (
                 this.vote[votekey].substring(0, 1) === '[' &&
                 this.vote[votekey].substring(this.vote[votekey].length - 1) ===

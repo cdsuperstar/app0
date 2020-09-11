@@ -406,6 +406,36 @@ export default {
           filter: true
         },
         {
+          headerName: this.$t('auth.users.profile.province'),
+          field: 'province',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.city'),
+          field: 'city',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: this.$t('auth.users.profile.area'),
+          field: 'area',
+          width: 100,
+          minWidth: 100,
+          maxWidth: 200,
+          editable: true,
+          sortable: true,
+          filter: true
+        },
+        {
           headerName: this.$t('auth.users.profile.remark'),
           field: 'memo',
           width: 150,

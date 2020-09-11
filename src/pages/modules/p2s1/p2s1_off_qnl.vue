@@ -2173,7 +2173,7 @@ export default {
               this.vote[votekey] !== null &&
               typeof this.vote[votekey] === 'string'
             ) {
-              console.log(votekey, '-----')
+              // console.log(votekey, '-----')
               if (
                 this.vote[votekey].substring(0, 1) === '[' &&
                 this.vote[votekey].substring(this.vote[votekey].length - 1) ===
