@@ -31,11 +31,11 @@ export default {
     savefailed: '保存问卷失败！',
     uploadsuccess: '上传问卷成功！',
     uploadfailed: '上传问卷失败！',
-    bmodify: '[管理问卷]是否有修改权限？',
-    bDelete: '[管理问卷]是否有删除权限？',
-    saveFiles: '[管理问卷]是否有保存权限？',
-    reviewData: '[管理问卷]是否有审核问卷权限？',
-    bexport: '[管理问卷]是否有导出权限？'
+    bmodify: '[管理问卷]是否有修改权限',
+    bDelete: '[管理问卷]是否有删除权限',
+    saveFiles: '[管理问卷]是否有保存权限',
+    reviewData: '[管理问卷]是否有审核问卷权限',
+    bexport: '[管理问卷]是否有导出权限'
   },
   p1s1techfile: {
     header: '技术文件',

@@ -2218,15 +2218,15 @@ export default {
           sortable: true,
           filter: true
         },
-        {
-          headerName: this.$t('p2s1.qpname'),
-          field: 'qtype',
-          width: 110,
-          minWidth: 130,
-          maxWidth: 170,
-          sortable: true,
-          filter: true
-        },
+        // {
+        //   headerName: this.$t('p2s1.qpname'),
+        //   field: 'qtype',
+        //   width: 110,
+        //   minWidth: 130,
+        //   maxWidth: 170,
+        //   sortable: true,
+        //   filter: true
+        // },
         {
           headerName: this.$t('p2s1.qsource'),
           field: 'qsource',

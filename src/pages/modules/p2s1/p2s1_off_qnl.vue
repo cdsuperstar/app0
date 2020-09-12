@@ -2056,8 +2056,17 @@ export default {
           filter: true
         },
         {
-          headerName: '家庭情况',
-          field: 'a2',
+          headerName: '乡镇',
+          field: 'town',
+          width: 110,
+          minWidth: 110,
+          maxWidth: 170,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: '村',
+          field: 'village',
           width: 110,
           minWidth: 110,
           maxWidth: 170,
@@ -2066,7 +2075,7 @@ export default {
         },
         {
           headerName: '户主姓名',
-          field: 'a3',
+          field: 'a1',
           width: 110,
           minWidth: 110,
           maxWidth: 170,
@@ -2075,7 +2084,7 @@ export default {
         },
         {
           headerName: '身份证号',
-          field: 'a4',
+          field: 'a2',
           width: 110,
           minWidth: 170,
           maxWidth: 260,
@@ -2084,7 +2093,7 @@ export default {
         },
         {
           headerName: '联系方式',
-          field: 'a6',
+          field: 'a4',
           width: 110,
           minWidth: 170,
           maxWidth: 260,

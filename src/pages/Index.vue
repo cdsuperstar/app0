@@ -1,16 +1,6 @@
 <template>
   <q-page class="q-pa-lg row items-start q-gutter-md">
     <!--    <q-btn @click="test">aaaaa</q-btn>-->
-    <q-card flat bordered :class="$q.screen.gt.xs ? 'col-4' : 'col-12'">
-      <q-card-section>
-        <ve-map :data="MapchartData" :settings="MapchartSettings"></ve-map>
-      </q-card-section>
-    </q-card>
-    <q-card flat bordered :class="$q.screen.gt.xs ? 'col-4' : 'col-12'">
-      <q-card-section>
-        <ve-pie :data="PiechartData" :settings="PiechartSettings"></ve-pie>
-      </q-card-section>
-    </q-card>
     <q-card
       flat
       bordered
@@ -74,6 +64,16 @@
             </q-list>
           </q-card-section>
         </q-card>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered :class="$q.screen.gt.xs ? 'col-4' : 'col-12'">
+      <q-card-section>
+        <ve-map :data="MapchartData" :settings="MapchartSettings"></ve-map>
+      </q-card-section>
+    </q-card>
+    <q-card flat bordered :class="$q.screen.gt.xs ? 'col-4' : 'col-12'">
+      <q-card-section>
+        <ve-pie :data="PiechartData" :settings="PiechartSettings"></ve-pie>
       </q-card-section>
     </q-card>
     <q-card flat bordered class="col-12">

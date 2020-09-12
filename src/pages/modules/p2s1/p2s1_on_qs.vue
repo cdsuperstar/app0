@@ -2338,48 +2338,48 @@ export default {
           maxWidth: 180,
           sortable: true,
           filter: true
-        },
-        {
-          headerName: this.$t('p2s1.reviewer'),
-          field: 'reviewer',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 260,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.isattachment'),
-          field: 'q_files',
-          width: 90,
-          minWidth: 90,
-          editable: true,
-          filter: true,
-          cellRendererFramework: agAttachmentCellRander,
-          cellRendererParams: {
-            down: this.downloadfile,
-            del: this.deletefile,
-            add: this.addfile
-          }
-        },
-        {
-          headerName: this.$t('p2s1.au_comments'),
-          field: 'au_comments',
-          width: 120,
-          minWidth: 120,
-          maxWidth: 260,
-          sortable: true,
-          filter: true
-        },
-        {
-          headerName: this.$t('p2s1.au_conclusion'),
-          field: 'au_conclusion',
-          width: 100,
-          minWidth: 100,
-          maxWidth: 180,
-          sortable: true,
-          filter: true
         }
+        // {
+        //   headerName: this.$t('p2s1.reviewer'),
+        //   field: 'reviewer',
+        //   width: 120,
+        //   minWidth: 120,
+        //   maxWidth: 260,
+        //   sortable: true,
+        //   filter: true
+        // },
+        // {
+        //   headerName: this.$t('p2s1.isattachment'),
+        //   field: 'q_files',
+        //   width: 90,
+        //   minWidth: 90,
+        //   editable: true,
+        //   filter: true,
+        //   cellRendererFramework: agAttachmentCellRander,
+        //   cellRendererParams: {
+        //     down: this.downloadfile,
+        //     del: this.deletefile,
+        //     add: this.addfile
+        //   }
+        // },
+        // {
+        //   headerName: this.$t('p2s1.au_comments'),
+        //   field: 'au_comments',
+        //   width: 120,
+        //   minWidth: 120,
+        //   maxWidth: 260,
+        //   sortable: true,
+        //   filter: true
+        // },
+        // {
+        //   headerName: this.$t('p2s1.au_conclusion'),
+        //   field: 'au_conclusion',
+        //   width: 100,
+        //   minWidth: 100,
+        //   maxWidth: 180,
+        //   sortable: true,
+        //   filter: true
+        // }
       ]
       this.defaultColDef = {
         editable: false,
