@@ -2043,33 +2043,38 @@ export default {
       // console.log(JSON.stringify(this.vote), '===========')
     },
     getmyprofile() {
-      this.$router.app.$http
-        .get('/profile/getMyProfile/')
-        .then(res => {
-          if (res.data.success) {
-            // 将地区数据赋过去
-            this.vote.province = res.data.data.province
-            this.vote.city = res.data.data.city
-            this.vote.county = res.data.data.area
-            if (
-              !res.data.data.area ||
-              !res.data.data.area ||
-              !res.data.data.area
-            ) {
+      if (this.$auth.check()) {
+        this.$router.app.$http
+          .get('/profile/getMyProfile/')
+          .then(res => {
+            if (res.data.success) {
+              // 将地区数据赋过去
+              this.vote.province = res.data.data.province
+              this.vote.city = res.data.data.city
+              this.vote.county = res.data.data.area
+              if (
+                !res.data.data.area ||
+                !res.data.data.area ||
+                !res.data.data.area
+              ) {
+                this.areasign = true
+                this.vote.province = '云南省'
+              }
+            } else {
               this.areasign = true
               this.vote.province = '云南省'
+              this.$zglobal.showMessage(
+                'red-5',
+                'center',
+                this.$t('auth.register.invalid_data')
+              )
             }
-          } else {
-            this.areasign = true
-            this.vote.province = '云南省'
-            this.$zglobal.showMessage(
-              'red-5',
-              'center',
-              this.$t('auth.register.invalid_data')
-            )
-          }
-        })
-        .catch(e => {})
+          })
+          .catch(e => {})
+      } else {
+        this.areasign = true
+        this.vote.province = '云南省'
+      }
     },
     checkFileSize(files) {
       return files.filter(file => file.size < 20480000)
