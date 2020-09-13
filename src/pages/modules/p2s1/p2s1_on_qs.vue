@@ -2406,6 +2406,15 @@ export default {
           })
           .onOk(() => {
             selectedData.forEach(val => {
+              // 如果有结论，就不能删除
+              if (val.re_conclusion !== null) {
+                this.$zglobal.showMessage(
+                  'red-7',
+                  'center',
+                  this.$t('p2s1.re_failed')
+                )
+                return
+              }
               this.gridApi.updateRowData({ remove: [val] })
               if (val.id === undefined) return false
               this.$router.app.$http

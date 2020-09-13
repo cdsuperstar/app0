@@ -2048,17 +2048,24 @@ export default {
           .get('/profile/getMyProfile/')
           .then(res => {
             if (res.data.success) {
-              // 将地区数据赋过去
-              this.vote.province = res.data.data.province
-              this.vote.city = res.data.data.city
-              this.vote.county = res.data.data.area
-              if (
-                !res.data.data.area ||
-                !res.data.data.area ||
-                !res.data.data.area
-              ) {
+              // 判断返回值是否为空
+              if (!res.data.data) {
                 this.areasign = true
                 this.vote.province = '云南省'
+              } else {
+                // 将地区数据赋过去
+                this.vote.province = res.data.data.province
+                this.vote.city = res.data.data.city
+                this.vote.county = res.data.data.area
+                // console.log('+++++++++++++111++', JSON.stringify(this.vote))
+                if (
+                  !this.vote.province ||
+                  !this.vote.city ||
+                  !this.vote.county
+                ) {
+                  this.areasign = true
+                  this.vote.province = '云南省'
+                }
               }
             } else {
               this.areasign = true
@@ -2127,6 +2134,10 @@ export default {
       this.saving = true
       const tmpa = this.$auth.user()
       this.vote.investigator = tmpa.id
+      // 如果取不到用户id信息,就赋予一个999
+      if (!this.vote.investigator) {
+        this.vote.investigator = '999999'
+      }
       // 生成问卷编号
       var date = new Date()
       var seperator1 = 'D'
@@ -2230,7 +2241,7 @@ export default {
         // 'b11',
         // 'b12',
         // 'b13',
-        'b14',
+        // 'b14',
         'b15',
         'b16',
         // 'b17',
@@ -2282,7 +2293,7 @@ export default {
         'e15',
         'e16',
         // 'e17',
-        'e18',
+        // 'e18',
         'e19',
         'e20',
         'e21',

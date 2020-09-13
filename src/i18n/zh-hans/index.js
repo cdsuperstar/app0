@@ -26,7 +26,7 @@ export default {
     qtname: '问卷统计',
     qpname: '问卷类型',
     qsource: '问卷来源',
-    re_failed: '保存问卷失败！(已审核问卷不能再修改)',
+    re_failed: '保存问卷失败！(已审核问卷不能再操作)',
     savesuccess: '保存问卷成功！',
     savefailed: '保存问卷失败！',
     uploadsuccess: '上传问卷成功！',

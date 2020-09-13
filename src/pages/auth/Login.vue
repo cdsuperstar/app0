@@ -72,7 +72,7 @@
               />
             </div>
           </q-card-section>
-          <q-card-actions align="center">
+          <q-card-actions align="right">
             <q-btn
               type="submit"
               color="primary"
@@ -92,20 +92,20 @@
               <!--            <q-spinner-facebook />-->
               <!--          </template>-->
             </q-btn>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <q-btn color="warning" icon-right="how_to_reg" to="register">
-              &nbsp;&nbsp;{{ $t('auth.register.register') }} &nbsp;&nbsp;
-            </q-btn>
+            <!--            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+            <!--            <q-btn color="warning" icon-right="how_to_reg" to="register">-->
+            <!--              &nbsp;&nbsp;{{ $t('auth.register.register') }} &nbsp;&nbsp;-->
+            <!--            </q-btn>-->
           </q-card-actions>
           <q-inner-loading :showing="loading">
             <q-spinner-gears size="50px" color="secondary" />
           </q-inner-loading>
-          <div align="right">
-            <br />
-            <router-link to="/forgot">
-              <a>{{ this.$t('auth.login.password_forgot') }}</a>
-            </router-link>
-          </div>
+          <!--          <div align="right">-->
+          <!--            <br />-->
+          <!--            <router-link to="/forgot">-->
+          <!--              <a>{{ this.$t('auth.login.password_forgot') }}</a>-->
+          <!--            </router-link>-->
+          <!--          </div>-->
         </q-card>
       </q-carousel-slide>
       <q-carousel-slide name="offline" class="column no-wrap flex-center">

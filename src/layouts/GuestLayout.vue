@@ -3,7 +3,11 @@
     <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title class="row">
-          <q-btn round style="background: white;">
+          <q-btn
+            round
+            style="background: white;"
+            @click="linktoUrl('http://202.115.137.211:8080/#/')"
+          >
             <q-avatar>
               <img src="../statics/app-logo.jpg" />
             </q-avatar>
@@ -106,6 +110,10 @@ export default {
   methods: {
     setlanguage(lang) {
       this.lang = lang
+    },
+    linktoUrl(tmpurl) {
+      var newTOwindow = window.open('_blank')
+      newTOwindow.location = tmpurl
     }
   }
 }
