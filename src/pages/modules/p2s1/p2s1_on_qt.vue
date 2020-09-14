@@ -78,7 +78,7 @@ export default {
             .then(res => {
               // console.log(res)
               if (res.data.success) {
-                // console.log('aaa', res.data.data, '--------')
+                console.log('aaa', res.data.data, '--------')
                 var currentdata = res.data.data
                 for (const allitem of allcountdata) {
                   for (const currentitem of currentdata) {
@@ -99,7 +99,7 @@ export default {
                 }
                 this.rowData = allcountdata
                 // out
-                // console.log(this.rowData, '=================1111111111')
+                console.log(this.rowData, '=================1111111111')
                 // 去重统计
                 var countyArr = this.FilterByName(this.rowData, 'county')
                 // 去重统计

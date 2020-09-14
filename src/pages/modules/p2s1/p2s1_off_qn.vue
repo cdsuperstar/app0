@@ -2383,6 +2383,10 @@ export default {
       //   this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
       //   submitsign = false
       // }
+      if (this.vote.city === 'null') {
+        this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
+        submitsign = false
+      }
       for (var item in requireditem) {
         // console.log(requireditem[item], '----------')
         // 检测所有必须的key是否包含
