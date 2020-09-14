@@ -2417,7 +2417,7 @@ export default {
                     'center',
                     this.$t('p2s1.savesuccess')
                   )
-                  this.$q.localStorage.set('votedata', '')
+                  this.$q.localStorage.remove('votedata')
                 } else {
                   this.$zglobal.showMessage(
                     'red-7',
@@ -2446,7 +2446,7 @@ export default {
                     'center',
                     this.$t('p2s1.savesuccess')
                   )
-                  this.$q.localStorage.set('votedata', '')
+                  this.$q.localStorage.remove('votedata')
                 } else {
                   this.$zglobal.showMessage(
                     'red-7',
