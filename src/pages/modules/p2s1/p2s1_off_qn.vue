@@ -2067,9 +2067,9 @@ export default {
     if (this.$q.localStorage.getItem('votedata')) {
       this.vote = JSON.parse(this.$q.localStorage.getItem('votedata'))
     }
-    this.$nextTick(() => {
-      setInterval(this.autoSaveD, 1000)
-    })
+    // this.$nextTick(() => {
+    //   setInterval(this.autoSaveD, 5000)
+    // })
   },
   beforeDestroy() {
     this.autoSaveD()
@@ -2137,7 +2137,11 @@ export default {
     },
     // 自动保存
     autoSaveD() {
-      this.$q.localStorage.set('votedata', JSON.stringify(this.vote))
+      this.$q.localStorage.remove('votedata')
+      this.$nextTick(() => {
+        console.log('.')
+        this.$q.localStorage.set('votedata', JSON.stringify(this.vote))
+      })
     },
     checkFileSize(files) {
       return files.filter(file => file.size < 20480000)
@@ -2417,7 +2421,10 @@ export default {
                     'center',
                     this.$t('p2s1.savesuccess')
                   )
-                  this.$q.localStorage.remove('votedata')
+                  setTimeout(() => {
+                    this.$q.localStorage.remove('votedata')
+                    location.href = '/'
+                  }, 5000)
                 } else {
                   this.$zglobal.showMessage(
                     'red-7',
@@ -2446,7 +2453,10 @@ export default {
                     'center',
                     this.$t('p2s1.savesuccess')
                   )
-                  this.$q.localStorage.remove('votedata')
+                  setTimeout(() => {
+                    this.$q.localStorage.remove('votedata')
+                    location.href = '/'
+                  }, 5000)
                 } else {
                   this.$zglobal.showMessage(
                     'red-7',
@@ -2459,7 +2469,6 @@ export default {
         }
         setTimeout(() => {
           this.saving = false
-          location.href = '/'
           // console.log('数据：' + JSON.stringify(this.vote))
         }, 5000)
       } else {
@@ -2476,7 +2485,6 @@ export default {
 
         setTimeout(() => {
           this.saving = false
-          location.href = '/'
           // console.log('数据：' + JSON.stringify(this.vote))
         }, 500)
       }
