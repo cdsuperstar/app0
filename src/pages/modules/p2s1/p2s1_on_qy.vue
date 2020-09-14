@@ -177,16 +177,6 @@
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">A6. 您所在的行政区域是？</div>
             </dd>
-            <!--            <dd class="q-mx-sm">-->
-            <!--              <v-distpicker-->
-            <!--                :province="vote.province"-->
-            <!--                :city="vote.city"-->
-            <!--                :area="vote.county"-->
-            <!--                :placeholders="placeholders"-->
-            <!--                province-disabled-->
-            <!--                @selected="AreaonSelected"-->
-            <!--              ></v-distpicker>-->
-            <!--            </dd>-->
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">乡镇：</div>
               <q-input v-model="vote.town" type="text" dense />
@@ -213,7 +203,7 @@
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
                 A9.
-                常住人口（居住在家半年以上(含半年),共享生活开支的人口，不包括在校学生，现役军人，服刑人员）（人）：
+                常住人口（居住在家半年以上(含半年),共享生活开支的人口，不包括现役军人，服刑人员）（人）：
               </div>
               <q-input v-model="vote.a9" type="text" dense mask="##" />
             </dd>
@@ -226,7 +216,7 @@
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
                 A9-2
-                现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括在校学生，现役军人，服刑人员】：
+                现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括现役军人，服刑人员】：
               </div>
               <q-input v-model="vote.a902" type="text" dense mask="##" />
             </dd>
@@ -253,15 +243,13 @@
 
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                A10. 近三年来（2018-2020 年），您家庭年均总收入（元）：
+                A10. 近三年来（2018-2020 年），
+                您家庭年均总收入（元）【人均收入（元）：<font color="red">{{
+                  (sumdataa10 / vote.a9) | Numformat
+                }}</font
+                >】：
               </div>
-              <q-input
-                v-model="sumdataa10"
-                type="text"
-                dense
-                readonly
-                mask="######"
-              />
+              <q-input v-model="sumdataa10" type="number" dense readonly />
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
@@ -269,9 +257,9 @@
               </div>
               <q-input
                 v-model="vote.a1001"
-                type="text"
+                type="number"
                 dense
-                mask="######"
+                oninput="if(value.length>10) value=value.slice(0,10)"
                 @change="suma10"
               />
             </dd>
@@ -281,9 +269,9 @@
               </div>
               <q-input
                 v-model="vote.a1002"
-                type="text"
+                type="number"
                 dense
-                mask="######"
+                oninput="if(value.length>10) value=value.slice(0,10)"
                 @change="suma10"
               />
             </dd>
@@ -293,9 +281,9 @@
               </div>
               <q-input
                 v-model="vote.a1003"
-                type="text"
+                type="number"
                 dense
-                mask="######"
+                oninput="if(value.length>10) value=value.slice(0,10)"
                 @change="suma10"
               />
             </dd>
@@ -305,9 +293,9 @@
               </div>
               <q-input
                 v-model="vote.a1004"
-                type="text"
+                type="number"
                 dense
-                mask="######"
+                oninput="if(value.length>10) value=value.slice(0,10)"
                 @change="suma10"
               />
             </dd>
@@ -315,11 +303,21 @@
               <div style="padding-top: 10px;">
                 A10-5 其中全家每月可领低保金（元）【若无，则填“0”】：
               </div>
-              <q-input v-model="vote.a1005" type="text" dense mask="#####" />
+              <q-input
+                v-model="vote.a1005"
+                type="number"
+                dense
+                oninput="if(value.length>6) value=value.slice(0,6)"
+              />
               <div style="padding-top: 10px;">
                 A10-6 每月领养老金（元）【若无，则填“0”】：
               </div>
-              <q-input v-model="vote.a1006" type="text" dense mask="####" />
+              <q-input
+                v-model="vote.a1006"
+                type="number"
+                dense
+                oninput="if(value.length>6) value=value.slice(0,6)"
+              />
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
@@ -867,7 +865,7 @@
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                C2.您所在的乡镇/村扶贫工厂或者扶贫车间有多少个（人）：【若无，则填“0”】
+                C2.您所在的乡镇/村扶贫工厂或者扶贫车间有多少个（个）：【若无，则填“0”】
               </div>
               <q-input
                 v-model="vote.c2"
@@ -916,11 +914,10 @@
                 behavior="menu"
                 :options="[
                   '手机短信',
-                  '山谷河谷区',
+                  '微信公众号',
                   '村内设置招工信息栏',
                   '乡/村招工信息群',
-                  '丘陵区',
-                  '平原区'
+                  '广播宣传'
                 ]"
               ></q-select>
             </dd>
@@ -1082,23 +1079,19 @@
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D2. 您所在地区（村/乡/镇）气象灾害主要有哪些？（多选）【可输入】
+                D2. 您所在地区（村/乡/镇）是否有气象灾害？（单选）
               </div>
               <q-select
                 v-model="vote.d2"
                 dense
-                multiple
-                use-input
-                use-chips
-                new-value-mode="add-unique"
-                style="min-width: 22em;"
+                style="min-width: 12em;"
                 behavior="menu"
-                :options="['洪灾', '旱灾', '霜冻', '雪灾', '没有']"
+                :options="['是', '否']"
               ></q-select>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.d2 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D3. 气象灾害给您家带来哪些影响？（多选）【可输入】
+                D3. 您所在地区（村/乡/镇）气象灾害主要有哪些？（多选）【可输入】
               </div>
               <q-select
                 v-model="vote.d3"
@@ -1109,34 +1102,24 @@
                 new-value-mode="add-unique"
                 style="min-width: 22em;"
                 behavior="menu"
-                :options="[
-                  '务工收入减少',
-                  '农作物减产或绝收',
-                  '财产损失',
-                  '人员伤亡',
-                  '公共服务设施受损'
-                ]"
+                :options="['洪灾', '旱灾', '霜冻', '雪灾']"
               ></q-select>
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D4. 您所在地区（村/乡/镇）地质灾害主要有哪些？（多选）【可输入】
+                D4. 您所在地区（村/乡/镇）是否有地质灾害？（单选）
               </div>
               <q-select
                 v-model="vote.d4"
                 dense
-                multiple
-                use-input
-                use-chips
-                new-value-mode="add-unique"
-                style="min-width: 22em;"
+                style="min-width: 12em;"
                 behavior="menu"
-                :options="['滑坡', '崩塌', '泥石流', '地震', '没有']"
+                :options="['是', '否']"
               ></q-select>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.d4 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D5. 地质灾害给您家带来哪些影响？（多选）【可输入】
+                D5. 您所在地区（村/乡/镇）地质灾害主要有哪些？（多选）【可输入】
               </div>
               <q-select
                 v-model="vote.d5"
@@ -1147,21 +1130,27 @@
                 new-value-mode="add-unique"
                 style="min-width: 22em;"
                 behavior="menu"
-                :options="[
-                  '务工收入减少',
-                  '农作物减产或绝收',
-                  '财产损失',
-                  '人员伤亡',
-                  '公共服务设施受损'
-                ]"
+                :options="['滑坡', '崩塌', '泥石流', '地震']"
               ></q-select>
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D6. 您所在地区（村/乡/镇）生物灾害主要有哪些？（多选）【可输入】
+                D6. 您所在地区（村/乡/镇）是否有生物灾害？（单选）
               </div>
               <q-select
                 v-model="vote.d6"
+                dense
+                style="min-width: 12em;"
+                behavior="menu"
+                :options="['是', '否']"
+              ></q-select>
+            </dd>
+            <dd v-if="vote.d6 === '是'" class="q-mx-sm">
+              <div style="padding-top: 10px;">
+                D7. 您所在地区（村/乡/镇）生物灾害主要有哪些？（多选）【可输入】
+              </div>
+              <q-select
+                v-model="vote.d7"
                 dense
                 multiple
                 use-input
@@ -1169,16 +1158,16 @@
                 new-value-mode="add-unique"
                 style="min-width: 22em;"
                 behavior="menu"
-                :options="['病虫害', '有害物种入侵', '没有']"
+                :options="['病虫害', '有害物种入侵']"
               ></q-select>
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D7.
+                D8.
                 针对以上自然灾害，您家希望得到什么救助措施？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d7"
+                v-model="vote.d8"
                 dense
                 multiple
                 use-input
@@ -1200,22 +1189,22 @@
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D8. 此次新冠肺炎对您家是否有影响？（单选）
+                D9. 此次新冠肺炎对您家是否有影响？（单选）
               </div>
               <q-select
-                v-model="vote.d8"
+                v-model="vote.d9"
                 dense
                 style="min-width: 12em;"
                 behavior="menu"
                 :options="['是', '否']"
               ></q-select>
             </dd>
-            <dd v-if="vote.d8 === '是'" class="q-mx-sm">
+            <dd v-if="vote.d9 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D9. 新冠肺炎对您家有什么影响？（多选）【可输入】
+                D10. 新冠肺炎对您家有什么影响？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d9"
+                v-model="vote.d10"
                 dense
                 multiple
                 use-input
@@ -1232,13 +1221,13 @@
                 ]"
               ></q-select>
             </dd>
-            <dd v-if="vote.d8 === '是'" class="q-mx-sm">
+            <dd v-if="vote.d9 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D10.
+                D11.
                 针对此次新冠肺炎，您家得到过什么救助措施？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d10"
+                v-model="vote.d11"
                 dense
                 multiple
                 use-input
@@ -1259,22 +1248,22 @@
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D11. 牲畜疫情（如非洲猪瘟、禽流感等）对您家是否有影响？（单选）
+                D12. 牲畜疫情（如非洲猪瘟、禽流感等）对您家是否有影响？（单选）
               </div>
               <q-select
-                v-model="vote.d11"
+                v-model="vote.d12"
                 dense
                 style="min-width: 12em;"
                 behavior="menu"
                 :options="['是', '否']"
               ></q-select>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.d12 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D12. 牲畜疫情对您家有什么影响？（多选）【可输入】
+                D13. 牲畜疫情对您家有什么影响？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d12"
+                v-model="vote.d13"
                 dense
                 multiple
                 use-input
@@ -1285,12 +1274,12 @@
                 :options="['收益减少', '订单减少', '成本增加']"
               ></q-select>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.d12 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D13. 针对牲畜疫情，您家希望得到什么救助措施？（多选）【可输入】
+                D14. 针对牲畜疫情，您家希望得到什么救助措施？（多选）【可输入】
               </div>
               <q-select
-                v-model="vote.d13"
+                v-model="vote.d14"
                 dense
                 multiple
                 use-input
@@ -1308,10 +1297,28 @@
             </dd>
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
-                D14. 灾害前您家希望得到哪些帮助措施？（多选）【可输入】
+                D15.
+                您所经受的各类灾害（自然灾害、新冠肺炎、牲畜疫情等）对家庭收入或人身安全的影响？（单选）
               </div>
               <q-select
-                v-model="vote.d14"
+                v-model="vote.d15"
+                dense
+                style="min-width: 12em;"
+                behavior="menu"
+                :options="[
+                  '没有什么影响',
+                  '有一定影响，影响不大',
+                  '有较大影响',
+                  '影响很大'
+                ]"
+              ></q-select>
+            </dd>
+            <dd class="q-mx-sm">
+              <div style="padding-top: 10px;">
+                D16. 灾害前您家希望得到哪些帮助措施？（多选）【可输入】
+              </div>
+              <q-select
+                v-model="vote.d16"
                 dense
                 multiple
                 use-input
@@ -1466,11 +1473,12 @@
             </dd>
             <dd v-if="vote.e2 > 0 && vote.e10 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                E11. 如果有，在读高校学生是否获得补贴政策？（单选）【可输入】
+                E11. 如果有，在读高校学生是否获得补贴政策？（多选）【可输入】
               </div>
               <q-select
                 v-model="vote.e11"
                 dense
+                multiple
                 use-input
                 use-chips
                 new-value-mode="add-unique"
@@ -1488,11 +1496,12 @@
             </dd>
             <dd v-if="vote.e2 > 0 && vote.e10 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
-                E12. 政府对于高校学生是否有以下就业政策？（单选）【可输入】
+                E12. 政府对于高校学生是否有以下就业政策？（多选）【可输入】
               </div>
               <q-select
                 v-model="vote.e12"
                 dense
+                multiple
                 use-input
                 use-chips
                 new-value-mode="add-unique"
@@ -1521,6 +1530,11 @@
               </div>
               <q-input v-model="vote.e14" type="text" dense mask="##" />
               <div style="padding-top: 10px;">
+                患慢性病人数：指患有下列疾病且影响劳动能力的人口。慢性病包括：高血压、糖尿病、肝硬化、风湿性心脏病、肺心病、慢性病毒性肝炎、肺结核、淋巴结核、甲状腺功能亢进、甲状腺功能低下、类风湿性关节炎、溶血性贫血、白血病、复发性阿弗他口腔溃疡、冠心病（专指心肌梗塞和心绞痛）、慢性阻塞性肺疾病（COPD）、再生障碍性贫血、原发性骨髓纤维化、慢性肾脏疾病（CKD）三期及以上、重症肌无力、系统性红斑狼疮、伴多发骨折的严重骨质疏松症、白塞氏病、侵袭性牙周炎、口腔扁平苔藓、银屑病、下肢静脉曲张、股骨头坏死、帕金森氏病、恶性肿瘤、精神分裂症。（32种）
+              </div>
+            </dd>
+            <dd class="q-mx-sm">
+              <div style="padding-top: 10px;">
                 E15. 您家有一二级残疾多少人？（人）
               </div>
               <q-input v-model="vote.e15" type="text" dense mask="##" />
@@ -1530,6 +1544,9 @@
                 E16. 您家患有大病有多少人？（人）
               </div>
               <q-input v-model="vote.e16" type="text" dense mask="##" />
+              <div style="padding-top: 10px;">
+                大病：新型农村合作医疗重大疾病医疗保险所列重大疾病。具体为：儿童先天性心脏病、急性白血病、终末期肾病、妇女乳腺癌、宫颈癌、重性精神病、艾滋病机会性感染、耐多药肺结核、肺癌、食道癌、胃癌、结肠癌、直肠癌、慢性粒细胞白血病、急性心肌梗塞、脑梗死、血友病、I型糖尿病、甲亢、唇腭裂。（20种）
+              </div>
             </dd>
             <dd v-if="vote.e16 > 0" class="q-mx-sm">
               <div style="padding-top: 10px;">
@@ -1573,7 +1590,7 @@
                 style="min-width: 22em;"
                 behavior="menu"
                 :options="[
-                  '医疗设备齐全',
+                  '完善医疗设备',
                   '配备专业医疗人员',
                   '适当减轻医疗费用负担',
                   '组织医务人员下乡/下村开展集中诊断或咨询'
@@ -1814,7 +1831,7 @@
               </div>
               <q-input v-model="vote.e33" type="text" dense mask="##" />
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.e32 === '没有'" class="q-mx-sm">
               <div style="padding-top: 10px;">
                 E34. 您希望乡/镇里设立集中供养中心吗？（单选）
               </div>
@@ -2128,6 +2145,17 @@ export default {
   name: 'P2s1OnQy',
   components: {
     AgGridVue
+  },
+  filters: {
+    Numformat: function(value) {
+      // 截取当前数据到小数点后三位
+      const tempVal = Number(value).toFixed(3)
+      if (tempVal === 'NaN') {
+        return '0.00'
+      }
+      const realVal = tempVal.substring(0, tempVal.length - 1)
+      return realVal
+    }
   },
   data() {
     return {

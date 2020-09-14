@@ -6,18 +6,18 @@ const zglobal = {
   },
   colors: {
     blue: [
-      { name: 'primary', value: '#027BE3' },
-      { name: 'secondary', value: '#26A69A' },
-      { name: 'accent', value: '#9C27B0' },
-      { name: 'positive', value: '#21BA45' },
-      { name: 'negative', value: '#C10015' },
-      { name: 'info', value: '#aceee6' },
-      { name: 'warning', value: '#F2C037' },
-      { name: 'addbtn', value: '#c0ca33' },
-      { name: 'deldbtn', value: '#ff7043' },
-      { name: 'savebtn', value: '#5c6bc0' },
+      { name: 'primary', value: '#0099CC' },
+      { name: 'secondary', value: '#336699' },
+      { name: 'accent', value: '#ABCDEF' },
+      { name: 'positive', value: '#666666' },
+      { name: 'negative', value: '#FF9933' },
+      { name: 'info', value: '#CCCCCC' },
+      { name: 'warning', value: '#FF9933' },
+      { name: 'addbtn', value: '#CCCC33' },
+      { name: 'deldbtn', value: '#FF9933' },
+      { name: 'savebtn', value: '#99CC33' },
       { name: 'treebtn', value: '#ab47bc' },
-      { name: 'expbtn', value: '#4caf50' }
+      { name: 'expbtn', value: '#99CC33' }
     ],
     Bright: [
       { name: 'primary', value: '#666699' },
@@ -34,18 +34,18 @@ const zglobal = {
       { name: 'expbtn', value: '#99CC33' }
     ],
     simple: [
-      { name: 'primary', value: '#0099CC' },
-      { name: 'secondary', value: '#336699' },
-      { name: 'accent', value: '#ABCDEF' },
-      { name: 'positive', value: '#666666' },
-      { name: 'negative', value: '#FF9933' },
-      { name: 'info', value: '#CCCCCC' },
-      { name: 'warning', value: '#FF9933' },
-      { name: 'addbtn', value: '#CCCC33' },
-      { name: 'deldbtn', value: '#FF9933' },
-      { name: 'savebtn', value: '#99CC33' },
+      { name: 'primary', value: '#027BE3' },
+      { name: 'secondary', value: '#26A69A' },
+      { name: 'accent', value: '#9C27B0' },
+      { name: 'positive', value: '#21BA45' },
+      { name: 'negative', value: '#C10015' },
+      { name: 'info', value: '#aceee6' },
+      { name: 'warning', value: '#F2C037' },
+      { name: 'addbtn', value: '#c0ca33' },
+      { name: 'deldbtn', value: '#ff7043' },
+      { name: 'savebtn', value: '#5c6bc0' },
       { name: 'treebtn', value: '#ab47bc' },
-      { name: 'expbtn', value: '#99CC33' }
+      { name: 'expbtn', value: '#4caf50' }
     ],
     fancy: [
       { name: 'primary', value: '#CC3399' },
