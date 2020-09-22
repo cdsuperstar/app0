@@ -735,7 +735,7 @@
                 />
               </div>
             </dd>
-            <dd v-if="vote.b1 === '是' && vote.b11 === '否'" class="q-mx-sm">
+            <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
                 B13. 若以前没有发展产业，以后想发展什么产业？（多选）
               </div>
@@ -771,7 +771,7 @@
                 />
               </div>
             </dd>
-            <dd v-if="vote.b11 === '是'" class="q-mx-sm">
+            <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
                 B14.你是否想参加农业技能培训？（单选）
               </div>
@@ -783,10 +783,7 @@
                 :options="['是', '否']"
               ></q-select>
             </dd>
-            <dd
-              v-if="(vote.b11 === '是') & (vote.b14 === '是')"
-              class="q-mx-sm"
-            >
+            <dd v-if="vote.b14 === '是'" class="q-mx-sm">
               <div style="padding-top: 10px;">
                 B15. 您希望参加哪些农业技能培训？（多选）
               </div>
