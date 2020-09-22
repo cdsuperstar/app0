@@ -125,7 +125,7 @@ export default {
                     town: '共' + townArr.length + '个乡（镇）',
                     village: '共' + villageArr.length + '个村',
                     qsource: '共' + qsourceArr.length + '种类型',
-                    cnt: '合计：' + pvCount,
+                    total: '合计：' + pvCount,
                     todaycnt: '新增：' + pJCount
                   }
                 ]
