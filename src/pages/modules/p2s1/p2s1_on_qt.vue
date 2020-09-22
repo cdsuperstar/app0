@@ -78,7 +78,7 @@ export default {
             .then(res => {
               // console.log(res)
               if (res.data.success) {
-                console.log('aaa', res.data.data, '--------')
+                // console.log('aaa', res.data.data, '--------')
                 var currentdata = res.data.data
                 for (const allitem of allcountdata) {
                   for (const currentitem of currentdata) {
@@ -90,7 +90,7 @@ export default {
                       allitem.village === currentitem.village &&
                       allitem.qsource === currentitem.qsource
                     ) {
-                      allitem.todaycnt = currentitem.cnt
+                      allitem.todaycnt = currentitem.total
                       break
                     } else {
                       allitem.todaycnt = 0
@@ -111,7 +111,7 @@ export default {
                 // 相加cnt
                 var pvCount = 0
                 for (var i = 0; i < this.rowData.length; i++) {
-                  pvCount = pvCount + this.rowData[i].cnt
+                  pvCount = pvCount + this.rowData[i].total
                 }
                 // 相加todaycnt
                 var pJCount = 0
@@ -225,7 +225,7 @@ export default {
         },
         {
           headerName: '小计',
-          field: 'cnt',
+          field: 'total',
           width: 100,
           minWidth: 100,
           maxWidth: 220,
