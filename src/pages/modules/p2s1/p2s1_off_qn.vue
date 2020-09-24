@@ -61,6 +61,7 @@
             dense
             style="min-width:200px;"
             mask="X##### ######## ###X X"
+            :rules="[val => val.length > 19 || '身份证号必须大于18位！']"
           />
           <div style="padding-top: 10px;">A3. 户主民族是：</div>
           <q-select
@@ -113,6 +114,7 @@
             type="text"
             dense
             mask="#############################"
+            :rules="[val => val.length > 10 || '联系电话必须大于11位！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -249,6 +251,7 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
+            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -261,6 +264,7 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
+            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -273,6 +277,7 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
+            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -285,6 +290,7 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
+            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
