@@ -99,7 +99,13 @@
             ]"
           ></q-select>
           <div v-if="vote.a3 === '其他'" style="padding-top: 10px;">
-            <q-input v-model="vote.a301" type="text" dense label="其他民族" />
+            <q-input
+              v-model="vote.a301"
+              type="text"
+              dense
+              label="其他民族"
+              :rules="[val => !!val || '必填项！']"
+            />
           </div>
           <div style="padding-top: 10px;">A4. 联系电话：</div>
           <q-input
@@ -121,7 +127,13 @@
             :options="['本人', '配偶', '子女', '父母', '其他']"
           ></q-select>
           <div v-if="vote.a502 === '其他'" style="padding-top: 10px;">
-            <q-input v-model="vote.a5021" type="text" dense label="其他关系" />
+            <q-input
+              v-model="vote.a5021"
+              type="text"
+              dense
+              label="其他关系"
+              :rules="[val => !!val || '必填项！']"
+            />
           </div>
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -150,10 +162,14 @@
           ></v-distpicker>
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
-          <div style="padding-top: 10px;">乡镇：</div>
-          <q-input v-model="vote.town" type="text" dense />
-          <div style="padding-top: 10px;">村：</div>
-          <q-input v-model="vote.village" type="text" dense />
+          <div class="row no-wrap ">
+            <q-input v-model="vote.town" type="text" dense class="col-9" />
+            <div style="padding-top: 10px;min-width: 100px;">乡（镇）</div>
+          </div>
+          <div class="row no-wrap ">
+            <q-input v-model="vote.village" type="text" dense class="col-9" />
+            <div style="padding-top: 10px;">村</div>
+          </div>
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">A7. 您的家庭情况是？（单选）</div>
@@ -338,6 +354,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -365,6 +382,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -391,6 +409,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -440,6 +459,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -497,6 +517,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -532,6 +553,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -568,6 +590,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -613,6 +636,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -651,6 +675,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -681,6 +706,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -735,6 +761,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -779,6 +806,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -815,6 +843,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -858,6 +887,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -920,6 +950,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -962,6 +993,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1003,6 +1035,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1106,6 +1139,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1133,6 +1167,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1169,6 +1204,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1220,6 +1256,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1271,6 +1308,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1322,6 +1360,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1386,6 +1425,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1429,6 +1469,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1472,6 +1513,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1510,6 +1552,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1560,6 +1603,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1599,6 +1643,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1642,6 +1687,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1679,6 +1725,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1730,6 +1777,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1783,6 +1831,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1896,6 +1945,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -1989,6 +2039,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2040,6 +2091,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2098,6 +2150,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2144,6 +2197,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2193,6 +2247,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2220,6 +2275,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2247,6 +2303,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2267,6 +2324,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2293,6 +2351,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2352,6 +2411,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2379,6 +2439,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2408,7 +2469,7 @@
             dense
             style="min-width: 12em;"
             behavior="menu"
-            :options="['有', '没有']"
+            :options="['有', '没有', '不知道']"
           ></q-select>
         </dd>
         <dd
@@ -2460,6 +2521,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2494,6 +2556,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2528,6 +2591,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2566,6 +2630,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -2600,6 +2665,7 @@
               type="text"
               dense
               label="其他(请填写具体内容)"
+              :rules="[val => !!val || '必填项！']"
             />
           </div>
         </dd>
@@ -3072,7 +3138,15 @@ export default {
       //   this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
       //   submitsign = false
       // }
-      if (this.vote.city === 'null') {
+      // console.log(JSON.stringify(this.vote), '+++++++++++')
+      if (
+        this.vote.city === null ||
+        this.vote.county === null ||
+        this.vote.city === 'null' ||
+        this.vote.county === 'null' ||
+        this.vote.city === '------- 市 -------' ||
+        this.vote.county === '------- 区 -------'
+      ) {
         this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
         submitsign = false
       }
@@ -3166,15 +3240,17 @@ export default {
         }, 5000)
       } else {
         // console.log(JSON.stringify(missitem), '+++++++++')
-        this.$zglobal.showMessage(
-          'blue-grey-8',
-          'center',
-          '保存失败！以下数据项未填写：<p style="word-break:break-all">' +
-            JSON.stringify(missitem) +
-            '</p>',
-          true,
-          '../statics/notice.png'
-        )
+        if (missitem.length > 0) {
+          this.$zglobal.showMessage(
+            'blue-grey-8',
+            'center',
+            '保存失败！以下数据项未填写：<p style="word-break:break-all">' +
+              JSON.stringify(missitem) +
+              '</p>',
+            true,
+            '../statics/notice.png'
+          )
+        }
 
         setTimeout(() => {
           this.saving = false

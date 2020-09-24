@@ -130,6 +130,16 @@
               <div style="padding-top: 10px;">A6. 您所在的行政区域是？</div>
             </dd>
             <dd class="q-mx-sm">
+              <v-distpicker
+                :province="vote.province"
+                :city="vote.city"
+                :area="vote.county"
+                :placeholders="placeholders"
+                province-disabled
+                @selected="AreaonSelected"
+              ></v-distpicker>
+            </dd>
+            <dd class="q-mx-sm">
               <div style="padding-top: 10px;">乡镇：</div>
               <q-input v-model="vote.town" type="text" dense />
               <div style="padding-top: 10px;">村：</div>
@@ -410,7 +420,7 @@
               <div
                 v-if="
                   typeof vote.a16 === 'object' &&
-                    vote.a16.length > 0 &&
+                    vote.a16 &&
                     vote.a16.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -467,7 +477,7 @@
               <div
                 v-if="
                   typeof vote.b2 === 'object' &&
-                    vote.b2.length > 0 &&
+                    vote.b2 &&
                     vote.b2.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -499,7 +509,7 @@
               <div
                 v-if="
                   typeof vote.b3 === 'object' &&
-                    vote.b3.length > 0 &&
+                    vote.b3 &&
                     vote.b3.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -535,7 +545,7 @@
               <div
                 v-if="
                   typeof vote.b4 === 'object' &&
-                    vote.b4.length > 0 &&
+                    vote.b4 &&
                     vote.b4.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -609,7 +619,7 @@
               <div
                 v-if="
                   typeof vote.b7 === 'object' &&
-                    vote.b7.length > 0 &&
+                    vote.b7 &&
                     vote.b7.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -684,7 +694,7 @@
               <div
                 v-if="
                   typeof vote.b10 === 'object' &&
-                    vote.b10.length > 0 &&
+                    vote.b10 &&
                     vote.b10.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -758,7 +768,7 @@
               <div
                 v-if="
                   typeof vote.b13 === 'object' &&
-                    vote.b13.length > 0 &&
+                    vote.b13 &&
                     vote.b13.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -804,7 +814,7 @@
               <div
                 v-if="
                   typeof vote.b15 === 'object' &&
-                    vote.b15.length > 0 &&
+                    vote.b15 &&
                     vote.b15.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -863,7 +873,7 @@
               <div
                 v-if="
                   typeof vote.b18 === 'object' &&
-                    vote.b18.length > 0 &&
+                    vote.b18 &&
                     vote.b18.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1043,7 +1053,7 @@
               <div
                 v-if="
                   typeof vote.c5 === 'object' &&
-                    vote.c5.length > 0 &&
+                    vote.c5 &&
                     vote.c5.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1106,7 +1116,7 @@
               <div
                 v-if="
                   typeof vote.c7 === 'object' &&
-                    vote.c7.length > 0 &&
+                    vote.c7 &&
                     vote.c7.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1154,7 +1164,7 @@
               <div
                 v-if="
                   typeof vote.c9 === 'object' &&
-                    vote.c9.length > 0 &&
+                    vote.c9 &&
                     vote.c9.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1199,7 +1209,7 @@
               <div
                 v-if="
                   typeof vote.c11 === 'object' &&
-                    vote.c11.length > 0 &&
+                    vote.c11 &&
                     vote.c11.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1247,7 +1257,7 @@
               <div
                 v-if="
                   typeof vote.c13 === 'object' &&
-                    vote.c13.length > 0 &&
+                    vote.c13 &&
                     vote.c13.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1311,7 +1321,7 @@
               <div
                 v-if="
                   typeof vote.d3 === 'object' &&
-                    vote.d3.length > 0 &&
+                    vote.d3 &&
                     vote.d3.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1351,7 +1361,7 @@
               <div
                 v-if="
                   typeof vote.d5 === 'object' &&
-                    vote.d5.length > 0 &&
+                    vote.d5 &&
                     vote.d5.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1391,7 +1401,7 @@
               <div
                 v-if="
                   typeof vote.d7 === 'object' &&
-                    vote.d7.length > 0 &&
+                    vote.d7 &&
                     vote.d7.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1429,7 +1439,7 @@
               <div
                 v-if="
                   typeof vote.d8 === 'object' &&
-                    vote.d8.length > 0 &&
+                    vote.d8 &&
                     vote.d8.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1476,7 +1486,7 @@
               <div
                 v-if="
                   typeof vote.d10 === 'object' &&
-                    vote.d10.length > 0 &&
+                    vote.d10 &&
                     vote.d10.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1512,7 +1522,7 @@
               <div
                 v-if="
                   typeof vote.d11 === 'object' &&
-                    vote.d11.length > 0 &&
+                    vote.d11 &&
                     vote.d11.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1552,7 +1562,7 @@
               <div
                 v-if="
                   typeof vote.d13 === 'object' &&
-                    vote.d13.length > 0 &&
+                    vote.d13 &&
                     vote.d13.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1586,7 +1596,7 @@
               <div
                 v-if="
                   typeof vote.d14 === 'object' &&
-                    vote.d14.length > 0 &&
+                    vote.d14 &&
                     vote.d14.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1637,7 +1647,7 @@
               <div
                 v-if="
                   typeof vote.d16 === 'object' &&
-                    vote.d16.length > 0 &&
+                    vote.d16 &&
                     vote.d16.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1693,7 +1703,7 @@
               <div
                 v-if="
                   typeof vote.e2 === 'object' &&
-                    vote.e2.length > 0 &&
+                    vote.e2 &&
                     vote.e2.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1794,7 +1804,7 @@
               <div
                 v-if="
                   typeof vote.e8 === 'object' &&
-                    vote.e8.length > 0 &&
+                    vote.e8 &&
                     vote.e8.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1873,7 +1883,7 @@
               <div
                 v-if="
                   typeof vote.e13 === 'object' &&
-                    vote.e13.length > 0 &&
+                    vote.e13 &&
                     vote.e13.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -1921,7 +1931,7 @@
               <div
                 v-if="
                   typeof vote.e15 === 'object' &&
-                    vote.e15.length > 0 &&
+                    vote.e15 &&
                     vote.e15.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2031,7 +2041,7 @@
               <div
                 v-if="
                   typeof vote.e22 === 'object' &&
-                    vote.e22.length > 0 &&
+                    vote.e22 &&
                     vote.e22.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2246,7 +2256,7 @@
               <div
                 v-if="
                   typeof vote.e32 === 'object' &&
-                    vote.e32.length > 0 &&
+                    vote.e32 &&
                     vote.e32.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2315,7 +2325,7 @@
                 dense
                 style="min-width: 12em;"
                 behavior="menu"
-                :options="['有', '没有']"
+                :options="['有', '没有', '不知道']"
               ></q-select>
             </dd>
             <dd v-if="vote.e35 === '有'" class="q-mx-sm">
@@ -2351,7 +2361,7 @@
               <div
                 v-if="
                   typeof vote.e38 === 'object' &&
-                    vote.e38.length > 0 &&
+                    vote.e38 &&
                     vote.e38.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2385,7 +2395,7 @@
               <div
                 v-if="
                   typeof vote.e39 === 'object' &&
-                    vote.e39.length > 0 &&
+                    vote.e39 &&
                     vote.e39.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2419,7 +2429,7 @@
               <div
                 v-if="
                   typeof vote.e40 === 'object' &&
-                    vote.e40.length > 0 &&
+                    vote.e40 &&
                     vote.e40.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2457,7 +2467,7 @@
               <div
                 v-if="
                   typeof vote.e41 === 'object' &&
-                    vote.e41.length > 0 &&
+                    vote.e41 &&
                     vote.e41.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2491,7 +2501,7 @@
               <div
                 v-if="
                   typeof vote.e42 === 'object' &&
-                    vote.e42.length > 0 &&
+                    vote.e42 &&
                     vote.e42.includes('其他')
                 "
                 style="padding-top: 10px;"
@@ -2607,11 +2617,13 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue'
+import VDistpicker from 'v-distpicker'
 
 export default {
   name: 'P2s1OffQnl',
   components: {
-    AgGridVue
+    AgGridVue,
+    VDistpicker
   },
   filters: {
     Numformat: function(value) {
