@@ -60,7 +60,7 @@
             type="text"
             dense
             style="min-width:200px;"
-            mask="X##### ######## ###X X"
+            mask="X##### ######## #### XX"
             :rules="[val => val.length > 19 || '身份证号必须大于18位！']"
           />
           <div style="padding-top: 10px;">A3. 户主民族是：</div>
@@ -114,7 +114,6 @@
             type="text"
             dense
             mask="#############################"
-            :rules="[val => val.length > 10 || '联系电话必须大于11位！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -251,7 +250,6 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
-            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -264,7 +262,6 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
-            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -277,7 +274,6 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
-            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -290,7 +286,6 @@
             dense
             oninput="if(value.length>10) value=value.slice(0,10)"
             @change="suma10"
-            :rules="[val => val > 0 || '收入必须大于0！']"
           />
         </dd>
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
@@ -816,7 +811,10 @@
             />
           </div>
         </dd>
-        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+        <dd
+          v-if="vote.b1 === '否'"
+          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+        >
           <div style="padding-top: 10px;">
             B13. 若以前没有发展产业，以后想发展什么产业？（多选）
           </div>
@@ -1018,7 +1016,10 @@
             :options="['能及时还上', '能还上，但是要延期还', '还不上']"
           ></q-select>
         </dd>
-        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
+        <dd
+          v-if="vote.b19 === '否'"
+          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+        >
           <div style="padding-top: 10px;">
             B22. 您没有申请扶贫小额贷款的原因？（单选）
           </div>
@@ -1633,7 +1634,8 @@
               '扶贫小额贷款（优惠）延期',
               '发放防护用品',
               '提供临时就业岗位',
-              '资金补贴'
+              '资金补贴',
+              '其他'
             ]"
           ></q-select>
           <div
@@ -1895,7 +1897,6 @@
             style="min-width: 12em;"
             behavior="menu"
             :options="[
-              '没有受教育孩子',
               '义务教育后不愿再接受教育',
               '义务教育后尽可能接受更高级教育',
               '义务教育后能不能接受更高级教育无所谓'
@@ -3138,6 +3139,60 @@ export default {
         // 'e4201',
         'e43'
       ]
+      // 检测其他字段是否有值
+      var requiredotheritm = [
+        'a12',
+        'a13',
+        'a14',
+        'a16',
+        'b2',
+        'b3',
+        'b4',
+        'b6',
+        'b7',
+        'b8',
+        'b10',
+        'b12',
+        'b13',
+        'b15',
+        'b18',
+        'b20',
+        'b22',
+        'c5',
+        'c6',
+        'c7',
+        'c9',
+        'c11',
+        'c13',
+        'd3',
+        'd5',
+        'd7',
+        'd8',
+        'd10',
+        'd11',
+        'd13',
+        'd14',
+        'd16',
+        'e2',
+        'e8',
+        'e13',
+        'e15',
+        'e20',
+        'e22',
+        'e25',
+        'e26',
+        'e27',
+        'e28',
+        'e29',
+        'e30',
+        'e32',
+        'e33',
+        'e38',
+        'e39',
+        'e40',
+        'e41',
+        'e42'
+      ]
       var missitem = []
       var submitsign = true
       // if (!this.vote.areacode) {
@@ -3153,15 +3208,33 @@ export default {
         this.vote.city === '------- 市 -------' ||
         this.vote.county === '------- 区 -------'
       ) {
-        this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确！')
+        this.$zglobal.showMessage('red-7', 'center', '行政区域未设置正确(A6)！')
         submitsign = false
       }
+      // 检测是否必须
       for (var item in requireditem) {
         // console.log(requireditem[item], '----------')
         // 检测所有必须的key是否包含
         if (!(requireditem[item] in this.vote)) {
           missitem.push(requireditem[item])
           submitsign = false
+        }
+      }
+      // 检测其他字段
+      for (var itemo in requiredotheritm) {
+        // 检测所有必须的key是否包含
+        if (requiredotheritm[itemo] in this.vote) {
+          var realitemo = this.vote[requiredotheritm[itemo]]
+          // console.log(realitemo, '----------')
+          if (realitemo) {
+            if (realitemo.includes('其他') || realitemo === '其他') {
+              var realk = requiredotheritm[itemo] + '01'
+              if (!this.vote[realk]) {
+                missitem.push(realk)
+                submitsign = false
+              }
+            }
+          }
         }
       }
       if (submitsign) {
@@ -3253,8 +3326,7 @@ export default {
             '保存失败！以下数据项未填写：<p style="word-break:break-all">' +
               JSON.stringify(missitem) +
               '</p>',
-            true,
-            '../statics/notice.png'
+            true
           )
         }
 

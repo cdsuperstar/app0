@@ -113,7 +113,7 @@
                 type="text"
                 dense
                 style="min-width:200px;"
-                mask="X##### ######## ###X X"
+                mask="X##### ######## #### XX"
               />
               <div style="padding-top: 10px;">A3. 户主民族是：</div>
               <q-select
@@ -815,7 +815,7 @@
                 />
               </div>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.b1 === '否'" class="q-mx-sm">
               <div style="padding-top: 10px;">
                 B13. 若以前没有发展产业，以后想发展什么产业？（多选）
               </div>
@@ -1007,7 +1007,7 @@
                 :options="['能及时还上', '能还上，但是要延期还', '还不上']"
               ></q-select>
             </dd>
-            <dd class="q-mx-sm">
+            <dd v-if="vote.b19 === '否'" class="q-mx-sm">
               <div style="padding-top: 10px;">
                 B22. 您没有申请扶贫小额贷款的原因？（单选）
               </div>
@@ -1586,7 +1586,8 @@
                   '扶贫小额贷款（优惠）延期',
                   '发放防护用品',
                   '提供临时就业岗位',
-                  '资金补贴'
+                  '资金补贴',
+                  '其他'
                 ]"
               ></q-select>
               <div
@@ -1834,7 +1835,6 @@
                 style="min-width: 12em;"
                 behavior="menu"
                 :options="[
-                  '没有受教育孩子',
                   '义务教育后不愿再接受教育',
                   '义务教育后尽可能接受更高级教育',
                   '义务教育后能不能接受更高级教育无所谓'
