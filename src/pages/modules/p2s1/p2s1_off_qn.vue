@@ -2843,7 +2843,7 @@ export default {
     autoSaveD() {
       this.$q.localStorage.remove('votedata')
       this.$nextTick(() => {
-        console.log('.')
+        console.log('AutoSave...')
         this.$q.localStorage.set('votedata', JSON.stringify(this.vote))
       })
     },

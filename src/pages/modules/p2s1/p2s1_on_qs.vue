@@ -2837,31 +2837,7 @@ export default {
   watch: {
     // 获得列表
   },
-  created() {
-    if (this.mPermissions['p2s1_on_qs.reviewData']) {
-      this.$router.app.$http
-        .get('/p2/s1/p2s1questionnaire1/')
-        .then(res => {
-          if (res.data.success) {
-            this.rowData = res.data.data
-            // console.log(this.rowData)
-          } else {
-          }
-        })
-        .catch(e => {})
-    } else {
-      this.$router.app.$http
-        .get('/p2/s1/p2s1questionnaire1/getMyQ/')
-        .then(res => {
-          if (res.data.success) {
-            this.rowData = res.data.data
-            // console.log(this.rowData)
-          } else {
-          }
-        })
-        .catch(e => {})
-    }
-  },
+  created() {},
   beforeMount() {
     this.initGrid()
   },
@@ -2881,6 +2857,32 @@ export default {
         Number(this.vote.a1004)
     },
     // 结束
+    // 得到数据 有审核的权限获的全部数据
+    getData() {
+      if (this.mPermissions['p2s1_on_qs.reviewData']) {
+        this.$router.app.$http
+          .get('/p2/s1/p2s1questionnaire1/')
+          .then(res => {
+            if (res.data.success) {
+              this.rowData = res.data.data
+              // console.log(this.rowData)
+            } else {
+            }
+          })
+          .catch(e => {})
+      } else {
+        this.$router.app.$http
+          .get('/p2/s1/p2s1questionnaire1/getMyQ/')
+          .then(res => {
+            if (res.data.success) {
+              this.rowData = res.data.data
+              // console.log(this.rowData)
+            } else {
+            }
+          })
+          .catch(e => {})
+      }
+    },
     // 权限
     ...mapActions('zero', ['getMyPermissions', 'reqThePermission']),
     initPermissions() {
@@ -2940,6 +2942,8 @@ export default {
       this.reqThePermission(preq)
         .then(res => {
           this.mPermissions = res
+          // 根据权限获取数据
+          this.getData()
         })
         .catch(e => {
           // console.log(e)

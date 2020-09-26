@@ -99,7 +99,7 @@ export default {
                 }
                 this.rowData = allcountdata
                 // out
-                console.log(this.rowData, '-=-=-=rowData')
+                // console.log(this.rowData, '-=-=-=rowData')
                 // 去重统计
                 var countyArr = this.FilterByName(this.rowData, 'county')
                 // 去重统计
