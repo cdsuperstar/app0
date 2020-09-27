@@ -148,7 +148,7 @@ export default {
                       allitem.village === currentitem.village &&
                       allitem.qsource === currentitem.qsource
                     ) {
-                      allitem.Newtoday = currentitem.cnt
+                      allitem.Newtoday = currentitem.total
                       break
                     } else {
                       allitem.Newtoday = 0

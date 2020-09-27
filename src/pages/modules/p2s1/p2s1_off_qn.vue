@@ -149,10 +149,7 @@
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">A6. 您所在的行政区域是？</div>
         </dd>
-        <dd
-          v-if="areasign"
-          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
-        >
+        <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <v-distpicker
             :province="vote.province"
             :city="vote.city"
@@ -205,7 +202,7 @@
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">
             A9-2
-            现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括现役军人，服刑人员】：
+            现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括现役军人，服刑人员，在校学生】：
           </div>
           <q-input v-model="vote.a902" type="text" dense mask="##" />
         </dd>
@@ -240,6 +237,22 @@
           </div>
           <q-input v-model="sumdataa10" type="number" dense readonly />
         </dd>
+        <dd
+          v-if="averagea10"
+          :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'"
+        >
+          <div style="padding-top: 10px;">
+            A10-7 请填写人均收入输入低于3500元的原因是：
+          </div>
+          <q-input
+            v-model="vote.a1007"
+            type="text"
+            dense
+            label="请填写具体原因"
+            :rules="[val => !!val || '必填项！']"
+          />
+        </dd>
+
         <dd :class="$q.screen.gt.xs ? 'row q-mx-ma' : 'q-mx-sm'">
           <div style="padding-top: 10px;">
             A10-1 近三年来（2018-2020年），您家庭年均经营性净收入（元）：
@@ -2739,6 +2752,7 @@ export default {
       netstate: null,
       qsource: null,
       sumdataa10: 0,
+      averagea10: false,
       areasign: false,
       placeholders: {
         province: '------- 省 --------',
@@ -2787,6 +2801,14 @@ export default {
         Number(this.vote.a1002) +
         Number(this.vote.a1003) +
         Number(this.vote.a1004)
+      if (this.sumdataa10 && this.vote.a9) {
+        var tmpaver = this.sumdataa10 / Number(this.vote.a9)
+        if (tmpaver < 3500) {
+          this.averagea10 = true
+        } else {
+          this.averagea10 = false
+        }
+      }
     },
     // 结束
     AreaonSelected(data) {
@@ -3237,6 +3259,13 @@ export default {
           }
         }
       }
+      // 检测总收入
+      if (this.averagea10) {
+        if (!this.vote.a1007) {
+          missitem.push('a1007')
+          submitsign = false
+        }
+      }
       if (submitsign) {
         // 检测是否vote里所有项是否有q-select多选的Array，如果有则toString
         for (var votekey in this.vote) {
@@ -3288,6 +3317,8 @@ export default {
           ) {
             alert('当前【无网络连接】，将采用离线方式保存问卷！')
             this.writeToFile('/AIApp/Votedata.json', this.vote)
+            this.$q.localStorage.remove('votedata')
+            location.href = '/'
           } else {
             this.$router.app.$http
               .post('/p2/s1/p2s1questionnaire1/noa', this.vote)

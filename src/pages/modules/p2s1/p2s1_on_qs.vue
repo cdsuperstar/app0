@@ -248,7 +248,7 @@
             <dd class="q-mx-sm">
               <div style="padding-top: 10px;">
                 A9-2
-                现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括现役军人，服刑人员】：
+                现有劳动力人口数（人）【16-64岁具有劳动能力人口，不包括现役军人，服刑人员，在校学生】：
               </div>
               <q-input v-model="vote.a902" type="text" dense mask="##" />
             </dd>
