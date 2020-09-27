@@ -3282,8 +3282,14 @@ export default {
             process.env.MODE === 'cordova' &&
             this.netstate === '无网络连接'
           ) {
-            alert('当前【无网络连接】，将采用离线方式保存问卷！')
+            alert(
+              '当前【无网络连接】，将采用离线方式保存问卷！问卷编号为：【' +
+                this.vote.no +
+                '】'
+            )
             this.writeToFile('/AIApp/Votedata.json', this.vote)
+            this.$q.localStorage.remove('votedata')
+            location.href = '/'
           } else {
             // console.log(this.vote, '==========')
             this.$router.app.$http
@@ -3294,7 +3300,10 @@ export default {
                   this.$zglobal.showMessage(
                     'green',
                     'center',
-                    this.$t('p2s1.savesuccess')
+                    this.$t('p2s1.savesuccess') +
+                      '问卷编号为：【' +
+                      this.vote.no +
+                      '】'
                   )
                   setTimeout(() => {
                     this.$q.localStorage.remove('votedata')
@@ -3315,7 +3324,11 @@ export default {
             process.env.MODE === 'cordova' &&
             this.netstate === '无网络连接'
           ) {
-            alert('当前【无网络连接】，将采用离线方式保存问卷！')
+            alert(
+              '当前【无网络连接】，将采用离线方式保存问卷！问卷编号为：【' +
+                this.vote.no +
+                '】'
+            )
             this.writeToFile('/AIApp/Votedata.json', this.vote)
             this.$q.localStorage.remove('votedata')
             location.href = '/'
@@ -3328,7 +3341,10 @@ export default {
                   this.$zglobal.showMessage(
                     'green',
                     'center',
-                    this.$t('p2s1.savesuccess')
+                    this.$t('p2s1.savesuccess') +
+                      '问卷编号为：【' +
+                      this.vote.no +
+                      '】'
                   )
                   setTimeout(() => {
                     this.$q.localStorage.remove('votedata')
