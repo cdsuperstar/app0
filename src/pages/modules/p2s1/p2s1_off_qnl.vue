@@ -2891,7 +2891,7 @@ export default {
                 }
               }
               // console.log(val)
-              val.qsource = '离线问卷'
+              // val.qsource = '离线问卷'
               this.$router.app.$http
                 .post('/p2/s1/p2s1questionnaire1', val)
                 .then(res => {
