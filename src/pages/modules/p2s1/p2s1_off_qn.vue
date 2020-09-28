@@ -2769,7 +2769,12 @@ export default {
   },
 
   computed: {},
-  watch: {},
+  watch: {
+    // 当vote的值发生变化时候 自动保存
+    vote(val) {
+      this.autoSaveD()
+    }
+  },
   created() {
     if (process.env.MODE === 'cordova') {
       this.getPosition()
@@ -2789,9 +2794,7 @@ export default {
     //   setInterval(this.autoSaveD, 5000)
     // })
   },
-  beforeDestroy() {
-    this.autoSaveD()
-  },
+  beforeDestroy() {},
 
   methods: {
     // 计算问卷内子项
@@ -2981,184 +2984,184 @@ export default {
       // 检测字段是否完整
       var requireditem = [
         'no',
-        'province',
-        'city',
-        'county',
-        'town',
-        'village',
-        'a1',
-        'a2',
-        'a3',
-        // 'a301',
-        'a4',
-        'a501',
-        'a502',
-        // 'a5021',
-        'a503',
-        'a7',
-        'a8',
-        'a9',
-        'a901',
-        'a902',
-        'a903',
-        'a904',
-        'a905',
-        'a1001',
-        'a1002',
-        'a1003',
-        'a1004',
-        'a1005',
-        'a1006',
-        'a11',
-        'a12',
-        // 'a1201',
-        'a13',
-        // 'a1301',
-        'a14',
-        // 'a1401',
-        'a15',
-        'a16',
-        // 'a1601',
-        'b1',
-        // 'b2',
-        // 'b201',
-        // 'b3',
-        // 'b301',
-        // 'b4',
-        // 'b401',
-        // 'b5',
-        // 'b6',
-        // 'b601',
-        // 'b7',
-        // 'b701',
-        // 'b8',
-        // 'b801',
-        // 'b9',
-        // 'b10',
-        // 'b1001',
-        // 'b11',
-        // 'b12',
-        // 'b1201',
-        // 'b13',
-        // 'b1301',
-        'b14',
-        // 'b15',
-        // 'b1501',
-        'b16',
-        'b17',
-        // 'b18',
-        // 'b1801',
-        'b19',
-        // 'b20',
-        // 'b2001',
-        // 'b21',
-        // 'b22',
-        // 'b2201',
-        'b23',
-        'c1',
-        'c2',
-        // 'c3',
-        'c4',
-        'c5',
-        // 'c501',
-        'c6',
-        // 'c601',
-        'c7',
-        // 'c701',
-        'c8',
-        // 'c9',
-        // 'c901',
-        // 'c10',
-        // 'c11',
-        // 'c1101',
-        'c12',
-        // 'c13',
-        // 'c1301',
-        'd1',
-        'd2',
-        // 'd3',
-        // 'd301',
-        'd4',
-        // 'd5',
-        // 'd501',
-        'd6',
-        // 'd7',
-        // 'd701',
-        'd8',
-        // 'd801',
-        'd9',
-        // 'd10',
-        // 'd1001',
-        // 'd11',
-        // 'd1101',
-        'd12',
-        // 'd13',
-        // 'd1301',
-        // 'd14',
-        // 'd1401',
-        'd15',
-        'd16',
-        // 'd1601',
-        'e1',
-        // 'e2',
-        // 'e201',
-        'e3',
-        // 'e4',
-        // 'e5',
-        // 'e6',
-        // 'e7',
-        // 'e8',
-        // 'e801',
-        // 'e9',
-        // 'e10',
-        // 'e11',
-        // 'e12',
-        // 'e13',
-        // 'e1301',
-        // 'e14',
-        // 'e15',
-        // 'e1501',
-        'e16',
-        'e17',
-        'e18',
-        'e19',
-        // 'e20',
-        // 'e2001',
-        'e21',
-        'e22',
-        // 'e2201',
-        'e23',
-        'e24',
-        'e25',
-        // 'e2501',
-        'e26',
-        // 'e2601',
-        'e27',
-        // 'e2701',
-        'e28',
-        // 'e2801',
-        'e29',
-        // 'e2901',
-        'e30',
-        'e31',
-        'e32',
-        // 'e3201',
-        'e33',
-        // 'e3301',
-        'e34',
-        'e35',
-        // 'e36',
-        // 'e37',
-        'e38',
-        // 'e3801',
-        'e39',
-        // 'e3901',
-        'e40',
-        // 'e4001',
-        'e41',
-        // 'e4101',
-        'e42',
-        // 'e4201',
+        // 'province',
+        // 'city',
+        // 'county',
+        // 'town',
+        // 'village',
+        // 'a1',
+        // 'a2',
+        // 'a3',
+        // // 'a301',
+        // 'a4',
+        // 'a501',
+        // 'a502',
+        // // 'a5021',
+        // 'a503',
+        // 'a7',
+        // 'a8',
+        // 'a9',
+        // 'a901',
+        // 'a902',
+        // 'a903',
+        // 'a904',
+        // 'a905',
+        // 'a1001',
+        // 'a1002',
+        // 'a1003',
+        // 'a1004',
+        // 'a1005',
+        // 'a1006',
+        // 'a11',
+        // 'a12',
+        // // 'a1201',
+        // 'a13',
+        // // 'a1301',
+        // 'a14',
+        // // 'a1401',
+        // 'a15',
+        // 'a16',
+        // // 'a1601',
+        // 'b1',
+        // // 'b2',
+        // // 'b201',
+        // // 'b3',
+        // // 'b301',
+        // // 'b4',
+        // // 'b401',
+        // // 'b5',
+        // // 'b6',
+        // // 'b601',
+        // // 'b7',
+        // // 'b701',
+        // // 'b8',
+        // // 'b801',
+        // // 'b9',
+        // // 'b10',
+        // // 'b1001',
+        // // 'b11',
+        // // 'b12',
+        // // 'b1201',
+        // // 'b13',
+        // // 'b1301',
+        // 'b14',
+        // // 'b15',
+        // // 'b1501',
+        // 'b16',
+        // 'b17',
+        // // 'b18',
+        // // 'b1801',
+        // 'b19',
+        // // 'b20',
+        // // 'b2001',
+        // // 'b21',
+        // // 'b22',
+        // // 'b2201',
+        // 'b23',
+        // 'c1',
+        // 'c2',
+        // // 'c3',
+        // 'c4',
+        // 'c5',
+        // // 'c501',
+        // 'c6',
+        // // 'c601',
+        // 'c7',
+        // // 'c701',
+        // 'c8',
+        // // 'c9',
+        // // 'c901',
+        // // 'c10',
+        // // 'c11',
+        // // 'c1101',
+        // 'c12',
+        // // 'c13',
+        // // 'c1301',
+        // 'd1',
+        // 'd2',
+        // // 'd3',
+        // // 'd301',
+        // 'd4',
+        // // 'd5',
+        // // 'd501',
+        // 'd6',
+        // // 'd7',
+        // // 'd701',
+        // 'd8',
+        // // 'd801',
+        // 'd9',
+        // // 'd10',
+        // // 'd1001',
+        // // 'd11',
+        // // 'd1101',
+        // 'd12',
+        // // 'd13',
+        // // 'd1301',
+        // // 'd14',
+        // // 'd1401',
+        // 'd15',
+        // 'd16',
+        // // 'd1601',
+        // 'e1',
+        // // 'e2',
+        // // 'e201',
+        // 'e3',
+        // // 'e4',
+        // // 'e5',
+        // // 'e6',
+        // // 'e7',
+        // // 'e8',
+        // // 'e801',
+        // // 'e9',
+        // // 'e10',
+        // // 'e11',
+        // // 'e12',
+        // // 'e13',
+        // // 'e1301',
+        // // 'e14',
+        // // 'e15',
+        // // 'e1501',
+        // 'e16',
+        // 'e17',
+        // 'e18',
+        // 'e19',
+        // // 'e20',
+        // // 'e2001',
+        // 'e21',
+        // 'e22',
+        // // 'e2201',
+        // 'e23',
+        // 'e24',
+        // 'e25',
+        // // 'e2501',
+        // 'e26',
+        // // 'e2601',
+        // 'e27',
+        // // 'e2701',
+        // 'e28',
+        // // 'e2801',
+        // 'e29',
+        // // 'e2901',
+        // 'e30',
+        // 'e31',
+        // 'e32',
+        // // 'e3201',
+        // 'e33',
+        // // 'e3301',
+        // 'e34',
+        // 'e35',
+        // // 'e36',
+        // // 'e37',
+        // 'e38',
+        // // 'e3801',
+        // 'e39',
+        // // 'e3901',
+        // 'e40',
+        // // 'e4001',
+        // 'e41',
+        // // 'e4101',
+        // 'e42',
+        // // 'e4201',
         'e43'
       ]
       // 检测其他字段是否有值
@@ -3277,7 +3280,7 @@ export default {
         }
         // 是否在线
         if (this.$auth.check()) {
-          console.log('ON-----', this.vote, '===', JSON.stringify(this.vote))
+          // console.log('ON-----', this.vote, '===', JSON.stringify(this.vote))
           if (
             process.env.MODE === 'cordova' &&
             this.netstate === '无网络连接'
@@ -3288,8 +3291,9 @@ export default {
                 '】'
             )
             this.writeToFile('/AIApp/Votedata.json', this.vote)
-            this.$q.localStorage.remove('votedata')
-            location.href = '/'
+            this.$nextTick(() => {
+              this.$q.localStorage.remove('votedata')
+            })
           } else {
             // console.log(this.vote, '==========')
             this.$router.app.$http
@@ -3330,8 +3334,9 @@ export default {
                 '】'
             )
             this.writeToFile('/AIApp/Votedata.json', this.vote)
-            this.$q.localStorage.remove('votedata')
-            location.href = '/'
+            this.$nextTick(() => {
+              this.$q.localStorage.remove('votedata')
+            })
           } else {
             this.$router.app.$http
               .post('/p2/s1/p2s1questionnaire1/noa', this.vote)
@@ -3387,14 +3392,15 @@ export default {
      * 打开或创建文件夹,创建文件并写入内容
      * */
     writeToFile(fileName, data) {
-      data = JSON.stringify(data)
+      var str = JSON.stringify(data)
+      // alert(str)
       if (process.env.MODE === 'cordova') {
         window.resolveLocalFileSystemURL(
           cordova.file.externalRootDirectory,
           function(directoryEntry) {
             // 创建文件夹AIApp
             directoryEntry.getDirectory(
-              'AIApp/Images',
+              'AIApp',
               { create: true },
               function(dirEntry) {
                 // alert('您创建了：' + dirEntry.name + ' 文件夹。')
@@ -3408,6 +3414,7 @@ export default {
               fileName,
               { create: true, exclusive: false },
               function(fileEntry) {
+                // alert('path:' + JSON.stringify(fileEntry))
                 fileEntry.createWriter(function(fileWriter) {
                   fileWriter.onwriteend = function(e) {
                     alert('保存成功： "' + fileName)
@@ -3415,9 +3422,14 @@ export default {
                   fileWriter.onerror = function(e) {
                     alert('保存失败：' + e.toString())
                   }
-                  // alert(data + '-' + fileWriter.length)
+                  // alert(str + '-' + fileWriter.length)
                   fileWriter.seek(fileWriter.length)
-                  var blob = new Blob([',' + data], { type: 'text/plain' })
+                  var blob = []
+                  if (str.length > 0) {
+                    blob = new Blob([',' + str], { type: 'text/plain' })
+                  } else {
+                    blob = new Blob([''], { type: 'text/plain' })
+                  }
                   fileWriter.write(blob)
                   fileWriter.close()
                 })
